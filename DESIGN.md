@@ -512,10 +512,9 @@ Everything works with no script and with reduced motion. The static state is the
 | `lift` | The English leaving and the colour falling back: the page's one orchestrated moment |
 | `navigate` | Native cross-document `@view-transition` root crossfade, where supported |
 
-- **Never:** entrance animation, scroll-triggered reveal, parallax, looping motion, autoplay,
-  count-up, carousel, typewriter, `ClientRouter`, or any scroll-driven effect on phones.
-- A laptop scroll-driven ornament goes inside `@supports (animation-timeline: view())`, on secondary
-  content, at most 400ms, once, over a designed static state. The default is none.
+- **Never, at any size:** entrance animation, scroll-triggered reveal or fade, scroll-driven effects
+  (`animation-timeline`), parallax, looping motion, autoplay, count-up, carousel, typewriter or
+  `ClientRouter`.
 - `prefers-reduced-motion: reduce`: every duration is 0. Nothing else changes.
 
 **Budgets.** The story page's offer, tap, lift, colour gate and store bar use no JavaScript.

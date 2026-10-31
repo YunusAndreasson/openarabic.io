@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(wrangler deploy*)",
+      "Bash(npx wrangler deploy*)",
+      "Bash(pnpm exec wrangler deploy*)",
+      "Bash(pnpm wrangler deploy*)",
+      "Bash(node_modules/.bin/wrangler deploy*)",
+      "Bash(./node_modules/.bin/wrangler deploy*)"
+    ]
+  }
+}
