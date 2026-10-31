@@ -89,6 +89,14 @@ export function publicStrings(html) {
     if (text) strings.push(text);
     buffer = '';
   };
+  const visitNested = (parent) => {
+    for (const child of parent.childNodes ?? []) {
+      if (!child.tagName) continue;
+      const lang = attrOf(child, 'lang');
+      if (lang && !lang.startsWith('ar')) visit(child);
+      else visitNested(child);
+    }
+  };
   const visit = (node) => {
     if (node.nodeName === '#text') {
       buffer += node.value;
@@ -111,6 +119,8 @@ export function publicStrings(html) {
       if (SKIP.has(tag)) return;
       if (attrOf(node, 'lang')?.startsWith('ar')) {
         buffer += ' ';
+        // A word card sits inside its Arabic line with lang="en", and it is copy like any other.
+        visitNested(node);
         return;
       }
     }
@@ -140,11 +150,12 @@ function traceString(text, lists) {
     ...[...lists.draft].map((value) => [value, 'draft']),
   ].sort((a, b) => b[0].length - a[0].length);
   for (const [value, kind] of all) {
-    const known = squash(value);
-    while (rest.includes(known)) {
-      rest = rest.replace(known, ' ');
+    // Whole words only, so a short entry like "on" can't eat part of a longer word.
+    const known = squash(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    rest = rest.replace(new RegExp(`(?<![\\p{L}\\p{N}])${known}(?![\\p{L}\\p{N}])`, 'gu'), () => {
       used[kind] += 1;
-    }
+      return ' ';
+    });
   }
   return { rest: squash(rest), used };
 }

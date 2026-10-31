@@ -1,7 +1,13 @@
+/* What every page shares. The story page's own rules are in story.css. */
 :root {
   color-scheme: dark;
   font-synthesis: none;
 }
+
+@view-transition { navigation: auto; }
+::view-transition-group(root) { animation-duration: var(--duration-navigate); animation-timing-function: var(--ease); }
+
+*, *::before, *::after { box-sizing: border-box; }
 
 html,
 body {
@@ -10,18 +16,41 @@ body {
   color: var(--color-on-surface);
 }
 
+html { -webkit-text-size-adjust: 100%; touch-action: manipulation; }
+
 body {
   font-family: var(--type-body-family);
   font-size: var(--type-body-size);
   font-weight: var(--type-body-weight);
   line-height: var(--type-body-line-height);
-  padding: var(--space-gutter);
 }
 
+h1, h2, p, figure { margin: 0; }
+
 h1 {
-  margin: 0;
   font-family: var(--type-title-family);
   font-size: var(--type-title-size);
   font-weight: var(--type-title-weight);
   line-height: var(--type-title-line-height);
 }
+
+::selection { background: var(--color-primary-deep); color: var(--color-on-surface); }
+
+a { color: var(--color-primary); text-decoration: underline; text-decoration-thickness: 1px; }
+a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+.quiet { font-size: var(--type-small-size); line-height: var(--type-small-line-height); color: var(--color-on-surface-quiet); }
+
+/* Draft copy stays marked until the owner approves it. DESIGN.md `Story`. */
+.draft { text-decoration: underline dashed var(--color-on-surface-quiet) 1px; text-underline-offset: 0.15em; }
+
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Footer */
+.footer-inner { max-width: var(--space-page-max); margin: var(--fluid-beat-gap) auto 0; padding: 0 var(--space-gutter) var(--space-block); }
+.mark { display: block; width: 32px; height: 32px; margin-bottom: var(--space-thought); }
+.footer-links { display: flex; flex-wrap: wrap; gap: 0 var(--space-thought); font-size: var(--type-small-size); line-height: var(--type-small-line-height); }
+.footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.credits { margin-top: var(--space-thought); max-width: var(--space-measure); }
+@media (hover: hover) { .footer-links a:hover { text-decoration-thickness: 2px; } }
+@media (min-width: 56.25rem) { .footer-inner { padding-inline: var(--space-gutter-laptop); } }

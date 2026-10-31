@@ -4,6 +4,7 @@ import '../styles/fonts.css';
 import '../styles/base.css';
 import { themeColorHex } from '../styles/tokens.generated';
 import amiriUrl from '../fonts/amiri-regular.subset.woff2?url';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
@@ -30,5 +31,6 @@ const {
   </head>
   <body>
     <slot />
+    <Footer />
   </body>
 </html>

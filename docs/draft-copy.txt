@@ -1,3 +1,41 @@
 # Draft copy: public strings that are in neither PRODUCT.md nor DESIGN.md, one per line,
 # waiting on the owner (D12). `pnpm ship` lets these through and counts them.
 # A banned phrase in PRODUCT.md stays banned even if it is listed here.
+
+# Story page: labels and alt text.
+App Store
+Google Play
+Close
+Privacy
+Terms
+Contact
+Account deletion
+Analytics choice
+A line from Ibn al-Jawzi. Each word opens its meaning.
+The line from Ibn al-Jawzi, read aloud in Arabic
+The app’s word card for الْمِسْكُ, showing its meaning, audio button and root.
+The app’s reader, with an English line above each classical Arabic line.
+The app’s voice review, showing one Arabic word while it listens for your answer.
+QR code for getting the app
+This word read aloud in Arabic
+
+# Story page: sentence 7106 as published, shown as stored. Machine-translated text from the database, not new copy.
+When I saw a book I had not seen before, it was as if I had stumbled upon a treasure.
+and when
+I saw
+a book
+did not
+see it
+so as if I
+I stumbled upon
+on
+a treasure
+This token combines the linking wa- with idha, a 'when/whenever' word that sets up a condition. Idha frames what follows as a recurring scenario, 'and whenever...', leading into a then-clause later in the sentence. So the word both connects and opens a conditional time-frame.
+A past-tense verb with the -tu ending that marks an 'I' subject. Inside the 'whenever' frame it gives the repeatable trigger: each time I saw. The -tu suffix is what fixes the speaker as the doer.
+The object of 'saw', an indefinite noun ('a book') shown by its -an object ending, which marks both that it is unspecified and that it is what the verb acts on. Being indefinite is the point: any previously unseen book triggers the reaction.
+A small but powerful negator that, placed before a present-tense verb, pushes its meaning into the past and cancels it: it produces 'had not'. Its trick is that it changes both the time and the polarity of the verb at once, so the following present-looking verb actually means a negated past.
+The verb governed by the preceding negator, with -hu ('it') attached as its object pointing back to the book. Because of that negator the verb takes its clipped jussive ending and reads as past, 'had not seen it'. The shortened ending is the visible mark that the negator is controlling this verb.
+This token bundles fa- ('so/then') with ka'anna ('as if') and the attached 'I'. The fa- introduces the result of the 'whenever' clause, while ka'anna sets up a likeness or simile and braces the following statement. Together they launch the 'it was as though I...' main response.
+A past-tense verb with the -tu 'I' ending, used here in a figurative sense of stumbling onto something. Sitting inside the simile launched by 'as if', it describes the imagined comparison rather than a literal event. The -tu again pins the speaker as the one acting.
+A preposition 'on/upon'. This particular verb of stumbling-onto pairs with 'ala to introduce what one chances upon, so 'ala marks the treasure as the thing happened upon. It also forces the genitive on the noun that follows.
+The noun governed by the preceding 'on', indefinite ('a treasure') and in the genitive that the preposition requires. Its indefiniteness keeps the image general, any treasure, fitting the simile. It is the thing the figurative stumbling lands on.

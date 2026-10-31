@@ -1,0 +1,31 @@
+---
+// The line, screens 1 and 9: DESIGN.md `Word`. One colour, native popover, no script.
+import line from '../data/story-line.json';
+
+interface Props {
+  prefix: 'w' | 'r';
+}
+const { prefix } = Astro.props;
+const tracks = import.meta.glob<string>('../assets/story/words/*.mp3', { query: '?url', import: 'default', eager: true });
+// The words are the stored sentence split on its own spaces. If they ever differ, stop rather than show altered text.
+if (line.words.map((word) => word.arabic).join(' ') !== line.arabic) throw new Error('story-line.json: the words do not rebuild the stored sentence.');
+---
+
+<div class="line" lang="ar" dir="rtl" role="group" aria-label="A line from Ibn al-Jawzi. Each word opens its meaning.">
+  {
+    line.words.map((word, index) => {
+      const id = `${prefix}${index}`;
+      return (
+        <>
+          <button class="w" type="button" popovertarget={id} style={`anchor-name:--${id}`}>{word.arabic}</button>
+          <div class="card" id={id} popover lang="en" dir="ltr" style={`position-anchor:--${id}`}>
+            <p class="card-gloss">{word.english}</p>
+            <p class="card-note">{word.grammar_note}</p>
+            <audio controls preload="none" src={tracks[`../assets/story/words/${word.audio}`]} aria-label="This word read aloud in Arabic"></audio>
+            <button class="close" type="button" popovertarget={id} popovertargetaction="hide">Close</button>
+          </div>{' '}
+        </>
+      );
+    })
+  }
+</div>

@@ -1,0 +1,221 @@
+{
+ "source": "Sentence 7106 as stored in Supabase, checked against snapshot 62effa92 on 2026-10-31: arabic and english byte for byte, glosses and notes per word. Word text splits the stored arabic on its spaces. Segments are the app classifier output (computeColoredSegments) with mark-only segments merged into their base letter. Word audio is each word row's stored track, copied unchanged.",
+ "scholar": "Ibn al-Jawzi",
+ "work": "Ṣayd al-Khāṭir",
+ "arabic": "وَإِذَا رَأَيْتُ كِتَابًا لَمْ أَرَهُ فَكَأَنِّي وَقَعْتُ عَلَى كَنْزٍ،",
+ "english": "When I saw a book I had not seen before, it was as if I had stumbled upon a treasure.",
+ "audio": "line-7106-ar.mp3",
+ "words": [
+  {
+   "arabic": "وَإِذَا",
+   "english": "and when",
+   "grammar_note": "This token combines the linking wa- with idha, a 'when/whenever' word that sets up a condition. Idha frames what follows as a recurring scenario, 'and whenever...', leading into a then-clause later in the sentence. So the word both connects and opens a conditional time-frame.",
+   "segments": [
+    {
+     "text": "وَ",
+     "color": "grammar-conjunction"
+    },
+    {
+     "text": "إِذَا",
+     "color": "grammar-particle"
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "and",
+     "color": "grammar-conjunction"
+    },
+    {
+     "text": "when",
+     "color": "grammar-particle"
+    }
+   ],
+   "audio": "word-59283.mp3"
+  },
+  {
+   "arabic": "رَأَيْتُ",
+   "english": "I saw",
+   "grammar_note": "A past-tense verb with the -tu ending that marks an 'I' subject. Inside the 'whenever' frame it gives the repeatable trigger: each time I saw. The -tu suffix is what fixes the speaker as the doer.",
+   "segments": [
+    {
+     "text": "رَأَيْ",
+     "color": null
+    },
+    {
+     "text": "تُ",
+     "color": "grammar-verb"
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "I",
+     "color": "grammar-verb"
+    },
+    {
+     "text": "saw",
+     "color": null
+    }
+   ],
+   "audio": "word-59284.mp3"
+  },
+  {
+   "arabic": "كِتَابًا",
+   "english": "a book",
+   "grammar_note": "The object of 'saw', an indefinite noun ('a book') shown by its -an object ending, which marks both that it is unspecified and that it is what the verb acts on. Being indefinite is the point: any previously unseen book triggers the reaction.",
+   "segments": [
+    {
+     "text": "كِتَابًا",
+     "color": null
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "a book",
+     "color": null
+    }
+   ],
+   "audio": "word-59285.mp3"
+  },
+  {
+   "arabic": "لَمْ",
+   "english": "did not",
+   "grammar_note": "A small but powerful negator that, placed before a present-tense verb, pushes its meaning into the past and cancels it: it produces 'had not'. Its trick is that it changes both the time and the polarity of the verb at once, so the following present-looking verb actually means a negated past.",
+   "segments": [
+    {
+     "text": "لَمْ",
+     "color": null
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "did not",
+     "color": null
+    }
+   ],
+   "audio": "word-59286.mp3"
+  },
+  {
+   "arabic": "أَرَهُ",
+   "english": "see it",
+   "grammar_note": "The verb governed by the preceding negator, with -hu ('it') attached as its object pointing back to the book. Because of that negator the verb takes its clipped jussive ending and reads as past, 'had not seen it'. The shortened ending is the visible mark that the negator is controlling this verb.",
+   "segments": [
+    {
+     "text": "أَرَ",
+     "color": null
+    },
+    {
+     "text": "هُ",
+     "color": "grammar-accent"
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "see",
+     "color": null
+    },
+    {
+     "text": "it",
+     "color": "grammar-accent"
+    }
+   ],
+   "audio": "word-59287.mp3"
+  },
+  {
+   "arabic": "فَكَأَنِّي",
+   "english": "so as if I",
+   "grammar_note": "This token bundles fa- ('so/then') with ka'anna ('as if') and the attached 'I'. The fa- introduces the result of the 'whenever' clause, while ka'anna sets up a likeness or simile and braces the following statement. Together they launch the 'it was as though I...' main response.",
+   "segments": [
+    {
+     "text": "فَ",
+     "color": "grammar-conjunction"
+    },
+    {
+     "text": "كَ",
+     "color": "grammar-preposition"
+    },
+    {
+     "text": "أَنِّي",
+     "color": null
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "so",
+     "color": "grammar-conjunction"
+    },
+    {
+     "text": "as",
+     "color": "grammar-preposition"
+    },
+    {
+     "text": "if I",
+     "color": null
+    }
+   ],
+   "audio": "word-59288.mp3"
+  },
+  {
+   "arabic": "وَقَعْتُ",
+   "english": "I stumbled upon",
+   "grammar_note": "A past-tense verb with the -tu 'I' ending, used here in a figurative sense of stumbling onto something. Sitting inside the simile launched by 'as if', it describes the imagined comparison rather than a literal event. The -tu again pins the speaker as the one acting.",
+   "segments": [
+    {
+     "text": "وَقَعْ",
+     "color": null
+    },
+    {
+     "text": "تُ",
+     "color": "grammar-verb"
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "I",
+     "color": "grammar-verb"
+    },
+    {
+     "text": "stumbled upon",
+     "color": null
+    }
+   ],
+   "audio": "word-59289.mp3"
+  },
+  {
+   "arabic": "عَلَى",
+   "english": "on",
+   "grammar_note": "A preposition 'on/upon'. This particular verb of stumbling-onto pairs with 'ala to introduce what one chances upon, so 'ala marks the treasure as the thing happened upon. It also forces the genitive on the noun that follows.",
+   "segments": [
+    {
+     "text": "عَلَى",
+     "color": null
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "on",
+     "color": null
+    }
+   ],
+   "audio": "word-59290.mp3"
+  },
+  {
+   "arabic": "كَنْزٍ،",
+   "english": "a treasure",
+   "grammar_note": "The noun governed by the preceding 'on', indefinite ('a treasure') and in the genitive that the preposition requires. Its indefiniteness keeps the image general, any treasure, fitting the simile. It is the thing the figurative stumbling lands on.",
+   "segments": [
+    {
+     "text": "كَنْزٍ،",
+     "color": null
+    }
+   ],
+   "english_segments": [
+    {
+     "text": "a treasure",
+     "color": null
+    }
+   ],
+   "audio": "word-59291.mp3"
+  }
+ ],
+ "article_path": "/read/a-life-of-reading-and-writing-559"
+}

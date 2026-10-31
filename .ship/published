@@ -1,14 +1,16 @@
 {
   "worker": "openarabic-site",
-  "hash": "82563c64051110dcf65c6c875a90482dd1c105e5d9465decca7f281733adb9da",
-  "hashOf": "build",
-  "workerVersion": "7584ddc6-0036-4a0b-afdc-84b0bf55ec65",
-  "indexSha256": "d04973bcbf5844275108eab209c8162c5b5fa46356aeb0b0137b4f3ff0ae9484",
-  "publishedAt": "2026-10-31T18:22:53.224Z",
+  "hash": "62effa920874ca647a220139cea694fd4840070f73d2de40fb65775756011edc",
+  "hashOf": "snapshot",
+  "buildHash": "e8e048189b9b0d081b3f8e4861ff9488eaf4ed308f9907f769116c3799220d2e",
+  "workerVersion": "07a9cd17-3433-45f1-b2e8-9f1b2e8a7e28",
+  "indexSha256": "90375a307c3a4627845bea4306e7c457ca0fbe69a15eb3aa7a96f6d1a280f3fe",
+  "publishedAt": "2026-10-31T20:20:46.498Z",
   "previous": {
     "hash": "82563c64051110dcf65c6c875a90482dd1c105e5d9465decca7f281733adb9da",
-    "workerVersion": "ad0e7ff0-3b5e-42c8-a35c-4f1dae288d6b",
+    "hashOf": "build",
+    "workerVersion": "7584ddc6-0036-4a0b-afdc-84b0bf55ec65",
     "indexSha256": "d04973bcbf5844275108eab209c8162c5b5fa46356aeb0b0137b4f3ff0ae9484",
-    "publishedAt": "2026-10-31T18:20:29.743Z"
+    "publishedAt": "2026-10-31T18:22:53.224Z"
   }
 }

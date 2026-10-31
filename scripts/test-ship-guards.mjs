@@ -614,6 +614,8 @@ async function main() {
   stops('"side by side" away from the book page', () => edit(PAGE, HEADING, `${HEADING}<p>side by side</p>`), /Banned phrases[\s\S]*"side by side"/);
   stops('A sentence that traces to nothing', () => edit(PAGE, HEADING, `${HEADING}<p>Our app changes lives.</p>`), /traces to nothing[\s\S]*"Our app changes lives\."/);
   stops('A ledger sentence with an added tail', () => edit(PAGE, HEADING, `${HEADING}<p>Free. No ads. No subscription. Today only.</p>`), /traces to nothing[\s\S]*"Today only\."/);
+  stops('English inside an Arabic run still has to trace', () => edit(PAGE, HEADING, `${HEADING}<div lang="ar"><p lang="en">Our app changes lives.</p></div>`), /traces to nothing[\s\S]*"Our app changes lives\."/);
+  stops('A draft word does not clear part of a longer word', () => edit(PAGE, HEADING, `${HEADING}<p>Contactless</p>`), /traces to nothing[\s\S]*"Contactless"/);
   stops('Untraced aria-label', () => edit(PAGE, '<main>', '<main aria-label="Made up label">'), /traces to nothing[\s\S]*"Made up label"/);
   passes('Sentence listed in docs/draft-copy.txt passes', () => {
     fs.appendFileSync(at('docs/draft-copy.txt'), 'A new line for the owner.\n');

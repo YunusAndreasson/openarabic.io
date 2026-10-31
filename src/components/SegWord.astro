@@ -1,0 +1,17 @@
+---
+// DESIGN.md `Coloured word and English`. A word with no coloured part is plain text. Parts come from the classifier, never by hand.
+interface Segment {
+  text: string;
+  color: string | null;
+}
+interface Props {
+  text: string;
+  segments: Segment[];
+  spaced?: boolean;
+}
+const { text, segments, spaced = false } = Astro.props;
+const coloured = segments.some((segment) => segment.color);
+const partClass = (color: string | null) => (color ? color.replace('grammar-', 'part-') : undefined);
+---
+
+{coloured ? <span class="seg-word"><span class="w-plain">{text}</span>{spaced && ' '}<span class="w-seg">{segments.map((segment, index) => <>{spaced && index > 0 && ' '}<span class={partClass(segment.color)}>{segment.text}</span></>)}</span></span> : <span class="seg-word">{text}</span>}
