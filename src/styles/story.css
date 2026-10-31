@@ -165,33 +165,57 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
   @supports (anchor-name: --a) { .card { right: anchor(right); width: var(--space-card-laptop); } }
 }
 
-/* Promo first screen, in the class of qamar360.com. */
+/* The page: a first screen, then one job per screen in one layout. */
 .draft { text-decoration: none; }
-.hero { position: relative; isolation: isolate; min-height: 100svh; overflow: hidden; display: flex; flex-direction: column; background: var(--color-surface); }
-.hero-scene { position: absolute; inset: 0; z-index: -1; background-color: var(--color-surface); background-image: linear-gradient(to bottom, color-mix(in oklch, var(--color-surface) 35%, transparent), transparent 18%, transparent 28%, var(--color-surface) 50%), url('/hero-tall.webp'); background-size: 100% 100%, 100% auto; background-position: top, center top; background-repeat: no-repeat; }
+.hero, .closing { position: relative; isolation: isolate; min-height: 100svh; overflow: hidden; display: flex; flex-direction: column; background: var(--color-surface); }
+.hero-scene { position: absolute; inset: 0; z-index: -1; background-color: var(--color-surface); background-image: linear-gradient(to bottom, color-mix(in oklch, var(--color-surface) 35%, transparent), transparent 16%, transparent 42%, var(--color-surface) 68%), url('/hero-tall.webp'); background-size: 100% 100%, 100% auto; background-position: top, center top; background-repeat: no-repeat; }
 .topbar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1440px; margin-inline: auto; padding: 20px var(--space-gutter); }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-on-surface); font-size: 1.25rem; font-weight: 500; text-decoration: none; }
 .brand svg { color: var(--color-primary); }
 .get { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 18px; border-radius: 999px; background: var(--color-primary); color: var(--color-surface); font-weight: 500; text-decoration: none; }
-.hero-body { flex: 1; display: grid; gap: 40px; width: 100%; max-width: 1440px; margin-inline: auto; padding: 0 var(--space-gutter); }
-.hero-copy { margin-top: 44svh; }
-.hero h1 { font-size: clamp(2.75rem, 11vw, 5.5rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.015em; color: var(--color-on-surface); }
-.lede { max-width: 30rem; margin-top: 16px; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.4; color: var(--color-on-surface); }
-.stores { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.hero .stores { margin-top: 24px; }
+.hero-copy { width: 100%; max-width: 1440px; margin: auto auto 0; padding: 0 var(--space-gutter) 40px; }
+.hero h1 { font-size: clamp(2.75rem, 11vw, 5.5rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.015em; color: var(--color-on-surface); max-width: 12ch; }
+.lede { max-width: 25rem; margin-top: 16px; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.4; color: var(--color-on-surface); }
+.stores { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 24px; }
 .badge { display: inline-block; line-height: 0; }
 .badge img { height: 48px; width: auto; }
-.free { margin-top: 14px; color: var(--color-on-surface-quiet); }
-.phones { position: relative; justify-self: center; width: min(68vw, 280px); margin-bottom: -22%; }
-.phone { display: block; width: 100%; height: auto; border: 7px solid var(--color-surface-raised); outline: 1px solid var(--color-outline); border-radius: 38px; box-shadow: 0 30px 80px var(--color-surface); }
-.phone.front { position: relative; }
-.phone.back { position: absolute; top: 7%; left: -34%; transform: rotate(-6deg); }
-.capture img { border: 6px solid var(--color-surface-raised); outline: 1px solid var(--color-outline); border-radius: 32px; }
+
+.screen { display: flex; flex-direction: column; align-items: center; gap: 32px; width: 100%; max-width: 1200px; min-height: 100svh; margin-inline: auto; padding: 64px var(--space-gutter); }
+.screen h2 { align-self: stretch; font-size: clamp(1.875rem, 4.2vw, 3.25rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
+.phone { display: block; width: auto; height: min(78svh, 680px); max-width: 100%; border: 7px solid var(--color-surface-raised); outline: 1px solid var(--color-outline); border-radius: 38px; }
+.shelf { justify-content: center; }
+.scholars { align-self: stretch; list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: clamp(1.25rem, 3vw, 2rem); color: var(--color-on-surface-quiet); }
+
+/* The live demo: a real line in a phone, and a pulse on one word until someone taps. */
+.try-hint { margin-top: 16px; color: var(--color-primary); font-size: clamp(1.125rem, 2vw, 1.375rem); }
+.phone.live { display: flex; flex-direction: column; justify-content: center; gap: 28px; aspect-ratio: 720 / 1600; padding: 28px 22px; background: var(--color-surface-raised); }
+.live-en { font-size: 1rem; line-height: 1.45; }
+.live .line { --arabic-line: 2.25rem; font-size: 2.25rem; line-height: 1.9; text-align: right; }
+.live-attr { color: var(--color-on-surface-quiet); font-size: var(--type-small-size); }
+.live .w { position: relative; }
+.live .w:nth-of-type(3)::after { content: ''; position: absolute; left: 50%; top: 58%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: var(--color-primary); opacity: 0; pointer-events: none; animation: tap-hint 2.4s ease-out infinite; }
+.live .line:has(:popover-open) .w::after { animation: none; }
+@keyframes tap-hint { 0% { opacity: 0; transform: scale(0.5); } 18% { opacity: 0.55; transform: scale(0.8); } 40% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; transform: scale(1.5); } }
+@media (prefers-reduced-motion: reduce) { .live .w:nth-of-type(3)::after { animation: none; } }
+
+.phone.live { anchor-name: --live; }
+@supports (anchor-name: --a) {
+  .live .card { right: calc(anchor(--live right) + 10px); width: calc(anchor-size(--live width) - 20px); }
+}
+
+.closing { min-height: 90svh; }
+.closing .hero-scene { transform: scaleX(-1); }
+.closing-copy { width: 100%; max-width: 1200px; margin: auto auto 0; padding: 0 var(--space-gutter) 56px; }
+.closing h2 { font-size: clamp(2.25rem, 7vw, 4.5rem); font-weight: 500; line-height: 1.05; }
+.note { max-width: 34rem; margin-top: 20px; color: var(--color-on-surface-quiet); font-size: var(--type-small-size); }
+
 @media (min-width: 56.25rem) {
-  .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 40%, transparent) 36%, transparent 55%), linear-gradient(to bottom, transparent 78%, var(--color-surface)), url('/hero-wide.webp'); background-size: 100% 100%, 100% 100%, cover; background-position: top, top, right center; }
-  .hero-body { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) minmax(0, 0.8fr); align-items: center; }
-  .hero-copy { margin-top: -5svh; }
-  .lede { max-width: 25rem; }
-  .phone.back { left: -24%; top: 9%; }
-  .phones { width: min(22vw, 270px); justify-self: center; margin: 0; align-self: end; margin-bottom: -10svh; }
+  .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 45%, transparent) 34%, transparent 52%), linear-gradient(to bottom, transparent 82%, var(--color-surface)), url('/hero-wide.webp'); background-size: 100% 100%, 100% 100%, cover; background-position: top, top, center; }
+  .hero-copy { margin-block: auto; padding-bottom: 72px; }
+  .screen { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 72px; }
+  .screen h2 { max-width: 15ch; }
+  .phone.live { height: min(78svh, 680px); }
+  .shelf { grid-template-columns: 1fr 1fr; }
+  .closing .hero-scene { transform: none; }
+  .closing-copy { margin-block: auto; }
 }

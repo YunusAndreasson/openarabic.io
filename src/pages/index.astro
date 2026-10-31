@@ -1,20 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
-import Attribution from '../components/Attribution.astro';
-import Capture from '../components/Capture.astro';
-import SegWord from '../components/SegWord.astro';
 import StoreLinks from '../components/StoreLinks.astro';
-import StoreQr from '../components/StoreQr.astro';
 import TappableLine from '../components/TappableLine.astro';
-import '../styles/story.css';
 import line from '../data/story-line.json';
+import '../styles/story.css';
 import captureReader from '../assets/story/01-reader-classical-line.webp?url';
-import captureCard from '../assets/story/02-word-card.webp?url';
+import captureAudio from '../assets/story/03-audio-playing.webp?url';
 import captureReview from '../assets/story/07-voice-review-listening.webp?url';
-import lineAudio from '../assets/story/line-7106-ar.mp3?url';
+import captureHorizon from '../assets/story/05-memory-horizon-breakdown.webp?url';
 
-// Screen 3 is the one word from the line that shows colour best. DESIGN.md `Story`.
-const colourWord = line.words[5];
+// One job per screen: one line, one phone. Stand-in captures until the new set lands.
+const screens = [
+  { line: 'Read the Arabic itself, with English line by line.', src: captureReader, alt: 'The app’s reader, with English above each classical Arabic line.' },
+  { line: 'Arabic audio on every word and every line.', src: captureAudio, alt: 'The app playing a text aloud.' },
+  { line: 'You answer out loud before the app shows the meaning.', src: captureReview, alt: 'The app’s voice review, listening for your answer to one Arabic word.' },
+  { line: 'Words return when your predicted recall falls to 90%.', src: captureHorizon, alt: 'The app’s memory horizon, showing how long practised words hold.' },
+];
 ---
 
 <Base>
@@ -22,122 +23,67 @@ const colourWord = line.words[5];
     <section class="hero" id="top">
       <div class="hero-scene" aria-hidden="true"></div>
       <header class="topbar">
-        <a class="brand" href="/" aria-label="OpenArabic, home">
+        <a class="brand" href="/" aria-label="OpenArabic">
           <svg viewBox="0 0 1000 1000" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M0 500a500 500 0 1 1 1000 0a500 500 0 1 1-1000 0ZM106.9 500a393.1 393.1 0 1 0 786.2 0a393.1 393.1 0 1 0-786.2 0Z" /></svg>
           <span>OpenArabic</span>
         </a>
         <a class="get" href="/download-app?from=home">Get the app</a>
       </header>
-      <div class="hero-body">
-        <div class="hero-copy">
-          <h1><span class="draft">Read the classics in Arabic.</span></h1>
-          <p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>
-          <StoreLinks />
-          <p class="free">Free. No ads. No subscription.</p>
-        </div>
-        <div class="phones" aria-hidden="true">
-          <img class="phone back" src={captureCard} width="720" height="1600" alt="" />
-          <img class="phone front" src={captureReader} width="720" height="1600" alt="" />
-        </div>
+      <div class="hero-copy">
+        <h1><span class="draft">Read the classics in Arabic.</span></h1>
+        <p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>
+        <StoreLinks />
       </div>
     </section>
 
-    <section class="beat bookend gap" id="screen-1">
-      <div class="offer">
-        <h2><span class="draft">Tap a word.</span></h2>
-        <p class="after-word">One tap gives you the meaning, a grammar note and audio.</p>
+    {
+      screens.slice(0, 1).map((screen) => (
+        <section class="screen">
+          <h2>{screen.line}</h2>
+          <img class="phone" src={screen.src} width="720" height="1600" decoding="async" loading="lazy" alt={screen.alt} />
+        </section>
+      ))
+    }
+
+    <section class="screen" id="try">
+      <div>
+        <h2>One tap gives you the meaning, a grammar note and audio.</h2>
+        <p class="try-hint"><span class="draft">Try it. Tap a word.</span></p>
       </div>
-      <div class="line-col">
+      <div class="phone live">
+        <p class="live-en" lang="en">{line.english}</p>
         <TappableLine prefix="w" />
-        <div class="attr-row"><Attribution /></div>
+        <p class="live-attr">{line.scholar}, {line.work}</p>
       </div>
     </section>
 
-    <section class="beat gap-phone" id="screen-2">
-      <div class="words"><h2>One tap gives you the meaning, a grammar note and audio.</h2></div>
-      <Capture src={captureCard} alt="The app’s word card for الْمِسْكُ, showing its meaning, audio button and root."><span class="draft">Emulator capture of a development build, 1448.5.5.</span></Capture>
+    {
+      screens.slice(1).map((screen) => (
+        <section class="screen">
+          <h2>{screen.line}</h2>
+          <img class="phone" src={screen.src} width="720" height="1600" decoding="async" loading="lazy" alt={screen.alt} />
+        </section>
+      ))
+    }
+
+    <section class="screen shelf">
+      <h2>Excerpts from 22 classical works by six scholars</h2>
+      <ul class="scholars">
+        <li>Ibn al-Jawzi</li>
+        <li>Ibn al-Qayyim</li>
+        <li>an-Nawawi</li>
+        <li>Ibn Taymiyyah</li>
+        <li>al-Bukhari</li>
+        <li>adh-Dhahabi</li>
+      </ul>
     </section>
 
-    <div class="bar-wrap">
-      <section class="beat" id="screen-3">
-        <div class="words"><h2>Colour shows how multi-part words are built.</h2></div>
-        <div class="object big">
-          <div class="big-word" lang="ar" dir="rtl"><SegWord text={colourWord.arabic} segments={colourWord.segments} /></div>
-          <p class="big-gloss" lang="en" dir="ltr"><SegWord text={colourWord.english} segments={colourWord.english_segments} spaced /></p>
-        </div>
-      </section>
-
-      <section class="beat gap" id="screen-4">
-        <div class="words">
-          <h2>Arabic audio on every word and every line.</h2>
-          <p class="after-word">Every text plays English first, then Arabic, or Arabic only.</p>
-          <p class="quiet after-word"><span class="draft">The audio uses AI voices.</span></p>
-        </div>
-        <div class="object">
-          <audio controls preload="none" src={lineAudio} aria-label="The line from Ibn al-Jawzi, read aloud in Arabic"></audio>
-          <div class="attr-row"><Attribution /></div>
-        </div>
-      </section>
-
-      <section class="beat gap" id="screen-5">
-        <div class="words">
-          <h2>English above every Arabic line.</h2>
-          <p class="quiet after-word"><span class="draft">The English is machine-translated.</span></p>
-        </div>
-        <Capture src={captureReader} alt="The app’s reader, with an English line above each classical Arabic line."><span class="draft">Ibn al-Qayyim, Ighāthat al-Lahfān. Emulator capture of a development build, 1448.5.5.</span></Capture>
-      </section>
-
-      <section class="beat gap" id="screen-6">
-        <div class="words">
-          <h2>You answer out loud before the app shows the meaning.</h2>
-          <p class="after-word">Words return when your predicted recall falls to 90%.</p>
-        </div>
-        <Capture src={captureReview} alt="The app’s voice review, showing one Arabic word while it listens for your answer."><span class="draft">Emulator capture of a development build, 1448.5.5.</span></Capture>
-      </section>
-
-      <section class="beat gap" id="screen-7">
-        <div class="words">
-          <h2>Excerpts from 22 classical works by six scholars</h2>
-          <p class="after-word">Ibn al-Jawzi, Ibn al-Qayyim, an-Nawawi, Ibn Taymiyyah, al-Bukhari, adh-Dhahabi.</p>
-          <p class="after-thought">Sorted by difficulty. Most texts are advanced; 48 are easier.</p>
-          <p class="quiet after-word"><span class="draft">Counted on 31 October 2026.</span></p>
-        </div>
-      </section>
-
-      <div class="store-bar"><div class="store-bar-inner"><StoreLinks /></div></div>
-    </div>
-
-    <section class="beat gap lift" id="screen-8">
-      <h2 class="vh">Read the line</h2>
-      <input class="vh lift-input" type="checkbox" id="lift" aria-label="Take the English away" />
-      <div class="stage">
-        <p class="sentence en" lang="en" dir="ltr">{line.english}</p>
-        <div class="pairs" dir="rtl">
-          {
-            line.words.map((word) => (
-              <div class="pair">
-                <span class="pair-ar" lang="ar" dir="rtl"><SegWord text={word.arabic} segments={word.segments} /></span>
-                <span class="pair-gloss en" lang="en" dir="ltr"><SegWord text={word.english} segments={word.english_segments} spaced /></span>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      <div class="attr-row lift-attr"><Attribution /></div>
-      <label class="lift-control" for="lift"><span class="take"><span class="draft">Take the English away</span></span>{' '}<span class="bring"><span class="draft">Bring the English back</span></span></label>
-    </section>
-
-    <section class="beat bookend gap-phone-top" id="screen-9">
-      <div class="line-col">
-        <TappableLine prefix="r" />
-        <div class="attr-row"><Attribution /></div>
-      </div>
-      <div class="offer">
-        <h2><span class="draft">That was this page.</span></h2>
-        <p class="after-word"><span class="draft">In the app, the English stays above the line.</span></p>
-        <div class="after-thought"><StoreLinks /></div>
-        <div class="qr-plate after-thought"><StoreQr /></div>
-        <p class="quiet after-thought"><span class="draft">Free as sadaqah jariyah.</span></p>
+    <section class="closing">
+      <div class="hero-scene" aria-hidden="true"></div>
+      <div class="closing-copy">
+        <h2>Free. No ads. No subscription.</h2>
+        <StoreLinks />
+        <p class="note">An account is needed in the app. <span class="draft">The audio uses AI voices. The English is machine-translated.</span></p>
       </div>
     </section>
   </main>
