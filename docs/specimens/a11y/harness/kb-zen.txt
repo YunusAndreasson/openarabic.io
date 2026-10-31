@@ -1,0 +1,38 @@
+stops nojs: Tabs from page top to the store link after the text = 343
+stops a: Tabs from page top to the store link after the text = 343
+stops b: Tabs from page top to the store link after the text = 3
+stops c: Tabs from page top to the store link after the text = 24
+skip: A||Skip past the text
+ after Enter: H2#after||Get the app y 5168
+ next Tab: A||App Store
+C sentence: P|button|كُنَّا مَعَ رَسُولِ 
+ Enter -> A|button|كُنَّا
+ Tab -> A|button|مَعَ
+ Space opens: true DIV#sheet|dialog|withA preposition me | with
+ Esc -> A|button|مَعَ open false same word true
+ Enter opens: true
+ Tabs -> BUTTON#sc||Close
+ Close -> A|button|مَعَ same true open false
+ Tab off Close -> A|button|مَعَ same true open false y 0
+ Shift+Tab off card -> A|button|مَعَ open false
+ Esc -> P|button|كُنَّا مَعَ رَسُولِ 
+ Tab -> P|button|فَنَهَسَ مِنْهَا نَه
+ Shift+Tab -> P|button|كُنَّا مَعَ رَسُولِ 
+B first: A||كُنَّا
+ Left -> A||مَعَ
+ Down -> A||فَنَهَسَ
+ Enter open true
+ Esc -> A||فَنَهَسَ
+nojs word: A||كُنَّا
+ Enter -> /word/we-were-9672
+story word: BUTTON||رَأَيْتُ
+ Enter -> P||I saw
+ Esc -> BUTTON||رَأَيْتُ
+ Tab -> BUTTON||Close
+ Close -> BUTTON||رَأَيْتُ
+reveal: INPUT#lift|| solid 2px
+ Space checked true English hidden label bring visible
+ Space checked false English visible
+mouse click word: open true gloss the Messenger
+ Esc -> A|button|رَسُولِ
+mouse drag: selected chars 26 open false
