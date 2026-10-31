@@ -17,3 +17,7 @@
 - Anything that looks like an illustration, a game or generic AI art.
 
 **Rule:** Claude directs and critiques each candidate at full size and at 390 px. At least two rounds. The real Arabic line, logo and app capture are composited on the page afterwards, never generated.
+
+## Round 2 critique
+
+Round 1 worked as a mood. To fix: the moon is too bright and stock-like, so remove the visible moon and keep cold blue light on the window. The gothic arch and European library read generic: use a plain arched stone window with simple dark wooden lattice, thick plaster walls, and low shelves of old leather-bound books, without any costume or decoration. Keep the man on the right third with the left half very dark and calm for text. Add a modern phone lying face up on the desk beside the open book, its screen softly lit but showing no readable content, so it says old books and an app, tonight. Reject the cross-like shape in tall-2: no crosses or cross-shaped window bars or handles anywhere.
