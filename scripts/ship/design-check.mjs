@@ -76,8 +76,9 @@ export function colourBan() {
   for (const hit of findColourLiterals(body, { named: false })) problems.push(`DESIGN.md below the front matter: ${hit}`);
 
   const generated = new Set([CSS_PATH, TS_PATH]);
+  // The store badges are official artwork, used unmodified.
   const files = [...walk(path.join(ROOT, 'src')), ...walk(path.join(ROOT, 'public'))].filter(
-    (file) => SCANNED.test(file) && !generated.has(rel(file)),
+    (file) => !/badge-[a-z-]+\.svg$/.test(file) && SCANNED.test(file) && !generated.has(rel(file)),
   );
   for (const file of files) {
     for (const hit of findColourLiterals(fs.readFileSync(file, 'utf8'))) problems.push(`${rel(file)}: ${hit}`);

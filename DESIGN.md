@@ -103,6 +103,8 @@ components:
   part-accent: {backgroundColor: "{colors.surface}", textColor: "{colors.grammar-accent}"}
 ---
 
+> **Visual direction withdrawn, 2026-10-31.** The owner rejected the page these rules produced. The `Overview`, `Lineage`, `Story`, `Layout` and `Imagery` sections and the taste parts of `Motion` are no longer authority, and the `Review` matrix only checks technical things. The bar is now the approved first screen in `src/pages/index.astro`, alongside the owner's current site for structure and qamar360.com for cinematic quality. Tokens, Arabic text rules and budgets still apply. This file gets rewritten short once the owner approves the home page. See `docs/decisions/2026-10-31-design-reset.md`.
+
 # OpenArabic design system
 
 Everything here is a current rule. Dated decisions live in `docs/decisions/`, how a rule came about
