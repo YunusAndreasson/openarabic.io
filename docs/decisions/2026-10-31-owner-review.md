@@ -64,6 +64,10 @@ The owner: "main focus is the new site, we will abandon the old".
 - **Not abandoned:** the database. The app reads it too, so the content write migration still matters, and with no admin to keep, its main cost goes away.
 - **Still needed from the old site:** URL parity and redirects, because search traffic follows those URLs. Publishing and reviews still need a route after cutover, as in Round 6.
 
+## Later: the emotion test
+
+The owner chose to skip the test entirely, after seeing the recommendation against it. No learner has seen concept A, so the pick and the design remain a judgement. Concept A's main risk, a pay-off too quiet to notice, stays **unproven**. Store taps per visit after launch is the first real evidence. This overrides the plan's fallback of making the test the first task of the build.
+
 ## Round 5: measurement and privacy
 
 | Question | Decision | Notes |

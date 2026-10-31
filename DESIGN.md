@@ -519,8 +519,10 @@ Everything works with no script and with reduced motion. The static state is the
 - `prefers-reduced-motion: reduce`: every duration is 0. Nothing else changes.
 
 **Budgets.** The story page's offer, tap, lift, colour gate and store bar use no JavaScript.
-**JS budget: pending spike** (the word-tap spike in `docs/decisions/`); set the figure from
-that measurement and enforce it in CI. Others: LCP at most 2.5s, INP at most 200ms, CLS at most 0.1,
+**JS budget, gzip, enforced in CI** (from `docs/decisions/2026-10-31-spike-word-tap.md`): 0 on word,
+dictionary, category and legal pages; 1KB on the reader; at most 0.25KB on the story page, only if the
+old-iOS colour gate can't be done without script; 1.5KB hard cap on any page, which includes about
+0.5KB reserved for the store-tap counter. Others: LCP at most 2.5s, INP at most 200ms, CLS at most 0.1,
 CSS at most 12KB gzip, first-view fonts at most 110KB, phone first load at most 1MB.
 
 **Sound.** Silent by default, sound only on a tap. Male voices, no instruments. Silence beats a bad
