@@ -1,0 +1,73 @@
+/* Concept C: the first year. One bar grows from the Arabic margin to the English margin. */
+h1 { font-size: 1.3125rem; font-weight: 500; line-height: 1.25; }
+h2 { font-size: 1.5rem; font-weight: 400; line-height: 1.25; }
+main > section, .with-bar > section { padding-inline: var(--gutter); }
+.quiet { color: var(--quiet); font-size: 1rem; }
+.who { text-align: right; }
+.en { color: var(--quiet); font-size: 1.0625rem; }
+
+.open { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; }
+.open-en { display: flex; flex-direction: column; gap: 6px; }
+.open .stores { margin-top: 8px; }
+.line { line-height: 2.05; }
+
+.beat.first { padding-top: 8px; }
+.beat { padding-top: var(--gap); display: flex; flex-direction: column; gap: 12px; }
+.big { font-size: clamp(76px, 22vw, 120px); line-height: 1.75; }
+.big-en { font-size: 1.75rem; text-align: right; line-height: 1.2; }
+
+/* An underline, not a hue: colour stays reserved for grammar */
+.known { text-decoration: underline solid var(--ink) 2px; text-underline-offset: .32em; }
+
+.bar {
+  position: relative;
+  height: 28px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.bar::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 3px;
+  width: var(--w);
+  background: var(--ink);
+}
+.bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 1px;
+  height: 1px;
+  background: var(--line);
+  z-index: -1;
+}
+.bar span { font-size: 1rem; color: var(--quiet); }
+
+.close { padding-top: var(--gap); padding-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+
+@media (min-width: 900px) {
+  :root { --gutter: 48px; --ar-size: clamp(44px, min(5vw, 10svh), 72px); }
+  .open {
+    display: grid;
+    grid-template-columns: minmax(18rem, 2fr) 5fr;
+    column-gap: 56px;
+    align-content: end;
+    padding-block: 24px;
+    min-height: calc(100svh - 64px);
+  }
+  .open > * { grid-column: 2; }
+  .open-en { grid-column: 1; grid-row: 1 / span 2; align-self: end; }
+  .beat { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; }
+  .beat > * { grid-column: 2; }
+  .beat h2, .beat > p:not(.ar):not(.who):not(.big-en):not(.en) { grid-column: 1; }
+  .storebar .store { flex: 0 0 11rem; }
+  .close .stores { max-width: 24rem; }
+  .beat .en { text-align: right; }
+  .beat .shot { justify-self: end; }
+  .beat p.quiet { grid-column: 1; grid-row: 2; }
+}

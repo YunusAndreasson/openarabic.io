@@ -1,0 +1,60 @@
+/* Concept B: a thousand years. The rule's length is time, at one scale. */
+:root { --px-per-year: .26px; }
+h1 { font-size: 1.3125rem; font-weight: 500; line-height: 1.25; }
+h2 { font-size: 1.5rem; font-weight: 400; line-height: 1.25; }
+main > section, main > .span, .with-bar > section, .with-bar > .span { margin-inline: var(--gutter); }
+.quiet { color: var(--quiet); font-size: 1rem; }
+.who { text-align: right; }
+
+.yr { font-size: clamp(44px, 12vw, 72px); font-weight: 300; line-height: 1; color: var(--quiet); }
+
+.open { display: flex; flex-direction: column; gap: 4px; padding-top: 8px; }
+.open .yr { font-size: 36px; }
+.open-en { display: flex; flex-direction: column; gap: 4px; }
+.open .stores { margin-top: 8px; }
+.line { line-height: 2.05; }
+
+.span {
+  width: 1px;
+  height: calc(var(--years) * var(--px-per-year));
+  background: var(--quiet);
+  margin-block: 16px;
+}
+
+.era { display: flex; flex-direction: column; gap: 4px; }
+.en { font-size: 1.0625rem; color: var(--quiet); }
+.say { margin-top: 12px; font-size: 1.3125rem; line-height: 1.25; }
+
+.now { display: flex; flex-direction: column; gap: 12px; }
+.yr-now { font-size: clamp(96px, 30vw, 240px); font-weight: 300; line-height: .95; color: var(--ink); }
+
+.close { padding-top: var(--gap); padding-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+
+@media (min-width: 900px) {
+  :root { --gutter: 48px; --ar-size: clamp(44px, min(5vw, 10svh), 72px); --px-per-year: .3px; }
+  .open {
+    display: grid;
+    grid-template-columns: minmax(18rem, 2fr) 5fr;
+    column-gap: 56px;
+    align-content: end;
+    padding-block: 24px;
+    min-height: calc(100svh - 64px);
+  }
+  .open > * { grid-column: 2; }
+  .open-en { grid-column: 1; grid-row: 1 / span 3; align-self: end; }
+  .open .yr { font-size: 64px; }
+  .era { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; }
+  .era .yr { grid-column: 1; grid-row: 1 / span 2; }
+  .era .line, .era .en, .era .who { grid-column: 2; }
+  .era .en { text-align: right; }
+  .era .say { grid-column: 1; grid-row: 3; }
+  .now { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; }
+  .now > * { grid-column: 1; }
+  .now .shot { grid-column: 2; grid-row: 1 / span 5; justify-self: end; }
+  .storebar .store { flex: 0 0 11rem; }
+  .close { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; }
+  .close > * { grid-column: 1; }
+  .close .line, .close .who { grid-column: 2; }
+  .close .line { grid-row: 1 / span 4; }
+  .close .who { grid-row: 5; }
+}

@@ -1,0 +1,105 @@
+/* Concept A: one sentence. Arabic holds the right margin, English the left. */
+h1 { font-size: 1.3125rem; font-weight: 500; line-height: 1.25; }
+h2 { font-size: 1.5rem; font-weight: 400; line-height: 1.25; max-width: 22ch; }
+main > section, .with-bar > section { padding-inline: var(--gutter); }
+
+.quiet { color: var(--quiet); font-size: 1rem; }
+.who { text-align: right; }
+
+.open {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+}
+.open-en { display: flex; flex-direction: column; gap: 6px; }
+.open-en .stores { margin-top: 6px; }
+
+.line { line-height: 2.05; }
+
+.beat { padding-top: var(--gap); display: flex; flex-direction: column; gap: 12px; }
+.beat-card { padding-top: 8px; }
+
+.card {
+  background: var(--raised);
+  border-top: 1px solid var(--line);
+  padding: 8px var(--gutter) 16px;
+  margin-inline: calc(-1 * var(--gutter));
+}
+.card-word { font-size: 44px; text-align: center; }
+.card .g-en { text-align: center; }
+.card .g-note { text-align: center; max-width: 30rem; margin-inline: auto; }
+
+.big { font-size: clamp(76px, 24vw, 128px); line-height: 1.75; text-align: right; }
+.big-en { font-size: 1.75rem; line-height: 1.2; text-align: right; }
+
+
+/* The line with its English: the English can be taken away with a tap */
+.lift-box { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.stage { display: flex; flex-direction: column; gap: 12px; }
+.whole { font-size: 1.125rem; }
+.pairs { display: flex; flex-wrap: wrap; gap: 0 10px; justify-content: flex-start; }
+.pair { display: inline-flex; flex-direction: column; align-items: center; min-width: 44px; }
+.pair-ar { line-height: 1.75; }
+.pair-en { font-size: .9375rem; line-height: 1.15; text-align: center; max-width: 8ch; min-height: 2.3em; }
+.off { transition: opacity .3s linear; }
+.lift-box:checked ~ .stage .off { opacity: 0; visibility: hidden; }
+
+.lift {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--action);
+  color: var(--action);
+  cursor: pointer;
+}
+.lift-box:focus-visible + .stage + .lift { outline: 2px solid var(--action); outline-offset: 2px; }
+.lift-b { display: none; }
+.lift-box:checked ~ .lift .lift-a { display: none; }
+.lift-box:checked ~ .lift .lift-b { display: inline; }
+
+.close { padding-top: var(--gap); padding-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+.close .after { margin-top: 16px; }
+
+@media (min-width: 900px) {
+  :root { --gutter: 48px; --ar-size: clamp(44px, min(5.5vw, 11svh), 84px); }
+
+  .open {
+    display: grid;
+    grid-template-columns: minmax(18rem, 2fr) 5fr;
+    grid-template-rows: 1fr;
+    column-gap: 56px;
+    align-items: end;
+    min-height: calc(100svh - 64px);
+    padding-block: 24px;
+  }
+  .open-en { grid-column: 1; grid-row: 1; }
+  .open-ar { grid-column: 2; grid-row: 1; }
+
+  .beat { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; align-items: start; }
+  .beat > * { grid-column: 1; }
+  h2 { font-size: 1.75rem; }
+
+  .beat-card .card, .beat-colour .big, .beat-colour .big-en,
+  .beat-hear audio { grid-column: 2; grid-row: 1 / span 4; }
+  .beat-colour .big-en { grid-row: 3; }
+  .beat-colour .big { grid-row: 1 / span 2; }
+  .card { margin: 0; }
+  .beat .shot { grid-column: 2; grid-row: 1 / span 4; justify-self: end; }
+
+  .beat-lift { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; }
+  .stage { grid-column: 2; grid-row: 1; }
+  .lift { grid-column: 1; grid-row: 1; align-self: end; }
+  .pair-en { font-size: 1.0625rem; max-width: 12ch; }
+  .whole { text-align: right; }
+
+  .close { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: 56px; row-gap: 8px; }
+  .close > * { grid-column: 1; }
+  .close .line, .close .who { grid-column: 2; }
+  .close .line { grid-row: 1 / span 5; align-self: start; }
+  .close .who { grid-row: 6; }
+  .storebar { padding-inline: var(--gutter); }
+  .storebar .store { flex: 0 0 11rem; }
+}

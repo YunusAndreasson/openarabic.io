@@ -55,6 +55,15 @@ Asked before the 2026-10-31 crash and answered afterwards. Each answer was picke
 | Product name | OpenArabic: Read the Classics | Differs from the live App Store and Play titles and from `app.json` |
 | Al-Fawaid PDF | Free to share | The Terms forbid redistribution, so they need an exception for the PDF, in the app repo |
 
+## Later: the old site
+
+The owner: "main focus is the new site, we will abandon the old".
+
+- **Live-site fix:** not deployed and not worked on further. `~/Work/open-arabic-site-fix` stays as a reference for the consent, rating and catalogue logic and the corrected copy. Until cutover, openarabic.io keeps its false claims and runs GA4 without consent.
+- **Old Worker:** `openarabic-web` keeps serving the site until cutover and stays available for rollback. The hard rules in `AGENTS.md` still apply.
+- **Not abandoned:** the database. The app reads it too, so the content write migration still matters, and with no admin to keep, its main cost goes away.
+- **Still needed from the old site:** URL parity and redirects, because search traffic follows those URLs. Publishing and reviews still need a route after cutover, as in Round 6.
+
 ## Round 5: measurement and privacy
 
 | Question | Decision | Notes |
