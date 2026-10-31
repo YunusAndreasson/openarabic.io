@@ -1,0 +1,36 @@
+# Third-party agent skills are a cache, not source. `skills-lock.json` IS
+# tracked; downloaded files are restored from it, like node_modules from a
+# lockfile. Skills we write ourselves get re-included here by name.
+.claude/skills/*
+.agents/
+.claude/settings.local.json
+.claude/projects/
+
+# Per-developer editor and agent config
+.codex/
+.opencode/
+.zed/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+.wrangler/
+worker-configuration.d.ts
+
+# Secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# Raw analytics and interview material: may hold personal data
+docs/research/raw/
+
+.DS_Store
+*.log
