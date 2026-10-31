@@ -11,10 +11,10 @@ import captureHorizon from '../assets/story/05-memory-horizon-breakdown.webp?url
 
 // One job per screen: one line, one phone. Stand-in captures until the new set lands.
 const screens = [
-  { line: 'Read the Arabic itself, with English line by line.', src: captureReader, alt: 'The app’s reader, with English above each classical Arabic line.' },
-  { line: 'Arabic audio on every word and every line.', src: captureAudio, alt: 'The app playing a text aloud.' },
-  { line: 'You answer out loud before the app shows the meaning.', src: captureReview, alt: 'The app’s voice review, listening for your answer to one Arabic word.' },
-  { line: 'Words return when your predicted recall falls to 90%.', src: captureHorizon, alt: 'The app’s memory horizon, showing how long practised words hold.' },
+  { word: 'Read', line: 'Read the Arabic itself, with English line by line.', src: captureReader, alt: 'The app’s reader, with English above each classical Arabic line.' },
+  { word: 'Listen', line: 'Arabic audio on every word and every line.', src: captureAudio, alt: 'The app playing a text aloud.' },
+  { word: 'Speak', line: 'You answer out loud before the app shows the meaning.', src: captureReview, alt: 'The app’s voice review, listening for your answer to one Arabic word.' },
+  { word: 'Remember', line: 'Words return when your predicted recall falls to 90%.', src: captureHorizon, alt: 'The app’s memory horizon, showing how long practised words hold.' },
 ];
 ---
 
@@ -39,15 +39,16 @@ const screens = [
     {
       screens.slice(0, 1).map((screen) => (
         <section class="screen">
-          <h2>{screen.line}</h2>
+          <div class="head"><h2><span class="draft">{screen.word}</span></h2><p>{screen.line}</p></div>
           <img class="phone" src={screen.src} width="720" height="1600" decoding="async" loading="lazy" alt={screen.alt} />
         </section>
       ))
     }
 
     <section class="screen" id="try">
-      <div>
-        <h2>One tap gives you the meaning, a grammar note and audio.</h2>
+      <div class="head">
+        <h2><span class="draft">Tap</span></h2>
+        <p>One tap gives you the meaning, a grammar note and audio.</p>
         <p class="try-hint"><span class="draft">Try it. Tap a word.</span></p>
       </div>
       <div class="phone live">
@@ -60,14 +61,14 @@ const screens = [
     {
       screens.slice(1).map((screen) => (
         <section class="screen">
-          <h2>{screen.line}</h2>
+          <div class="head"><h2><span class="draft">{screen.word}</span></h2><p>{screen.line}</p></div>
           <img class="phone" src={screen.src} width="720" height="1600" decoding="async" loading="lazy" alt={screen.alt} />
         </section>
       ))
     }
 
     <section class="screen shelf">
-      <h2>Excerpts from 22 classical works by six scholars</h2>
+      <div class="head"><h2><span class="draft">The library</span></h2><p>Excerpts from 22 classical works by six scholars</p></div>
       <ul class="scholars">
         <li>Ibn al-Jawzi</li>
         <li>Ibn al-Qayyim</li>
