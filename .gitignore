@@ -37,4 +37,6 @@ docs/research/raw/
 
 # Ship state: `.ship/published` is committed, the rest stays on this machine
 .ship/lock
+.ship/preview-url
+.ship/published.tmp
 .ship/snapshots/

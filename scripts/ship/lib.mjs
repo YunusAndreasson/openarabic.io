@@ -8,10 +8,9 @@ export const WORKER = 'openarabic-site';
 export const LIVE_WORKER = 'openarabic-web';
 export const LIVE_DOMAIN = 'openarabic.io';
 
-// Task 1.3 turns this on, after the D16 exception is in AGENTS.md. Until then nothing can upload.
-export const REAL_DEPLOYS_ALLOWED = false;
-export const REAL_DEPLOY_REFUSAL =
-  'Real deploys are off until task 1.3, which waits for the D16 exception in AGENTS.md. Use --dry-run.';
+// On since task 1.3, under D16: the noindexed workers.dev preview only. The off switch for every upload and rollback.
+export const REAL_DEPLOYS_ALLOWED = true;
+export const REAL_DEPLOY_REFUSAL = 'Real deploys are switched off in scripts/ship/lib.mjs. Use --dry-run.';
 
 /** A check that stops the run. The message is what the owner reads. */
 export class ShipFailure extends Error {}

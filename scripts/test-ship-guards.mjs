@@ -2,7 +2,7 @@
 // `pnpm ship:test`: seeds each failure in docs/site-plan.md Phase 1 and proves `pnpm ship --dry-run`
 // stops on it, before any upload. Everything runs in a throwaway copy of the repo, so a seed can't be
 // left behind or collide with other work here. The copy's wrangler is a spy, which also proves nothing
-// reached it. Real wrangler is never called.
+// reached it, and real runs meet a stubbed edge loaded with --import. Real wrangler is never called, and no real preview is requested.
 import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
@@ -15,6 +15,9 @@ const COPY = fs.mkdtempSync(path.join(os.tmpdir(), 'openarabic-ship-test-'));
 const SOURCES = ['astro.config.mjs', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'tsconfig.json', 'wrangler.jsonc', 'DESIGN.md', 'PRODUCT.md', 'docs/draft-copy.txt', 'public', 'scripts', 'src'];
 const GENERATED = new Set(['node_modules', 'dist', '.astro', '.wrangler', '.ship']);
 const SPY_LOG = path.join(COPY, 'wrangler-spy.log');
+const EDGE_STUB = path.join(COPY, 'edge-stub.mjs');
+const NEW_VERSION = 'aaaaaaaa-2222-4333-8444-555555555555';
+const PREVIEW = 'https://openarabic-site.stub.workers.dev';
 
 function hashTree(root, entries) {
   const hash = createHash('sha256');
@@ -41,7 +44,35 @@ function prepare() {
   for (const name of fs.readdirSync(path.join(REPO, 'node_modules/.bin'))) {
     if (name !== 'wrangler') fs.copyFileSync(path.join(REPO, 'node_modules/.bin', name), path.join(modules, '.bin', name));
   }
-  fs.writeFileSync(path.join(modules, '.bin/wrangler'), `#!/bin/sh\necho "$@" >> "${SPY_LOG}"\n`, { mode: 0o755 });
+  fs.writeFileSync(path.join(modules, '.bin/wrangler'), `#!/bin/sh
+echo "$@" >> "${SPY_LOG}"
+case "$1" in
+  deploy)
+    [ -n "$SPY_DEPLOY_FAIL" ] && exit 1
+    printf '{"type":"deploy","version":1,"worker_name":"%s","version_id":"${NEW_VERSION}","targets":["%s"]}\\n' "\${SPY_WORKER:-openarabic-site}" "\${SPY_TARGET:-${PREVIEW}}" >> "$WRANGLER_OUTPUT_FILE_PATH"
+    ;;
+  rollback)
+    [ -n "$SPY_ROLLBACK_FAIL" ] && exit 1
+    ;;
+esac
+exit 0
+`, { mode: 0o755 });
+  // Only ever in the copy's runs, through NODE_OPTIONS: the ship has no switch of its own to point its smoke elsewhere.
+  fs.writeFileSync(EDGE_STUB, `import fs from 'node:fs';
+const real = globalThis.fetch;
+const previous = process.env.STUB_PREVIOUS_BODY ?? '';
+globalThis.fetch = async (input, init) => {
+  const href = String(input?.url ?? input);
+  if (!/^https:\\/\\/[^/]*\\.workers\\.dev/.test(href)) return real(input, init);
+  const route = new URL(href).pathname;
+  let mode = process.env.STUB_EDGE ?? 'ok';
+  const rolled = fs.existsSync('wrangler-spy.log') && fs.readFileSync('wrangler-spy.log', 'utf8').includes('rollback ');
+  if (mode === 'bad-until-rollback') mode = rolled ? 'previous' : 'no-header';
+  if (mode === 'previous' && route === '/') return new Response(previous, { headers: { 'x-robots-tag': 'noindex' } });
+  const body = route === '/' ? fs.readFileSync('dist/client/index.html') : 'file';
+  return new Response(body, { headers: mode === 'no-header' ? {} : { 'x-robots-tag': 'noindex' } });
+};
+`);
 }
 
 const REAL_TREE_BEFORE = hashTree(REPO, SOURCES);
@@ -71,6 +102,21 @@ const run = (script, ...args) => {
   const result = spawnSync('pnpm', ['--silent', script, ...args], { cwd: COPY, encoding: 'utf8', timeout: 180_000 });
   return { status: result.status, output: `${result.stdout}${result.stderr}` };
 };
+
+/** A real run: the checks are real, and the upload and the edge are the stubs. */
+const runReal = (script, env = {}) => {
+  if (!read('node_modules/.bin/wrangler').startsWith('#!/bin/sh\necho')) throw new Error('The spy is not installed. Stopping before any wrangler call.');
+  const result = spawnSync('pnpm', ['--silent', script], {
+    cwd: COPY,
+    encoding: 'utf8',
+    timeout: 240_000,
+    env: { ...process.env, NODE_OPTIONS: `--import=${EDGE_STUB}`, ...env },
+  });
+  return { status: result.status, output: `${result.stdout}${result.stderr}` };
+};
+const spyCalls = () => (fs.existsSync(SPY_LOG) ? fs.readFileSync(SPY_LOG, 'utf8').trim().split('\n') : []);
+const publishedNow = () => (fs.existsSync(at('.ship/published')) ? JSON.parse(read('.ship/published')) : null);
+const sha = (text) => createHash('sha256').update(text).digest('hex');
 
 const incompressible = (bytes) => randomBytes(bytes).toString('base64');
 const seedScript = incompressible(2200);
@@ -114,8 +160,127 @@ function rollback(name, seed, args, expected, wantStatus) {
 }
 
 const VERSION = '11111111-2222-4333-8444-555555555555';
+const CURRENT = '99999999-2222-4333-8444-555555555555';
 const seedPublished = (over = {}) => () =>
-  write('.ship/published', JSON.stringify({ worker: 'openarabic-site', hash: 'bbb', workerVersion: '99999999-2222-4333-8444-555555555555', previous: { hash: 'aaa', workerVersion: VERSION }, ...over }));
+  write('.ship/published', JSON.stringify({ worker: 'openarabic-site', hash: 'bbb', workerVersion: CURRENT, previous: { hash: 'aaa', workerVersion: VERSION }, ...over }));
+
+/** Each thing smoke must catch, one at a time, with no waiting. */
+async function smokeUnits() {
+  const { smoke } = await import(path.join(REPO, 'scripts/ship/smoke.mjs'));
+  const META = '<meta name="robots" content="noindex, nofollow">';
+  const edge = ({ status = 200, headers = { 'x-robots-tag': 'noindex' }, body = META, asset = headers } = {}) => async (url) =>
+    new URL(url).pathname === '/' ? new Response(body, { status, headers }) : new Response('x', { headers: asset });
+  const quick = { attempts: 1, waitMs: 0, expectedSha: sha(META), otherRoutes: ['/_astro/a.css'] };
+  const cases = [
+    ['Smoke: a good page passes', {}, null],
+    ['Smoke: 500 on / fails', { status: 500 }, /answered 500/],
+    ['Smoke: a redirect on / fails', { status: 302 }, /answered 302/],
+    ['Smoke: no X-Robots-Tag fails', { headers: {} }, /\/ has no "X-Robots-Tag: noindex"/],
+    ['Smoke: X-Robots-Tag without noindex fails', { headers: { 'x-robots-tag': 'nofollow' } }, /\/ has no "X-Robots-Tag: noindex"/],
+    ['Smoke: no meta fails', { body: '<p></p>' }, /\/ has no noindex meta/],
+    ['Smoke: a Set-Cookie fails', { headers: { 'x-robots-tag': 'noindex', 'set-cookie': 'a=1' } }, /\/ sets a cookie/],
+    ["Smoke: the previous build's bytes fail", { body: `${META}<p>old</p>` }, /bytes differ/],
+    ['Smoke: an asset without the header fails', { asset: {} }, /_astro\/a\.css has no "X-Robots-Tag: noindex"/],
+    ['Smoke: an asset with a Set-Cookie fails', { asset: { 'x-robots-tag': 'noindex', 'set-cookie': 'a=1' } }, /_astro\/a\.css sets a cookie/],
+  ];
+  for (const [name, over, expected] of cases) {
+    const result = await smoke(PREVIEW, { ...quick, fetchImpl: edge(over) });
+    const text = result.problems.join('; ');
+    record(name, expected ? !result.ok && expected.test(text) : result.ok, text);
+  }
+  const down = await smoke(PREVIEW, { ...quick, fetchImpl: async () => { throw new TypeError('fetch failed'); } });
+  record('Smoke: no answer at all fails', !down.ok, down.problems.join('; '));
+}
+
+/** The real upload, smoke, record and rollback paths, against the spy and the stubbed edge. */
+function realRuns() {
+  const previousBody = '<meta name="robots" content="noindex"><p>previous</p>';
+  const seedRecorded = () => {
+    seedPublished({ indexSha256: sha(previousBody), publishedAt: 'earlier' })();
+    write('.ship/preview-url', `${PREVIEW}\n`);
+  };
+  const seedRollback = () => {
+    seedPublished({ previous: { hash: 'aaa', workerVersion: VERSION, indexSha256: sha(previousBody) } })();
+    write('.ship/preview-url', `${PREVIEW}\n`);
+  };
+  const unchanged = (before) => JSON.stringify(publishedNow()) === JSON.stringify(before);
+  const reset = () => {
+    restore();
+    fs.rmSync(SPY_LOG, { force: true });
+  };
+
+  let result = runReal('ship');
+  let calls = spyCalls();
+  let after = publishedNow();
+  record('Real run, first ever: uploads from the built config, with no --name, then records', result.status === 0 && calls.length === 1 && calls[0] === 'deploy --config dist/client/wrangler.json' && /\[worker\] dist\/client\/wrangler\.json names: openarabic-site/.test(result.output), calls.join(' | ') + (result.status === 0 ? '' : result.output.slice(-800)));
+  record('Real run: published holds hash, version and time, and no URL', after?.workerVersion === NEW_VERSION && /^[0-9a-f]{64}$/.test(after?.hash ?? '') && Boolean(after?.publishedAt) && !JSON.stringify(after).includes('workers.dev') && read('.ship/preview-url').trim() === PREVIEW, JSON.stringify(after));
+  record('Real run: the unbuilt steps still print NOT BUILT', /NOT BUILT, so not passed: fetch, validate, compare, parity\./.test(result.output));
+  reset();
+
+  seedRecorded();
+  result = runReal('ship');
+  after = publishedNow();
+  record('Real run, again: moves the old version to previous', result.status === 0 && after?.workerVersion === NEW_VERSION && after?.previous?.workerVersion === CURRENT && after?.previous?.hash === 'bbb', JSON.stringify(after?.previous));
+  reset();
+
+  seedRecorded();
+  let before = publishedNow();
+  result = runReal('ship', { STUB_EDGE: 'bad-until-rollback', STUB_PREVIOUS_BODY: previousBody });
+  calls = spyCalls();
+  record('Smoke fails after upload: rolls back the recorded version by explicit name, published untouched, and says so', result.status === 1 && calls[0].startsWith('deploy ') && calls[1]?.startsWith(`rollback ${CURRENT} --name openarabic-site --yes `) && calls.length === 2 && unchanged(before) && /Rolled back openarabic-site to/.test(result.output) && /The edge serves that version again/.test(result.output) && !/Nothing was uploaded/.test(result.output), calls.join(' | '));
+  reset();
+
+  result = runReal('ship', { STUB_EDGE: 'no-header' });
+  calls = spyCalls();
+  record('Smoke fails on the first ever ship: nothing to roll back to, no record, and says so', result.status === 1 && calls.length === 1 && publishedNow() === null && /Nothing is recorded to roll back to/.test(result.output), calls.join(' | '));
+  reset();
+
+  seedRecorded();
+  before = publishedNow();
+  result = runReal('ship', { STUB_EDGE: 'no-header', SPY_ROLLBACK_FAIL: '1' });
+  record('Smoke and the rollback both fail: published untouched, and says the failed version is live', result.status === 1 && unchanged(before) && /AUTOMATIC ROLLBACK FAILED/.test(result.output), '');
+  reset();
+
+  seedRecorded();
+  before = publishedNow();
+  result = runReal('ship', { SPY_DEPLOY_FAIL: '1' });
+  calls = spyCalls();
+  record('A failed upload: published untouched, no rollback, the next run retries', result.status === 1 && calls.length === 1 && unchanged(before) && /next run retries/.test(result.output) && !/Nothing was uploaded/.test(result.output), calls.join(' | '));
+  reset();
+
+  seedRecorded();
+  before = publishedNow();
+  result = runReal('ship', { SPY_WORKER: 'openarabic-web' });
+  calls = spyCalls();
+  record('Wrangler reports another Worker: no rollback of it, published untouched', result.status === 1 && calls.length === 1 && unchanged(before) && /STOP AND TELL THE OWNER/.test(result.output), calls.join(' | '));
+  reset();
+
+  seedRecorded();
+  before = publishedNow();
+  result = runReal('ship', { SPY_TARGET: 'https://openarabic.io/*' });
+  calls = spyCalls();
+  record('Wrangler reports a target other than the preview: treated as a failed smoke', result.status === 1 && calls[1]?.startsWith(`rollback ${CURRENT} --name openarabic-site `) && unchanged(before), calls.join(' | '));
+  reset();
+
+  seedRollback();
+  result = runReal('ship:rollback', { STUB_EDGE: 'previous', STUB_PREVIOUS_BODY: previousBody });
+  calls = spyCalls();
+  after = publishedNow();
+  record('Rollback, real path: only --name openarabic-site, confirmed at the edge, version and hash restored', result.status === 0 && calls.length === 1 && calls[0].startsWith(`rollback ${VERSION} --name openarabic-site --yes `) && after.workerVersion === VERSION && after.hash === 'aaa', calls.join(' | ') + (result.status === 0 ? '' : result.output.slice(-500)));
+  reset();
+
+  seedRollback();
+  before = publishedNow();
+  result = runReal('ship:rollback', { SPY_ROLLBACK_FAIL: '1' });
+  record('Rollback: wrangler fails, published untouched', result.status === 1 && unchanged(before) && /ROLLBACK STOPPED\. Nothing changed\./.test(result.output));
+  reset();
+
+  seedRollback();
+  before = publishedNow();
+  result = runReal('ship:rollback', { STUB_EDGE: 'no-header' });
+  record('Rollback: the edge disagrees, published untouched, and says wrangler did act', result.status === 1 && unchanged(before) && /after wrangler rolled back/.test(result.output) && /did not confirm/.test(result.output));
+  reset();
+}
 
 async function concurrentRuns() {
   const first = spawn('pnpm', ['--silent', 'ship', '--dry-run'], { cwd: COPY, stdio: 'ignore' });
@@ -134,7 +299,7 @@ async function main() {
 
   // The five the plan and the owner named.
   stops('Wrong Worker name in wrangler.jsonc', () => edit('wrangler.jsonc', '"name": "openarabic-site"', '"name": "openarabic-web"'), /names the Worker "openarabic-web"/, { required: true });
-  stops('A route in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": false', '"routes": [{ "pattern": "example.com/*", "zone_name": "example.com" }],\n  "workers_dev": false'), /holds a route/, { required: true });
+  stops('A route in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "example.com/*", "zone_name": "example.com" }],\n  "workers_dev": true'), /holds a route/, { required: true });
   stops('A hand-edited CSS token', () => edit('src/styles/tokens.generated.css', '--color-primary: oklch(0.7323', '--color-primary: oklch(0.8'), /tokens\.generated\.css has drifted/, { required: true });
   stops('A 2 KB script, inline on the page', () => edit(PAGE, HEADING, `${HEADING}<script is:inline>window.x='${seedScript}'</script>`), /ships [\d.]+ KB of JS gzip, over its 0\.50 KB budget/, { required: true });
   stops('A seeded "native audio"', () => edit(PAGE, HEADING, `${HEADING}<p>Hear native audio.</p>`), /Banned phrases[\s\S]*"native audio"/, { required: true });
@@ -142,10 +307,10 @@ async function main() {
   // Guard: other ways round it.
   stops('Wrong name, other than the live one', () => edit('wrangler.jsonc', '"name": "openarabic-site"', '"name": "something-else"'), /names the Worker "something-else"/);
   stops('wrangler.jsonc deleted', () => fs.rmSync(at('wrangler.jsonc')), /wrangler\.jsonc is missing/);
-  stops('openarabic.io as a value in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": false', '"vars": { "SITE": "https://openarabic.io" },\n  "workers_dev": false'), /mentions openarabic\.io/);
-  stops('A custom domain in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": false', '"route": { "pattern": "x.example", "custom_domain": true },\n  "workers_dev": false'), /holds a route/);
-  stops('An environment in wrangler.jsonc that could carry another name', () => edit('wrangler.jsonc', '"workers_dev": false', '"env": { "prod": { "name": "openarabic-web" } },\n  "workers_dev": false'), /defines environments/);
-  stops('A service binding to the live Worker', () => edit('wrangler.jsonc', '"workers_dev": false', '"services": [{ "binding": "OLD", "service": "openarabic-web" }],\n  "workers_dev": false'), /refers to the live Worker/);
+  stops('openarabic.io as a value in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": true', '"vars": { "SITE": "https://openarabic.io" },\n  "workers_dev": true'), /mentions openarabic\.io/);
+  stops('A custom domain in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": true', '"route": { "pattern": "x.example", "custom_domain": true },\n  "workers_dev": true'), /holds a route/);
+  stops('An environment in wrangler.jsonc that could carry another name', () => edit('wrangler.jsonc', '"workers_dev": true', '"env": { "prod": { "name": "openarabic-web" } },\n  "workers_dev": true'), /defines environments/);
+  stops('A service binding to the live Worker', () => edit('wrangler.jsonc', '"workers_dev": true', '"services": [{ "binding": "OLD", "service": "openarabic-web" }],\n  "workers_dev": true'), /refers to the live Worker/);
   stops('Wrong name only in the built config, source clean', () => edit('astro.config.mjs', "trailingSlash: 'never',", BUILD_HOOK("c.name = 'openarabic-web'")), /Built config dist\/client\/wrangler\.json names the Worker "openarabic-web"/);
   stops('A route only in the built config, source clean', () => edit('astro.config.mjs', "trailingSlash: 'never',", BUILD_HOOK("c.routes = ['x.example/*']")), /Built config dist\/client\/wrangler\.json holds a route/);
   stops('openarabic.io only in the built config, source clean', () => edit('astro.config.mjs', "trailingSlash: 'never',", BUILD_HOOK("c.vars = { S: 'openarabic.io' }")), /Built config dist\/client\/wrangler\.json mentions openarabic\.io/);
@@ -157,8 +322,16 @@ async function main() {
   stops('Noindex header removed', () => write('public/_headers', '# none\n'), /has no "X-Robots-Tag: noindex"/);
   stops('A second page while Phase 2 steps are unbuilt', () => write('src/pages/extra.astro', '---\nimport Base from "../layouts/Base.astro";\n---\n<Base><main></main></Base>\n'), /pages beyond the placeholder/);
 
-  // Plain `pnpm ship`, no dry run: goes through the checks, then refuses the upload.
-  stops('A real run is refused at the upload until task 1.3', () => {}, /Real deploys are off until task 1\.3/, { args: [] });
+  stops('workers_dev switched off', () => edit('wrangler.jsonc', '"workers_dev": true', '"workers_dev": false'), /workers_dev false/);
+  stops('An on-demand page, with no HTML file to see', () => write('src/pages/live.astro', '---\nexport const prerender = false;\n---\n<p></p>\n'), /pages beyond the placeholder/);
+  stops('An endpoint, with no HTML file to see', () => write('src/pages/data.json.ts', 'export const GET = () => new Response("{}");\n'), /pages beyond the placeholder/);
+  stops('--production on a real run', () => {}, /--production is refused/, { args: ['--production'] });
+  stops('The off switch refuses a real run at the upload', () => edit('scripts/ship/lib.mjs', 'REAL_DEPLOYS_ALLOWED = true', 'REAL_DEPLOYS_ALLOWED = false'), /switched off/, { args: [] });
+  stops('A published record for another Worker stops the ship', seedPublished({ worker: 'openarabic-web' }), /is for "openarabic-web"/);
+
+  // The real dev runtime.
+  stops("A compatibility_date workerd can't run: the build passes, dev does not", () => edit('wrangler.jsonc', '"compatibility_date": "2026-10-23"', '"compatibility_date": "2099-01-01"'), /dev runtime/, { required: true });
+  stops('A page that throws only under dev', () => edit(PAGE, "import Base from '../layouts/Base.astro';", "import Base from '../layouts/Base.astro';\nif (import.meta.env.DEV) throw new Error('seeded');"), /dev runtime started but `\/` answered 500/);
 
   // Design.
   stops('DESIGN.md token changed, CSS not regenerated', () => edit('DESIGN.md', 'surface: "oklch(0.145 0.02 160)"', 'surface: "oklch(0.146 0.02 160)"'), /tokens\.generated\.css has drifted/);
@@ -227,20 +400,15 @@ async function main() {
     write('.ship/lock', JSON.stringify({ command: 'pnpm ship', pid: process.pid, started: 'earlier' }));
   }, ['--dry-run'], /another run holds/, 1);
   rollback('Rollback: dry run prints an explicit --name openarabic-site', seedPublished(), ['--dry-run'], new RegExp(`wrangler rollback ${VERSION} --name openarabic-site`), 0);
-  rollback('Rollback: a real run is refused until task 1.3', seedPublished(), [], /Real deploys are off until task 1\.3/, 1);
+  rollback('Rollback: the off switch refuses a real run', () => {
+    seedPublished()();
+    edit('scripts/ship/lib.mjs', 'REAL_DEPLOYS_ALLOWED = true', 'REAL_DEPLOYS_ALLOWED = false');
+  }, [], /switched off/, 1);
   if (fs.existsSync(SPY_LOG)) record('wrangler was never called', false, fs.readFileSync(SPY_LOG, 'utf8'));
   else record('wrangler was never called, in any case above', true);
 
-  // Rollback's real path, switched on in the copy only, against the spy. Refuses to run unless the spy is what would be called.
-  seedPublished()();
-  edit('scripts/ship/lib.mjs', 'REAL_DEPLOYS_ALLOWED = false', 'REAL_DEPLOYS_ALLOWED = true');
-  if (!read('node_modules/.bin/wrangler').startsWith('#!/bin/sh\necho')) throw new Error('The spy is not installed. Stopping before any wrangler call.');
-  const enabled = run('ship:rollback');
-  const called = fs.existsSync(SPY_LOG) ? fs.readFileSync(SPY_LOG, 'utf8') : '';
-  const after = JSON.parse(read('.ship/published'));
-  record('Rollback, real path against the spy: calls only --name openarabic-site and restores version and hash', enabled.status === 0 && called.startsWith(`rollback ${VERSION} --name openarabic-site `) && after.workerVersion === VERSION && after.hash === 'aaa', called.trim());
-  fs.rmSync(SPY_LOG, { force: true });
-  restore();
+  await smokeUnits();
+  realRuns();
 
   passes('Clean copy still passes after every restore');
 

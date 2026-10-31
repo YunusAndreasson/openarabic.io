@@ -9,6 +9,6 @@
   "compatibility_date": "2026-10-23",
 
   // No routes and no custom domains until the cutover in docs/site-plan.md.
-  "workers_dev": false,
+  "workers_dev": true,
   "preview_urls": false
 }

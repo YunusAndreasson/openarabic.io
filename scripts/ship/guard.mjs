@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { parse, printParseErrorCode } from 'jsonc-parser';
-import { fail, LIVE_DOMAIN, LIVE_WORKER, rel, ROOT, WORKER } from './lib.mjs';
+import { fail, LIVE_DOMAIN, LIVE_WORKER, rel, ROOT, walk, WORKER } from './lib.mjs';
+import { NOINDEX_META } from './smoke.mjs';
 
 const ROUTE_KEYS = new Set(['route', 'routes', 'custom_domain', 'custom_domains', 'zone_id', 'zone_name']);
 
@@ -24,6 +25,9 @@ function checkConfig(config, label) {
   }
   if (config.topLevelName !== undefined && config.topLevelName !== WORKER) {
     fail(`${label} has topLevelName "${config.topLevelName}". Only "${WORKER}" may ship.`);
+  }
+  if (config.workers_dev !== true) {
+    fail(`${label} has workers_dev ${JSON.stringify(config.workers_dev)}. The preview lives on workers.dev, so it must be true.`);
   }
   if (config.env && Object.keys(config.env).length > 0) {
     fail(`${label} defines environments (${Object.keys(config.env).join(', ')}), which could carry another name or route.`);
@@ -94,7 +98,7 @@ export function checkBuiltConfig(root = ROOT) {
   if (!found.includes(target)) {
     fail(`.wrangler/deploy/config.json sends wrangler to ${target}, not a config this guard checked.`);
   }
-  return { file: path.relative(root, target), name: WORKER };
+  return { file: path.relative(root, target), name: JSON.parse(fs.readFileSync(target, 'utf8')).name };
 }
 
 /** Task 1.3's rule, already true: noindex by meta on every page and by header on every path. */
@@ -105,8 +109,23 @@ export function checkNoindex(htmlFiles, root = ROOT) {
     fail('dist/client/_headers has no "X-Robots-Tag: noindex" on /*. A preview must not be indexed.');
   }
   for (const file of htmlFiles) {
-    if (!/<meta\s+name="robots"\s+content="noindex[^"]*"/i.test(fs.readFileSync(file, 'utf8'))) {
+    if (!NOINDEX_META.test(fs.readFileSync(file, 'utf8'))) {
       fail(`${rel(file)} has no noindex meta. A preview must not be indexed.`);
     }
   }
+}
+
+/**
+ * The unbuilt steps may stand only while there is nothing for them to protect: the one prerendered
+ * placeholder page. An extra prerendered page, an on-demand route and an endpoint each count as more.
+ */
+export function checkPlaceholderOnly(htmlFiles, notBuilt, root = ROOT) {
+  const beyond = (what) => fail(`The build has pages beyond the placeholder (${what}), but ${notBuilt.join(', ')} aren't built. Phase 2 fills them first.`);
+  const home = path.join(root, 'dist/client/index.html');
+  const extraPage = htmlFiles.find((page) => page !== home);
+  if (extraPage) beyond(path.relative(root, extraPage));
+  const extraSource = walk(path.join(root, 'src/pages')).find((file) => path.relative(root, file) !== path.join('src/pages/index.astro'));
+  if (extraSource) beyond(path.relative(root, extraSource));
+  const workerCode = walk(path.join(root, 'dist/server'))[0];
+  if (workerCode) beyond(`Worker code in ${path.relative(root, workerCode)}`);
 }
