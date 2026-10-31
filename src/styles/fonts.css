@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Amiri Subset";
+  src: url("../fonts/amiri-regular.subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alegreya Sans";
+  src: url("../fonts/alegreya-sans-400.subset.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alegreya Sans";
+  src: url("../fonts/alegreya-sans-500.subset.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}

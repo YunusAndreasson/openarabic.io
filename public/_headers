@@ -1,0 +1,3 @@
+# Noindex everywhere until the cutover in docs/site-plan.md. `pnpm ship` checks this line.
+/*
+  X-Robots-Tag: noindex

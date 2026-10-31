@@ -199,7 +199,7 @@ token's `fontSize`.
 
 **Files**
 
-| Face | In `docs/specimens/shared/fonts/` until the site has `src/fonts/` | KB | Load |
+| Face | In `src/fonts/` | KB | Load |
 |---|---|---|---|
 | Amiri 400 | `amiri-regular.subset.woff2` | 51 | Preload, `font-display: swap` |
 | Alegreya Sans 400, 500 | `alegreya-sans-400.subset.woff2`, `alegreya-sans-500.subset.woff2` | 29 each | `swap`, no preload |
@@ -519,7 +519,7 @@ Everything works with no script and with reduced motion. The static state is the
 - `prefers-reduced-motion: reduce`: every duration is 0. Nothing else changes.
 
 **Budgets.** The story page's offer, tap, lift, colour gate and store bar use no JavaScript.
-**JS budget, gzip, enforced in CI** (from `docs/decisions/2026-10-31-spike-word-tap.md`): 0 on word,
+**JS budget, gzip, enforced by `pnpm ship`** (from `docs/decisions/2026-10-31-spike-word-tap.md`): 0 on word,
 dictionary, category and legal pages, plus one inline GA4 choice check of at most 0.25KB on every page;
 1KB on the reader; at most 0.25KB on the story page, only if the
 old-iOS colour gate can't be done without script; 1.5KB hard cap on any page, which includes about
@@ -627,7 +627,7 @@ isn't a judgement call: a blank cell means the row doesn't apply.
 | `[T]` Reduced motion | The same layout, durations 0 | Yes | Yes | Yes | Yes | Yes |
 | `[T]` No script: lift | Tap, Close, lift, audio and store links work | Yes | | | | |
 | `[T]` No script: page | All content is readable and links work. In the reader, words go to their word page | | Yes | Yes | Yes | Yes |
-| `[T]` Budgets | As in `Motion`, for that page type, in CI | Yes | Yes | Yes | Yes | Yes |
+| `[T]` Budgets | As in `Motion`, for that page type, in `pnpm ship` | Yes | Yes | Yes | Yes | Yes |
 | `[T]` Claims | Every sentence traces to `PRODUCT.md` or the draft list; banned phrases absent | Yes | Yes | Yes | Yes | Yes |
 | `[T]` Tokens | Lint: 0 errors, 0 warnings, a `token-summary` present; generated CSS has no drift; no colour literal below the front matter | Yes | Yes | Yes | Yes | Yes |
 | `[T]` Accessibility | Automated scan 0 serious; 200% zoom works; heading outline reads as the argument | Yes | Yes | Yes | Yes | Yes |

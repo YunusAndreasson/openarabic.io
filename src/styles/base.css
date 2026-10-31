@@ -1,0 +1,27 @@
+:root {
+  color-scheme: dark;
+  font-synthesis: none;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+body {
+  font-family: var(--type-body-family);
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: var(--type-body-line-height);
+  padding: var(--space-gutter);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--type-title-family);
+  font-size: var(--type-title-size);
+  font-weight: var(--type-title-weight);
+  line-height: var(--type-title-line-height);
+}

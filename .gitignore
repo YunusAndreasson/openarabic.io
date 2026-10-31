@@ -34,3 +34,7 @@ docs/research/raw/
 
 .DS_Store
 *.log
+
+# Ship state: `.ship/published` is committed, the rest stays on this machine
+.ship/lock
+.ship/snapshots/

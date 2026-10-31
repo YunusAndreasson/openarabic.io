@@ -1,0 +1,3 @@
+# Draft copy: public strings that are in neither PRODUCT.md nor DESIGN.md, one per line,
+# waiting on the owner (D12). `pnpm ship` lets these through and counts them.
+# A banned phrase in PRODUCT.md stays banned even if it is listed here.
