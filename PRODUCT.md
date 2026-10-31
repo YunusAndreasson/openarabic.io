@@ -101,6 +101,6 @@ The true claims nobody makes yet are the strongest material, so start with them:
 ## Open
 
 - **Word colour on a real iPhone:** the owner offered no test devices, so this is unproven. The one-colour fallback below iOS 26.2 stays.
-- **The 5 learners for the emotion test:** check with the owner at step 7.
+- **Emotion test:** skipped by the owner, so no learner has seen the page. Concept A is unproven until store taps per page view come in after launch.
 - **Terms exception for the PDF:** the Terms forbid redistribution, while the page says free to share. Needs a change in the app repo.
 - **AI disclosure and sadaqah jariyah sentences:** exact wording awaits owner approval.
