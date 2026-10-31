@@ -139,7 +139,9 @@ const sha = (text) => createHash('sha256').update(text).digest('hex');
 const incompressible = (bytes) => randomBytes(bytes).toString('base64');
 const seedScript = incompressible(2200);
 const PAGE = 'src/pages/index.astro';
-const HEADING = '<h1>OpenArabic: Read the Classics</h1>';
+const HEADING = '<p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>';
+// A page that isn't home, because the home page has its own limits: docs/decisions/2026-10-31-home-rebuild.md.
+const OTHER_PAGE = (head, body = '') => `<!doctype html><html lang="en"><head><meta name="robots" content="noindex, nofollow" /><title>OpenArabic: Read the Classics</title>${head}</head><body>${body}</body></html>`;
 const BUILD_HOOK = (change) =>
   `integrations: [{ name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); const f = process.cwd() + '/dist/client/wrangler.json'; const c = JSON.parse(fs.readFileSync(f, 'utf8')); ${change}; fs.writeFileSync(f, JSON.stringify(c)); } } }],\n  trailingSlash: 'never',`;
 
@@ -539,7 +541,8 @@ async function main() {
   stops('Wrong Worker name in wrangler.jsonc', () => edit('wrangler.jsonc', '"name": "openarabic-site"', '"name": "openarabic-web"'), /names the Worker "openarabic-web"/, { required: true });
   stops('A route in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "example.com/*", "zone_name": "example.com" }],\n  "workers_dev": true'), /holds a route/, { required: true });
   stops('A hand-edited CSS token', () => edit('src/styles/tokens.generated.css', '--color-primary: oklch(0.7323', '--color-primary: oklch(0.8'), /tokens\.generated\.css has drifted/, { required: true });
-  stops('A 2 KB script, inline on the page', () => edit(PAGE, HEADING, `${HEADING}<script is:inline>window.x='${seedScript}'</script>`), /ships [\d.]+ KB of JS gzip, over its 0\.50 KB budget/, { required: true });
+  stops('A 2 KB script, inline on a page that isn\'t home', () => write('src/pages/other.astro', OTHER_PAGE('', `<script is:inline>window.x='${seedScript}'</script>`)), /ships [\d.]+ KB of JS gzip, over its 0\.25 KB budget/, { required: true });
+  stops('A home page over its 60 KB of JS', () => edit(PAGE, HEADING, `${HEADING}<script is:inline>window.x='${incompressible(90000)}'</script>`), /\/ \(home\) ships [\d.]+ KB of JS gzip, over its 60\.00 KB budget/, { required: true });
   stops('A seeded "native audio"', () => edit(PAGE, HEADING, `${HEADING}<p>Hear native audio.</p>`), /Banned phrases[\s\S]*"native audio"/, { required: true });
 
   // Guard: other ways round it.
@@ -584,11 +587,12 @@ async function main() {
   stops('Colour literal in DESIGN.md below the front matter', () => edit('DESIGN.md', '## Overview', 'Use #123456 here.\n\n## Overview'), /Colour literals[\s\S]*DESIGN\.md below the front matter: #123456/);
 
   // Budgets.
-  stops('2 KB script in the Astro bundle', () => edit(PAGE, HEADING, `${HEADING}<script>document.title='${seedScript}'</script>`), /loads the script|KB of JS gzip/);
+  stops('2 KB script in the Astro bundle, on a page that isn\'t home', () => write('src/pages/other.astro', OTHER_PAGE('', `<script>document.title='${seedScript}'</script>`)), /loads the script|KB of JS gzip/);
   stops('2 KB script in public, loaded by no page', () => write('public/stray.js', `window.x='${seedScript}'`), /stray\.js is [\d.]+ KB of JS gzip, over the 1\.5 KB cap/);
   stops('External script on a 0 JS page type', () => edit(PAGE, HEADING, `${HEADING}<script is:inline src="https://example.com/a.js"></script>`), /third-party resource/);
   stops('Third-party request made only at runtime', () => edit(PAGE, HEADING, `${HEADING}<script is:inline>new Image().src='https://example.com/p.gif'</script>`), /third-party request in the browser/);
-  stops('CSS over 12 KB gzip', () => fs.appendFileSync(at('src/styles/base.css'), `\n/*${incompressible(14000)}*/\n.x{--y:'${incompressible(14000)}'}\n`), /CSS gzip, over the 12\.00 KB budget/);
+  stops('CSS over 12 KB gzip, on a page that isn\'t home', () => write('src/pages/other.astro', OTHER_PAGE(`<style is:inline>.x{--y:'${incompressible(20000)}'}</style>`)), /CSS gzip, over the 12\.00 KB budget/);
+  stops('A home page over its 24 KB of CSS', () => fs.appendFileSync(at('src/styles/base.css'), `\n.x{--y:'${incompressible(40000)}'}\n`), /CSS gzip, over the 24\.00 KB budget/);
   stops('Fonts over 110 KB', () => {
     fs.copyFileSync(at('src/fonts/amiri-regular.subset.woff2'), at('src/fonts/copy.woff2'));
     fs.appendFileSync(at('src/fonts/copy.woff2'), randomBytes(1000));

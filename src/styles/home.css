@@ -1,0 +1,180 @@
+/* The home page: the app's promo. docs/decisions/2026-10-31-home-rebuild.md. qamar360.com is the bar. */
+:root {
+  --home-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-arrive: 1.2s;
+  --t-light: 2.4s;
+  --stagger: 0.12s;
+  --follow: 0.4s;
+  --rise: 8px;
+  --unlit: 0.5;
+  --home-gutter: clamp(20px, 5vw, 64px);
+  --home-wide: 84rem;
+  --quiet-over: color-mix(in oklch, var(--color-on-surface) 78%, transparent);
+}
+
+body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+.draft { text-decoration: none; }
+
+/* Display type: large, light and tight, as Inter's display cut wants it. */
+.hero h1, .chapter { font-weight: 300; letter-spacing: -0.035em; }
+
+/* Motion, one vocabulary. Arrive: fade and rise. Develop: light comes up out of the dark. */
+@keyframes arrive { from { opacity: var(--faint, 0); transform: translateY(var(--rise)); } }
+@keyframes develop { from { filter: brightness(var(--unlit)); } }
+.play .reveal { transition: opacity var(--t-arrive) var(--home-ease), transform var(--t-arrive) var(--home-ease); }
+.play .reveal:not(.is-visible) { opacity: 0; transform: translateY(var(--rise)); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* The phone: a real screen in a thin dark edge, not a rendered device. */
+.phone {
+  --w: var(--phone-w, 320px);
+  position: relative; width: var(--w); padding: calc(var(--w) * 0.02);
+  border-radius: calc(var(--w) * 0.125);
+  background: var(--color-on-primary);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-on-surface) 16%, transparent), 0 40px 90px color-mix(in oklch, var(--color-on-primary) 75%, transparent);
+}
+.screen { position: relative; overflow: hidden; aspect-ratio: 1206 / 2622; border-radius: calc(var(--w) * 0.107); background: var(--color-surface); }
+.screen img { display: block; width: 100%; height: auto; }
+
+/* The first screen */
+.hero-wrap { position: relative; }
+.hero { position: relative; isolation: isolate; height: 100svh; min-height: 540px; }
+.hero-photo { position: absolute; inset: 0; z-index: -1; overflow: hidden; mask-image: linear-gradient(to top, transparent 0%, color-mix(in oklch, var(--color-surface) 35%, transparent) 26%, var(--color-surface) 58%); }
+.hero-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; animation: develop var(--t-light) var(--home-ease) backwards; }
+.topbar { position: absolute; inset: 0 0 auto; z-index: 2; max-width: var(--home-wide); margin-inline: auto; padding: clamp(16px, 3svh, 28px) var(--home-gutter); }
+.brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--color-on-surface); font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.01em; text-decoration: none; }
+.brand svg { color: var(--color-primary); }
+.hero-words { position: absolute; inset: auto 0 0; max-width: var(--home-wide); margin-inline: auto; padding: 0 var(--home-gutter) clamp(20px, 11svh, 96px); }
+.hero h1 { font-size: min(14.6vw, 9.4svh); line-height: 0.98; }
+.hero h1 span { display: block; animation: arrive var(--t-arrive) var(--home-ease) var(--wait, 0s) both; --faint: 0.01; }
+.hero h1 span:nth-child(2) { --wait: var(--stagger); }
+.hero h1 span:nth-child(3) { --wait: calc(2 * var(--stagger)); }
+.hero .stores { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: clamp(14px, 3svh, 32px); animation: arrive var(--t-arrive) var(--home-ease) calc(3 * var(--stagger) + var(--follow)) both; }
+.badge { display: inline-block; line-height: 0; }
+.badge img { width: auto; height: 48px; }
+/* Google's artwork carries its clear space inside the file, so it is drawn taller to match Apple's. */
+.badge img[src*='google'] { height: 70px; margin-block: -11px; margin-inline: -9px; }
+.lede, .offer-note { max-width: 42em; color: var(--quiet-over); font-size: 0.875rem; line-height: 1.4; animation: arrive var(--t-arrive) var(--home-ease) calc(4 * var(--stagger) + var(--follow)) both; }
+.lede { margin-top: clamp(12px, 2.4svh, 22px); }
+
+/* On a phone the man sits above the words, and the words get their own dark ground. */
+.hero-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, var(--color-surface) 8%, color-mix(in oklch, var(--color-surface) 72%, transparent) 42%, transparent 66%); }
+.hero-photo { --lift: calc(63vw - 12svh); }
+.hero-photo img { height: calc(100% + var(--lift)); margin-top: calc(-1 * var(--lift)); }
+
+/* A played stage. This is the plain form: everything in order, every screen shown. */
+.stage { max-width: var(--home-wide); margin: clamp(72px, 14svh, 140px) auto 0; padding-inline: var(--home-gutter); }
+.chapter { margin: 0; font-size: clamp(3.25rem, 8.4vw, 8.5rem); line-height: 0.98; }
+.stops { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 32px; }
+.stop h3 { max-width: 19em; margin: 0; font-size: clamp(1.3125rem, 2.3vw, 2.375rem); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
+.stop-note { max-width: 30em; margin-top: 10px; color: var(--color-on-surface-quiet); font-size: clamp(0.9375rem, 1.15vw, 1.0625rem); line-height: 1.4; }
+.stage-phone { margin-top: 40px; }
+.stage .phone { width: auto; padding: 0; background: none; box-shadow: none; }
+.stage .screen { display: flex; flex-wrap: wrap; gap: 20px; overflow: visible; aspect-ratio: auto; background: none; border-radius: 0; }
+.stage .screen > picture { width: min(72vw, 300px); }
+.stage .screen img { border-radius: 28px; }
+.stage .zoomer { display: contents; }
+.only-played { display: none !important; }
+
+/* The played form. `--t` runs 0 to n-1. Every stop and layer is drawn from it, so nothing is timed. */
+.play .stage { height: calc(var(--n) * 100svh + 40svh); margin-top: 0; padding-inline: 0; max-width: none; }
+.play .stage-pin {
+  position: sticky; top: 0; height: 100svh; min-height: 480px; overflow: clip;
+  display: flex; flex-direction: column; gap: clamp(10px, 2svh, 20px);
+  max-width: var(--home-wide); margin-inline: auto; padding: clamp(20px, 4svh, 40px) var(--home-gutter) clamp(16px, 3svh, 32px);
+}
+.play .stops { display: grid; gap: 0; margin-top: clamp(8px, 1.4svh, 16px); }
+.play .stop {
+  grid-area: 1 / 1;
+  --d: max(calc(var(--t) - var(--i)), calc(var(--i) - var(--t)));
+  opacity: clamp(0, calc(1 - var(--d) * 2.6), 1);
+  transform: translateY(calc((var(--i) - var(--t)) * 28px));
+}
+.play .stage-phone { flex: 1; min-height: 0; margin: 0; container-type: size; display: grid; place-items: center; }
+.play .stage .phone { --phone-w: min(100cqw, calc(100cqh * 0.455)); width: var(--phone-w); padding: calc(var(--w) * 0.02); background: var(--color-on-primary); box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-on-surface) 16%, transparent), 0 40px 90px color-mix(in oklch, var(--color-on-primary) 75%, transparent); }
+.play .stage .screen { display: block; overflow: hidden; aspect-ratio: 1206 / 2622; background: var(--color-surface); border-radius: calc(var(--w) * 0.107); }
+.play .stage .screen > picture { position: absolute; inset: 0; width: 100%; }
+.play .stage .screen img { border-radius: 0; }
+.play .only-played { display: block !important; }
+
+/* The Read stage: reader, the colours up close, a tap, then the word's sheet. */
+.play .zoomer {
+  display: block; position: absolute; inset: 0;
+  --z: calc(clamp(0, var(--t), 1) - clamp(0, calc(var(--t) - 1), 1));
+  transform-origin: 98% 74.5%;
+  transform: translateY(calc(var(--z) * -22%)) scale(calc(1 + var(--z)));
+  will-change: transform;
+}
+.tap {
+  position: absolute; left: 72.8%; top: 74.5%; width: 16%; aspect-ratio: 1; margin: -8% 0 0 -8%; border-radius: 50%;
+  background: color-mix(in oklch, var(--color-primary) 38%, transparent);
+  box-shadow: 0 0 0 1.5px var(--color-primary);
+  opacity: calc(clamp(0, calc((var(--t) - 1.5) * 4), 1) - clamp(0, calc((var(--t) - 2.35) * 6), 1));
+}
+.stage[data-stop='2'] .tap { animation: tap 1.8s var(--home-ease) infinite; }
+@keyframes tap { 0%, 100% { scale: 1; } 40% { scale: 0.78; } }
+.play .sheet-dim { clip-path: inset(0 0 84.5% 0); opacity: clamp(0, calc(var(--t) - 2), 1); }
+.play .sheet { clip-path: inset(15.5% 0 0 0); transform: translateY(calc((1 - clamp(0, calc(var(--t) - 2), 1)) * 86%)); will-change: transform; }
+.add {
+  position: absolute; left: 5.4%; right: 5.4%; top: 42.9%; height: 5.3%; border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--color-on-surface), 0 0 0 7px color-mix(in oklch, var(--color-primary) 40%, transparent);
+  opacity: calc(1 - clamp(0, calc(var(--t) * 4), 1));
+}
+.stage[data-stop='0'] .add { animation: tap-add 1.8s var(--home-ease) infinite; }
+@keyframes tap-add { 0%, 100% { scale: 1; } 40% { scale: 0.975; } }
+
+/* The Listen stage: the playlist, then a text playing. */
+.play .audio { opacity: clamp(0, var(--t), 1); }
+.play .audio img { height: 100%; object-fit: cover; object-position: top; }
+
+/* The Remember stage: add a word, answer out loud, the schedule, how long words hold, your words. */
+.spoken {
+  position: absolute; left: 53.2%; right: 3.4%; top: 88%; height: 7.3%; border-radius: 16px;
+  box-shadow: 0 0 0 2px var(--color-on-surface), 0 0 0 7px color-mix(in oklch, var(--color-primary) 40%, transparent);
+  opacity: calc(clamp(0, calc((var(--t) - 0.6) * 4), 1) - clamp(0, calc((var(--t) - 1.4) * 4), 1));
+}
+.stage[data-stop='1'] .spoken { animation: tap-add 1.8s var(--home-ease) infinite; }
+.play .speak { opacity: clamp(0, var(--t), 1); }
+.play .horizon { opacity: clamp(0, calc(var(--t) - 1), 1); }
+.play .memory { opacity: clamp(0, calc(var(--t) - 2), 1); }
+.play .memory img { height: 100%; object-fit: cover; object-position: top; }
+.play .word-list { opacity: clamp(0, calc(var(--t) - 3), 1); }
+.stage-caption { color: var(--color-on-surface-quiet); font-size: 0.75rem; line-height: 1.3; text-align: center; }
+
+/* The scholars: what you get, named straight after the first screen. */
+.names { max-width: 26em; margin-top: clamp(12px, 2.6svh, 28px); color: var(--color-on-surface); font-size: clamp(1.125rem, 1.75vw, 1.625rem); font-weight: 400; line-height: 1.3; letter-spacing: -0.015em; animation: arrive var(--t-arrive) var(--home-ease) calc(var(--stagger) + var(--follow)) both; }
+.names span { white-space: nowrap; }
+.scholars { max-width: var(--home-wide); margin: clamp(96px, 18svh, 200px) auto; padding-inline: var(--home-gutter); }
+.scholars h2 { max-width: 13em; font-size: clamp(2.5rem, 7vw, 7.5rem); font-weight: 300; line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
+.scholars-lede { max-width: 34em; margin-top: 20px; color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.3vw, 1.1875rem); line-height: 1.45; }
+.scholar-list { display: grid; gap: 0; margin: clamp(40px, 8svh, 88px) 0 0; padding: 0; list-style: none; }
+.scholar { padding-block: 18px 20px; border-top: 1px solid var(--color-outline); }
+.scholar h3 { margin: 0; font-size: clamp(1.5rem, 2.3vw, 2.25rem); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
+.scholar-works { margin-top: 8px; color: var(--color-on-surface-quiet); font-size: 0.875rem; line-height: 1.45; }
+
+@media (min-width: 56.25rem) {
+  .scholar-list { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 3.4vw, 56px); row-gap: 28px; }
+  .hero { height: 100svh; }
+  .hero-photo { mask-image: linear-gradient(to top, transparent 0%, color-mix(in oklch, var(--color-surface) 50%, transparent) 8%, var(--color-surface) 24%); }
+  .hero-photo img { width: 100%; height: 100%; margin-top: 0; margin-left: 24%; max-width: none; object-position: 50% 46%; }
+  .hero-shade { background: linear-gradient(to right, var(--color-surface) 24%, color-mix(in oklch, var(--color-surface) 62%, transparent) 40%, transparent 58%); }
+  .hero-words { top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; padding-top: 72px; padding-bottom: 32px; }
+  .hero h1 { font-size: min(6.6vw, 13svh); line-height: 0.98; }
+  .hero h1 span:first-child, .hero h1 span:nth-child(2) { display: inline; }
+
+  .play .stage-pin { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: minmax(0, 1fr) auto; align-items: center; column-gap: clamp(32px, 6vw, 96px); row-gap: 8px; padding-block: 4svh 2svh; }
+  .stage-words { grid-column: 1; grid-row: 1 / -1; }
+  .play .stage-phone { grid-column: 2; grid-row: 1; width: calc((100svh - 11svh) * 0.455); height: 100%; }
+  .stage-caption { grid-column: 2; grid-row: 2; }
+  .play .stop { transform: translateY(calc((var(--i) - var(--t)) * 44px)); }
+}
+
+/* Very short phones: tighten the first screen so the whole offer still fits. */
+@media (max-width: 56.24rem) and (max-height: 600px) {
+  .names { font-size: 1rem; margin-top: 8px; }
+  .badge img { height: 44px; }
+  .badge img[src*='google'] { height: 64px; margin-block: -10px; margin-inline: -8px; }
+  .lede, .offer-note { font-size: 0.8125rem; }
+  .chapter { font-size: 2.5rem; }
+  .stop h3 { font-size: 1.125rem; }
+}

@@ -26,12 +26,12 @@ colors:                                        # source: open-arabic constants/c
   grammar-article: "oklch(0.68 0.11 50)"
   grammar-accent: "oklch(0.68 0.13 265)"       # accent (indigo.dark), the classifier's mark colour
 typography:
-  title: {fontFamily: "Alegreya Sans", fontSize: 1.3125rem, fontWeight: 500, lineHeight: "1.25"}
-  beat: {fontFamily: "Alegreya Sans", fontSize: 1.5rem, fontWeight: 400, lineHeight: "1.25"}
-  beat-laptop: {fontFamily: "Alegreya Sans", fontSize: 1.75rem, fontWeight: 400, lineHeight: "1.25"}
-  body: {fontFamily: "Alegreya Sans", fontSize: 1.125rem, fontWeight: 400, lineHeight: "1.45"}
-  small: {fontFamily: "Alegreya Sans", fontSize: 1rem, fontWeight: 400, lineHeight: "1.4"}
-  gloss: {fontFamily: "Alegreya Sans", fontSize: 1.3125rem, fontWeight: 500, lineHeight: "1.3"}
+  title: {fontFamily: "Inter", fontSize: 1.3125rem, fontWeight: 500, lineHeight: "1.25"}
+  beat: {fontFamily: "Inter", fontSize: 1.5rem, fontWeight: 400, lineHeight: "1.25"}
+  beat-laptop: {fontFamily: "Inter", fontSize: 1.75rem, fontWeight: 400, lineHeight: "1.25"}
+  body: {fontFamily: "Inter", fontSize: 1.125rem, fontWeight: 400, lineHeight: "1.45"}
+  small: {fontFamily: "Inter", fontSize: 1rem, fontWeight: 400, lineHeight: "1.4"}
+  gloss: {fontFamily: "Inter", fontSize: 1.3125rem, fontWeight: 500, lineHeight: "1.3"}
   arabic-line: {fontFamily: "Amiri", fontSize: 2.125rem, fontWeight: 400, lineHeight: "2.1"}
   arabic-word: {fontFamily: "Amiri", fontSize: 6rem, fontWeight: 400, lineHeight: "1.75"}
   arabic-pair: {fontFamily: "Amiri", fontSize: 2.125rem, fontWeight: 400, lineHeight: "1.75"}
@@ -161,10 +161,9 @@ The page is dark at every size: no light theme, no toggle, no `prefers-color-sch
 
 ## Typography
 
-**Amiri and Alegreya Sans, chosen together.** Amiri is a book face in the Bulaq press tradition, so
-the line looks like a printed classical page. Alegreya Sans has a pen's modulation that echoes
-Amiri's stroke, and its small x-height stays quiet beside the Arabic. No third family, no italics,
-no other weights.
+**Amiri and Inter.** Amiri is a book face in the Bulaq press tradition, so the line looks like a
+printed classical page. Inter is the app's own face, so the site and the app read as one product.
+No third family and no italics.
 
 Tokens give font, weight and line height. Where a size below names `fluid.*`, that wins over the
 token's `fontSize`.
@@ -204,9 +203,9 @@ token's `fontSize`.
 | Face | In `src/fonts/` | KB | Load |
 |---|---|---|---|
 | Amiri 400 | `amiri-regular.subset.woff2` | 51 | Preload, `font-display: swap` |
-| Alegreya Sans 400, 500 | `alegreya-sans-400.subset.woff2`, `alegreya-sans-500.subset.woff2` | 29 each | `swap`, no preload |
+| Inter, variable 250 to 600 with optical size | `inter-variable.subset.woff2` | 36 | Preload, `font-display: swap` |
 
-- Stacks: `"Amiri Subset", "Noto Naskh Arabic", serif` and `"Alegreya Sans", system-ui, sans-serif`.
+- Stacks: `"Amiri Subset", "Noto Naskh Arabic", serif` and `"Inter Site", "Inter Fallback", system-ui, sans-serif`.
 - Arabic subset, `--layout-features='*'`, one file per face, because a separate marks file breaks
   joins:
   `U+0020,U+00A0,U+0600-0605,U+060C,U+061B,U+061C,U+061E,U+061F,U+0621-063A,U+0640-0671,U+06D4`,
@@ -395,7 +394,7 @@ credits within `measure`. A row of `primary` links in `small`, each at least 44p
 (`/privacy`), Terms (`/terms`), Contact (`/contact`), Account deletion
 (`/account-deletion`), Analytics choice (`/analytics-choice`). That last page is the only consent
 UI anywhere: GA4 is off until someone switches it on there, and there's no cookie banner. Then in
-quiet `small`: "Amiri and Alegreya Sans are used under the SIL Open Font License. App Store is a
+quiet `small`: "Amiri and Inter are used under the SIL Open Font License. App Store is a
 trademark of Apple Inc. Google Play is a trademark of Google LLC." The ring mark
 (`docs/specimens/shared/mark-dark-64.png`, shown at 32px, clear space 0.309 of its diameter, empty
 alt, flush with the margin) comes first, once. Never re-coloured, re-stroked, or on an image

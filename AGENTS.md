@@ -52,12 +52,11 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 | `/download-app?to=&from=` | Worker: counts the tap with no cookie and no script |
 | Any other on-demand route | Not without a new decision record |
 
-**Island or plain script.** No islands: no `client:*`, no UI framework, no `ClientRouter`. The hard cap is 1.5 KB gzip of JS on any page.
+**Island or plain script.** No islands: no `client:*`, no UI framework, no `ClientRouter`. The hard cap is 1.5 KB gzip of JS on any page except the home page, which is the app's promo and has 60 KB of JS and 24 KB of CSS (`docs/decisions/2026-10-31-home-rebuild.md`).
 
 | Surface | Markup | JS, gzip |
 |---|---|---|
-| Story page, a few words | `<button popovertarget>` with one popover per word in the HTML | 0, at most 0.25 KB for the old-iOS gate |
-| Offer, lift, colour gate, store bar | HTML and CSS | 0 |
+| Home page | Static HTML, played by `src/scripts/home.ts`. Tappable words stay `<button popovertarget>` with one popover per word. Reads whole with no script | At most 60 KB |
 | Article reader | `<a class=w href=/word/slug data-i=N>`, one shared `popover`, glosses in `/gl/<id>.json` fetched on first pointer contact, plain external deferred script. Words stay links with JS off | 1 KB |
 | Word, dictionary, category, legal | No tappable words | 0 |
 | Every page | One inline GA4 choice check, counted on top of the above. Visitors who haven't opted in make no third-party request | At most 0.25 KB |

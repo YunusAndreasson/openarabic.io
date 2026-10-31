@@ -1,91 +1,129 @@
 ---
 import Base from '../layouts/Base.astro';
+import Screen from '../components/Screen.astro';
+import Stage from '../components/Stage.astro';
 import StoreLinks from '../components/StoreLinks.astro';
-import TappableLine from '../components/TappableLine.astro';
-import line from '../data/story-line.json';
+import scholarData from '../data/scholars.json';
 import '../styles/story.css';
-import captureReader from '../assets/story/01-reader-classical-line.webp?url';
-import captureAudio from '../assets/story/03-audio-playing.webp?url';
-import captureReview from '../assets/story/07-voice-review-listening.webp?url';
-import captureHorizon from '../assets/story/05-memory-horizon-breakdown.webp?url';
+import '../styles/home.css';
+import readAvif from '../assets/story/ios-01-read.avif?url';
+import readWebp from '../assets/story/ios-01-read.webp?url';
+import tapAvif from '../assets/story/ios-02-tap-word.avif?url';
+import tapWebp from '../assets/story/ios-02-tap-word.webp?url';
+import listenAvif from '../assets/story/ios-04-listen.avif?url';
+import listenWebp from '../assets/story/ios-04-listen.webp?url';
+import audioAvif from '../assets/story/audio.avif?url';
+import audioWebp from '../assets/story/audio.webp?url';
+import speakAvif from '../assets/story/ios-05-speak.avif?url';
+import speakWebp from '../assets/story/ios-05-speak.webp?url';
+import rememberAvif from '../assets/story/ios-06-remember.avif?url';
+import rememberWebp from '../assets/story/ios-06-remember.webp?url';
+import horizonAvif from '../assets/story/horizon.avif?url';
+import horizonWebp from '../assets/story/horizon.webp?url';
+import wordsAvif from '../assets/story/ios-07-vocabulary.avif?url';
+import wordsWebp from '../assets/story/ios-07-vocabulary.webp?url';
 
-// One job per screen: one line, one phone. Stand-in captures until the new set lands.
-const screens = [
-  { word: 'Read', line: 'Read the Arabic itself, with English line by line.', src: captureReader, alt: 'The app’s reader, with English above each classical Arabic line.' },
-  { word: 'Listen', line: 'Arabic audio on every word and every line.', src: captureAudio, alt: 'The app playing a text aloud.' },
-  { word: 'Speak', line: 'You answer out loud before the app shows the meaning.', src: captureReview, alt: 'The app’s voice review, listening for your answer to one Arabic word.' },
-  { word: 'Remember', line: 'Words return when your predicted recall falls to 90%.', src: captureHorizon, alt: 'The app’s memory horizon, showing how long practised words hold.' },
+const readAlt = 'The app’s reader: an English line above each classical Arabic line, with parts of the words in colour.';
+const tapAlt = 'The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from.';
+
+const listenAlt = 'The app’s playlist of texts, each with its scholar and length, and a Play all button.';
+const audioAlt = 'The app’s reader with its player open along the bottom, playing a text aloud.';
+const speakAlt = 'The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.';
+const rememberAlt = 'The app’s practice screen: how many words you would recall right now, and how long a typical word holds.';
+const horizonAlt = 'The app’s memory horizon: how many practised words hold for days, weeks and months.';
+const wordsAlt = 'The app’s list of your words, each with its meaning and a bar for how strong it is.';
+
+const readStops = [
+  { title: 'English above every Arabic line.', note: 'The English is machine-translated.' },
+  { title: 'Colour shows how multi-part words are built.' },
+  { title: 'One tap gives you the meaning, a grammar note and audio.' },
+  { title: 'For most words, see the root and other words built on it.' },
+];
+
+const listenStops = [
+  { title: 'Arabic audio on every word and every line.', note: 'The audio uses AI voices.' },
+  { title: 'Every text plays English first, then Arabic, or Arabic only.' },
+];
+
+const rememberStops = [
+  { title: 'Add the words you don’t know. Practice them with spaced repetition.', note: 'Tap for the meaning. Long-press to save it.' },
+  { title: 'You answer out loud before the app shows the meaning.', note: 'Hear the Arabic, then say what it means in English. The app grades your answer.' },
+  { title: 'Words return when your predicted recall falls to 90%.', note: 'You choose 10, 20 or 30 new words a day.' },
+  { title: 'See how long each word holds before it needs you again.', note: 'New words pause by themselves when your recall drops.' },
+  { title: 'Every word you add stays in one list, with how strong it is.' },
 ];
 ---
 
 <Base>
   <main>
-    <section class="hero" id="top">
-      <div class="hero-scene" aria-hidden="true"></div>
-      <header class="topbar">
-        <a class="brand" href="/" aria-label="OpenArabic">
-          <svg viewBox="0 0 1000 1000" width="28" height="28" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M0 500a500 500 0 1 1 1000 0a500 500 0 1 1-1000 0ZM106.9 500a393.1 393.1 0 1 0 786.2 0a393.1 393.1 0 1 0-786.2 0Z" /></svg>
-          <span>OpenArabic</span>
-        </a>{' '}
-        <a class="get" href="/download-app?from=home">Get the app</a>
-      </header>
-      <div class="hero-copy">
-        <h1><span class="draft">Read the classics in Arabic.</span></h1>
-        <p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>
-        <StoreLinks />
-      </div>
-    </section>
+    <div class="hero-wrap">
+      <section class="hero" id="top">
+        <picture class="hero-photo">
+          <source media="(max-width: 56.24rem)" type="image/avif" srcset="/hero-tall.avif" />
+          <source media="(max-width: 56.24rem)" type="image/webp" srcset="/hero-tall.webp" />
+          <source type="image/avif" srcset="/hero-wide.avif" />
+          <img src="/hero-wide.webp" width="1672" height="941" alt="A man seen from behind, small in a dark room, reading a book at a table by a window at dusk." fetchpriority="high" />
+        </picture>
+        <div class="hero-shade"></div>
+        <header class="topbar">
+          <a class="brand" href="/" aria-label="OpenArabic">
+            <svg viewBox="0 0 1000 1000" width="24" height="24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M0 500a500 500 0 1 1 1000 0a500 500 0 1 1-1000 0ZM106.9 500a393.1 393.1 0 1 0 786.2 0a393.1 393.1 0 1 0-786.2 0Z" /></svg>
+            <span>OpenArabic</span>
+          </a>
+        </header>
+        <div class="hero-words">
+          <h1 aria-label="Read the classics in Arabic."><span>Read</span> <span>the classics</span> <span>in Arabic.</span></h1>
+          <p class="names"><span>Ibn al-Jawzi,</span> <span>Ibn al-Qayyim,</span> <span>an-Nawawi,</span> <span>Ibn Taymiyyah,</span> <span>al-Bukhari,</span> <span>adh-Dhahabi.</span></p>
+          <StoreLinks />
+          <p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>
+          <p class="offer-note">Free. No ads. No subscription. An account is needed in the app.</p>
+        </div>
+      </section>
+    </div>
 
-    {
-      screens.slice(0, 1).map((screen) => (
-        <section class="screen">
-          <div class="head"><h2><span class="draft">{screen.word}</span></h2><p>{screen.line}</p></div>
-          <img class="phone" src={screen.src} width="720" height="1600" decoding="async" loading="lazy" alt={screen.alt} />
-        </section>
-      ))
-    }
-
-    <section class="screen" id="try">
-      <div class="head">
-        <h2><span class="draft">Tap</span></h2>
-        <p>One tap gives you the meaning, a grammar note and audio.</p>
-        <p class="try-hint"><span class="draft">Try it. Tap a word.</span></p>
-      </div>
-      <div class="phone live">
-        <p class="live-en" lang="en">{line.english}</p>
-        <TappableLine prefix="w" />
-        <p class="live-attr">{line.scholar}, {line.work}</p>
-      </div>
-    </section>
-
-    {
-      screens.slice(1).map((screen) => (
-        <section class="screen">
-          <div class="head"><h2><span class="draft">{screen.word}</span></h2><p>{screen.line}</p></div>
-          <img class="phone" src={screen.src} width="720" height="1600" decoding="async" loading="lazy" alt={screen.alt} />
-        </section>
-      ))
-    }
-
-    <section class="screen shelf">
-      <div class="head"><h2><span class="draft">The library</span></h2><p>Excerpts from 22 classical works by six scholars</p></div>
-      <ul class="scholars">
-        <li>Ibn al-Jawzi</li>
-        <li>Ibn al-Qayyim</li>
-        <li>an-Nawawi</li>
-        <li>Ibn Taymiyyah</li>
-        <li>al-Bukhari</li>
-        <li>adh-Dhahabi</li>
+    <section class="scholars" id="scholars">
+      <h2 class="reveal">Excerpts from classical works by six scholars</h2>
+      <p class="scholars-lede reveal">Creed, fiqh, sīrah, ḥadīth, tafsīr. Sorted by difficulty. Most texts are advanced; some are easier.</p>
+      <ul class="scholar-list">
+        {
+          scholarData.scholars.map((scholar) => (
+            <li class="scholar reveal">
+              <h3>{scholar.name}</h3>
+              <div class="scholar-works">
+                <p>{scholar.works.join(', ')}</p>
+              </div>
+            </li>
+          ))
+        }
       </ul>
     </section>
 
-    <section class="closing">
-      <div class="hero-scene" aria-hidden="true"></div>
-      <div class="closing-copy">
-        <h2>Free. No ads. No subscription.</h2>
-        <StoreLinks />
-        <p class="note">An account is needed in the app. <span class="draft">The audio uses AI voices. The English is machine-translated.</span></p>
+    <Stage id="read" marker="Read" stops={readStops}>
+      <div class="zoomer">
+        <Screen avif={readAvif} webp={readWebp} alt={readAlt} />
+        <span class="tap only-played" aria-hidden="true"></span>
       </div>
-    </section>
+      <Screen avif={tapAvif} webp={tapWebp} alt="" class="sheet-dim only-played" />
+      <Screen avif={tapAvif} webp={tapWebp} alt={tapAlt} class="sheet" />
+    </Stage>
+
+    <Stage id="listen" marker="Listen" stops={listenStops}>
+      <Screen avif={listenAvif} webp={listenWebp} alt={listenAlt} />
+      <Screen avif={audioAvif} webp={audioWebp} alt={audioAlt} class="audio" />
+    </Stage>
+
+    <Stage id="remember" marker="Remember" stops={rememberStops} caption="The numbers shown are from an example account.">
+      <Screen avif={tapAvif} webp={tapWebp} alt="" class="only-played" />
+      <span class="add only-played" aria-hidden="true"></span>
+      <Screen avif={speakAvif} webp={speakWebp} alt={speakAlt} class="speak" />
+      <span class="spoken only-played" aria-hidden="true"></span>
+      <Screen avif={rememberAvif} webp={rememberWebp} alt={rememberAlt} class="horizon" />
+      <Screen avif={horizonAvif} webp={horizonWebp} alt={horizonAlt} class="memory" />
+      <Screen avif={wordsAvif} webp={wordsWebp} alt={wordsAlt} class="word-list" />
+    </Stage>
   </main>
 </Base>
+
+<script>
+  import '../scripts/home';
+</script>

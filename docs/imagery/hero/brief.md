@@ -31,3 +31,15 @@ The owner: "the environment doesnt look realistic though, typically ai gneerated
 **How it must look:** a real photograph taken handheld on a 35 mm camera at high ISO, available light only. Visible grain and some noise in the shadows, shadows that go properly black, slightly soft focus away from the subject, imperfect framing, muted natural colour, ordinary mess and wear.
 
 **Reject on sight:** HDR look, even sharpness everywhere, glossy or waxy surfaces, glowing lamps with halos, teal-and-orange grading, perfectly arranged objects, rows of identical books, symmetrical composition, anything grand or cinematic-fantasy. Everything in the earlier rejection list still applies.
+
+## Round 4: leave room for the phone
+
+The rebuilt first screen puts a real phone on the right and the headline at the lower left, so the Round 3 man, who fills the right third, ends up behind the phone. Same world and same rejection list. He becomes small in a large room, placed between the words and the phone, and the room does the work, as in qamar360's street.
+
+**Wide (16:9):** he sits near the centre of the frame, a little left of it, seen from behind, small: no more than a quarter of the frame's height. Tall window beside him showing a dim blue street. The left third is a dark plain wall, quiet enough for text. The right third is a dark room corner, quiet enough for a phone over it.
+
+**Tall (9:19.5):** he sits in the upper half. The lower half falls away into dark floor for the words.
+
+## Round 4 critique
+
+Picked `r4-wide-2` and `r4-tall-1`. The ordinary room finally works: one lamp, one cold window on a wet street, and a small figure, in the same world as qamar360's street. `r4-wide-1` has a flatter view through the window. `r4-wide-3` loses the man at 390 px. All three are a little staged, with a very bare room and a floor reflection brighter than it would be, and that is the first thing to fix in a further round. Only 1672 px wide came back, so large screens upscale it.

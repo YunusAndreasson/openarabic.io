@@ -6,7 +6,6 @@
   --pressed: color-mix(in oklch, var(--color-on-surface) 10%, var(--color-surface));
 }
 
-h2 { font-size: var(--beat-size); font-weight: var(--type-beat-weight); line-height: var(--type-beat-line-height); max-width: 22ch; }
 .words p, .offer p { max-width: var(--space-measure); }
 .after-word { margin-top: var(--space-word); }
 .after-thought { margin-top: var(--space-thought); }
@@ -163,61 +162,4 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
   .lift-input { top: 24px; bottom: auto; left: var(--space-gutter-laptop); }
   .qr-plate { display: block; }
   @supports (anchor-name: --a) { .card { right: anchor(right); width: var(--space-card-laptop); } }
-}
-
-/* The page: a first screen, then one job per screen in one layout. */
-.draft { text-decoration: none; }
-.hero, .closing { position: relative; isolation: isolate; min-height: 100svh; overflow: hidden; display: flex; flex-direction: column; background: var(--color-surface); }
-.hero-scene { position: absolute; inset: 0; z-index: -1; background-color: var(--color-surface); background-image: linear-gradient(to bottom, color-mix(in oklch, var(--color-surface) 35%, transparent), transparent 16%, transparent 42%, var(--color-surface) 68%), url('/hero-tall.webp'); background-size: 100% 100%, 100% auto; background-position: top, center top; background-repeat: no-repeat; }
-.topbar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1440px; margin-inline: auto; padding: 20px var(--space-gutter); }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-on-surface); font-size: 1.25rem; font-weight: 500; text-decoration: none; }
-.brand svg { color: var(--color-primary); }
-.get { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 18px; border-radius: 999px; background: var(--color-primary); color: var(--color-surface); font-weight: 500; text-decoration: none; }
-.hero-copy { width: 100%; max-width: 1440px; margin: auto auto 0; padding: 0 var(--space-gutter) 40px; }
-.hero h1 { font-size: clamp(2.75rem, 11vw, 5.5rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.015em; color: var(--color-on-surface); max-width: 12ch; }
-.lede { max-width: 25rem; margin-top: 16px; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.4; color: var(--color-on-surface); }
-.stores { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 24px; }
-.badge { display: inline-block; line-height: 0; }
-.badge img { height: 48px; width: auto; }
-
-.screen { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; max-width: 1200px; margin-inline: auto; padding: 72px var(--space-gutter) 0; }
-.head { width: 100%; max-width: 40rem; text-align: center; }
-.head h2 { font-size: clamp(2.75rem, 7vw, 4.5rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.015em; }
-.head p { margin-top: 12px; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.35; color: var(--color-on-surface-quiet); text-wrap: balance; }
-.phone { display: block; width: min(100%, 320px); height: auto; border: 7px solid var(--color-surface-raised); outline: 1px solid var(--color-outline); border-radius: 38px; }
-.shelf { padding-bottom: 72px; }
-.scholars { width: 100%; max-width: 44rem; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: clamp(1.125rem, 2.4vw, 1.5rem); line-height: 1.2; text-align: center; }
-.scholars li { padding: 20px 8px; border: 1px solid var(--color-outline); border-radius: 16px; background: var(--color-surface-raised); }
-
-/* The live demo: a real line in a phone, and a pulse on one word until someone taps. */
-.head .try-hint { margin-top: 10px; color: var(--color-primary); }
-.phone.live { display: flex; flex-direction: column; justify-content: flex-start; gap: 24px; aspect-ratio: 720 / 1600; padding: 56px 20px 28px; background: var(--color-surface-raised); }
-.live-en { font-size: 1rem; line-height: 1.45; }
-.live .line { --arabic-line: 2.25rem; font-size: 2.25rem; line-height: 1.9; text-align: right; }
-.live-attr { color: var(--color-on-surface-quiet); font-size: var(--type-small-size); }
-.live .w { position: relative; }
-.live .w:nth-of-type(3)::after { content: ''; position: absolute; left: 50%; top: 58%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: var(--color-primary); opacity: 0; pointer-events: none; animation: tap-hint 2.4s ease-out infinite; }
-.live .line:has(:popover-open) .w::after { animation: none; }
-@keyframes tap-hint { 0% { opacity: 0; transform: scale(0.5); } 18% { opacity: 0.55; transform: scale(0.8); } 40% { opacity: 0; transform: scale(1.5); } 100% { opacity: 0; transform: scale(1.5); } }
-@media (prefers-reduced-motion: reduce) { .live .w:nth-of-type(3)::after { animation: none; } }
-
-.phone.live { anchor-name: --live; }
-/* The card opens like the app's sheet: along the bottom of the phone, never outside it. */
-@supports (anchor-name: --a) {
-  .live .card { inset: auto; right: calc(anchor(--live right) + 8px); bottom: calc(anchor(--live bottom) + 8px); width: calc(anchor-size(--live width) - 16px); max-height: calc(anchor-size(--live height) * 0.62); position-try-fallbacks: none; border-radius: 26px; }
-}
-.live .card audio { width: 100%; height: 36px; color-scheme: dark; }
-
-.closing { min-height: 90svh; }
-.closing-copy { width: 100%; max-width: 1200px; margin: auto auto 0; padding: 0 var(--space-gutter) 56px; }
-.closing h2 { font-size: clamp(2.25rem, 7vw, 4.5rem); font-weight: 500; line-height: 1.05; }
-.note { max-width: 34rem; margin-top: 20px; color: var(--color-on-surface-quiet); font-size: var(--type-small-size); }
-
-@media (min-width: 56.25rem) {
-  .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 45%, transparent) 34%, transparent 52%), linear-gradient(to bottom, transparent 82%, var(--color-surface)), url('/hero-wide.webp'); background-size: 100% 100%, 100% 100%, cover; background-position: top, top, center; }
-  .hero-copy { margin-block: auto; padding-bottom: 72px; }
-  .scholars { grid-template-columns: 1fr 1fr 1fr; }
-  .closing .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 70%, transparent) 50%, transparent 72%), linear-gradient(to bottom, var(--color-surface), transparent 20%, transparent 82%, var(--color-surface)), url('/hero-wide.webp'); }
-  .closing h2 { max-width: 11ch; }
-  .closing-copy { margin-block: auto; }
 }

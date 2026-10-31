@@ -4,6 +4,7 @@ import '../styles/fonts.css';
 import '../styles/base.css';
 import { themeColorHex } from '../styles/tokens.generated';
 import amiriUrl from '../fonts/amiri-regular.subset.woff2?url';
+import interUrl from '../fonts/inter-variable.subset.woff2?url';
 import Footer from '../components/Footer.astro';
 
 interface Props {
@@ -27,7 +28,9 @@ const {
     <meta name="description" content={description} />
     <meta name="theme-color" content={themeColorHex} />
     <link rel="icon" href="data:," />
+    <link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={amiriUrl} as="font" type="font/woff2" crossorigin />
+    {Astro.url.pathname === '/' && <script is:inline>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('play');</script>}
   </head>
   <body>
     <slot />

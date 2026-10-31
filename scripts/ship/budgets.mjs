@@ -10,13 +10,16 @@ const ANY_PAGE_JS = 1500;
 const READER_HTML_BROTLI = 12_000;
 const GLOSSARY_BROTLI = 25_000;
 const CSS_GZIP = 12_000;
+// The home page is the app's promo: docs/decisions/2026-10-31-home-rebuild.md. No other page gets these.
+const HOME_JS = 60_000;
+const HOME_CSS = 24_000;
 const FONTS_FIRST_VIEW = 110_000;
 const MAX_FILES = 90_000;
 const MAX_ASSET = 25 * 1024 * 1024;
 
-/** JS by page type. Every limit is the page's own row plus D7's inline check, under the 1.5 KB cap. */
+/** JS by page type. Every limit is the page's own row plus D7's inline check, under the 1.5 KB cap, except the home page's own. */
 export function pageType(route) {
-  if (route === '/') return { type: 'story', js: 250 + D7_CHECK, external: false };
+  if (route === '/') return { type: 'home', js: HOME_JS, css: HOME_CSS, external: true };
   if (route.startsWith('/read/')) return { type: 'reader', js: 1000 + D7_CHECK, external: true };
   if (route === '/analytics-choice') return { type: 'analytics choice', js: ANY_PAGE_JS, external: true };
   return { type: '0 JS plus the D7 check', js: D7_CHECK, external: false };
@@ -85,7 +88,7 @@ function checkPage(page, clientDir, facts) {
   }
 
   if (js > limits.js) fail(`${route} (${limits.type}) ships ${kb(js)} of JS gzip, over its ${kb(limits.js)} budget.`);
-  if (js > ANY_PAGE_JS) fail(`${route} ships ${kb(js)} of JS gzip, over the 1.5 KB cap on any page.`);
+  if (route !== '/' && js > ANY_PAGE_JS) fail(`${route} ships ${kb(js)} of JS gzip, over the 1.5 KB cap on any page.`);
 
   const fonts = new Set();
   for (const sheet of sheets) {
@@ -95,7 +98,8 @@ function checkPage(page, clientDir, facts) {
       if (/\.woff2?$/i.test(match[1].split(/[?#]/)[0])) fonts.add(localFile(clientDir, match[1], page));
     }
   }
-  if (css > CSS_GZIP) fail(`${route} ships ${kb(css)} of CSS gzip, over the ${kb(CSS_GZIP)} budget.`);
+  const cssLimit = limits.css ?? CSS_GZIP;
+  if (css > cssLimit) fail(`${route} ships ${kb(css)} of CSS gzip, over the ${kb(cssLimit)} budget.`);
   const fontBytes = [...fonts].reduce((sum, file) => sum + fs.statSync(file).size, 0);
   if (fontBytes > FONTS_FIRST_VIEW) fail(`${route} declares ${kb(fontBytes)} of fonts, over the ${kb(FONTS_FIRST_VIEW)} first-view budget.`);
 
@@ -115,16 +119,26 @@ export function checkBudgets(root = ROOT) {
 
   // wrangler.json and .assetsignore are never served, so they don't count against the upload.
   if (files.length > MAX_FILES) fail(`The build has ${files.length} files, over the ${MAX_FILES} limit.`);
+  // Only what the home page itself loads may use the home page's limits.
+  const homePage = pages.find((page) => routeOf(page, clientDir) === '/');
+  const homeFiles = new Set();
+  if (homePage) {
+    for (const node of elements(parse(fs.readFileSync(homePage, 'utf8')))) {
+      const url = node.tagName === 'script' ? attr(node, 'src') : node.tagName === 'link' && /stylesheet/i.test(attr(node, 'rel') ?? '') ? attr(node, 'href') : null;
+      if (url && !isExternal(url)) homeFiles.add(localFile(clientDir, url, homePage));
+    }
+  }
   for (const file of files) {
     const size = fs.statSync(file).size;
     if (size > MAX_ASSET) fail(`${rel(file)} is ${(size / 1024 / 1024).toFixed(1)} MiB, over the 25 MiB limit.`);
     if (/\.m?js$/.test(file)) {
       const zipped = gz(fs.readFileSync(file));
-      if (zipped > ANY_PAGE_JS) fail(`${rel(file)} is ${kb(zipped)} of JS gzip, over the 1.5 KB cap on any page.`);
+      if (!homeFiles.has(file) && zipped > ANY_PAGE_JS) fail(`${rel(file)} is ${kb(zipped)} of JS gzip, over the 1.5 KB cap on any page.`);
     }
     if (file.endsWith('.css')) {
       const zipped = gz(fs.readFileSync(file));
-      if (zipped > CSS_GZIP) fail(`${rel(file)} is ${kb(zipped)} of CSS gzip, over the ${kb(CSS_GZIP)} budget.`);
+      const limit = homeFiles.has(file) ? HOME_CSS : CSS_GZIP;
+      if (zipped > limit) fail(`${rel(file)} is ${kb(zipped)} of CSS gzip, over the ${kb(limit)} budget.`);
     }
     if (rel(file).startsWith(`dist${path.sep}client${path.sep}gl${path.sep}`)) {
       const size2 = br(fs.readFileSync(file));

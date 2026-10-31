@@ -23,7 +23,7 @@
   --color-grammar-article: oklch(0.68 0.11 50);
   --color-grammar-accent: oklch(0.68 0.13 265);
   --font-arabic: "Amiri Subset", "Noto Naskh Arabic", serif;
-  --font-latin: "Alegreya Sans", system-ui, sans-serif;
+  --font-latin: "Inter Site", "Inter Fallback", system-ui, sans-serif;
   --type-title-family: var(--font-latin);
   --type-title-size: 1.3125rem;
   --type-title-weight: 500;

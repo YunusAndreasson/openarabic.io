@@ -6,18 +6,21 @@
   font-display: swap;
 }
 
+/* Inter 4.1, the app's face. One variable file, weight 250 to 600 with optical size, cut to this site's characters. */
 @font-face {
-  font-family: "Alegreya Sans";
-  src: url("../fonts/alegreya-sans-400.subset.woff2") format("woff2");
-  font-weight: 400;
+  font-family: "Inter Site";
+  src: url("../fonts/inter-variable.subset.woff2") format("woff2");
+  font-weight: 250 600;
   font-style: normal;
   font-display: swap;
 }
 
+/* Arial scaled to Inter's width and line metrics, so the moment the font arrives moves nothing. */
 @font-face {
-  font-family: "Alegreya Sans";
-  src: url("../fonts/alegreya-sans-500.subset.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
+  font-family: "Inter Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Helvetica");
+  size-adjust: 107.06%;
+  ascent-override: 90.49%;
+  descent-override: 22.53%;
+  line-gap-override: 0%;
 }

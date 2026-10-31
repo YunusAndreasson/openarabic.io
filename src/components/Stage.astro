@@ -1,0 +1,36 @@
+---
+// A played section: the phone stays pinned while the scroll runs through its stops, and `--t` on the
+// section says where it stands. src/scripts/home.ts sets it. CSS draws every stop from `--t`.
+// Without script or with reduced motion, the stops and every screen are simply shown in order.
+interface Props {
+  id: string;
+  marker: string;
+  stops: { title: string; note?: string }[];
+  caption?: string;
+}
+const { id, marker, stops, caption } = Astro.props;
+---
+
+<section class="stage" id={id} data-stage data-stops={stops.length} style={`--n:${stops.length};--t:0`}>
+  <div class="stage-pin">
+    <div class="stage-words">
+      <h2 class="chapter"><span class="draft">{marker}</span></h2>
+      <ol class="stops">
+        {
+          stops.map((stop, index) => (
+            <li class="stop" style={`--i:${index}`}>
+              <h3>{stop.title}</h3>
+              {stop.note && <p class="stop-note"><span class="draft">{stop.note}</span></p>}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div class="stage-phone">
+      <figure class="phone">
+        <div class="screen"><slot /></div>
+      </figure>
+    </div>
+    {caption && <p class="stage-caption"><span class="draft">{caption}</span></p>}
+  </div>
+</section>

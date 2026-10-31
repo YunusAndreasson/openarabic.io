@@ -1,0 +1,13 @@
+---
+// One real app capture, AVIF with a WebP fallback. All captures are 1206x2622.
+interface Props {
+  avif: string;
+  webp: string;
+  alt: string;
+  class?: string;
+  eager?: boolean;
+}
+const { avif, webp, alt, class: className, eager = false } = Astro.props;
+---
+
+<picture class={className}><source type="image/avif" srcset={avif} /><img src={webp} width="1206" height="2622" alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" /></picture>

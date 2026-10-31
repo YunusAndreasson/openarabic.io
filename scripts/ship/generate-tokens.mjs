@@ -45,7 +45,7 @@ export function generateTokens(designText) {
   const { front, body } = splitDesign(designText);
   const stacks = body.match(/- Stacks: `([^`]+)` and `([^`]+)`/);
   if (!stacks) throw new Error('DESIGN.md `Typography` no longer has its "Stacks:" line.');
-  const stackFor = { Amiri: 'var(--font-arabic)', 'Alegreya Sans': 'var(--font-latin)' };
+  const stackFor = { Amiri: 'var(--font-arabic)', Inter: 'var(--font-latin)' };
 
   const lines = [
     ...Object.entries(front.colors).map(([k, v]) => `--color-${k}: ${v};`),

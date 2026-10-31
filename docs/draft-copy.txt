@@ -64,3 +64,33 @@ Listen
 Speak
 Remember
 The library
+
+# Home page rebuild. docs/decisions/2026-10-31-home-rebuild.md.
+Read
+The app’s reader: an English line above each classical Arabic line, with parts of the words in colour.
+The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from.
+The app’s playlist of texts, each with its scholar and length, and a Play all button.
+A man seen from behind, small in a dark room, reading a book at a table by a window at dusk.
+Add the words you don’t know. Practice them with spaced repetition.
+The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.
+The app’s practice screen: how many words you would recall right now, and how long a typical word holds.
+The app’s memory horizon: how many practised words hold for days, weeks and months.
+The app’s list of your words, each with its meaning and a bar for how strong it is.
+See how long each word holds before it needs you again.
+New words pause by themselves when your recall drops.
+Every word you add stays in one list, with how strong it is.
+The numbers shown are from an example account.
+Remember
+
+# Book names as stored in articles.book, not new copy.
+Ṣayd al-Khāṭir, Bustān al-Wāʿiẓīn wa-Riyāḍ al-Sāmiʿīn, Ṣifat al-Ṣafwa, Talbīs Iblīs, Akhbār al-Ḥamqā waʾl-Mughaffalīn, Birr al-Wālidayn, Minhāj al-Qāṣidīn
+Madārij al-Sālikīn, al-Tibyān fī Aqsām al-Qurʾān, Ighāthat al-Lahfān, Zād al-Maʿād, ʿUddat al-Ṣābirīn wa-Dhakhīrat al-Shākirīn
+Riyāḍ al-Ṣāliḥīn, al-Tibyān fī Ādāb Ḥamalat al-Qurʾān, al-Majmūʿ Sharḥ al-Muhadhdhab
+Majmūʿ al-Fatāwā, al-ʿUbūdiyya, al-Kalim al-Ṭayyib
+Ṣaḥīḥ al-Bukhārī
+Siyar Aʿlām al-Nubalāʾ, al-Kabāʾir, al-Ṭibb al-Nabawī
+Creed, fiqh, sīrah, ḥadīth, tafsīr.
+Excerpts from classical works by six scholars
+Sorted by difficulty. Most texts are advanced; some are easier.
+Listen
+The app’s reader with its player open along the bottom, playing a text aloud.

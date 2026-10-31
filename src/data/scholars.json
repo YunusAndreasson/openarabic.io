@@ -1,0 +1,29 @@
+{
+  "source": "articles joined to authors, published only, read from Supabase on 2026-10-31. Book names as stored.",
+  "scholars": [
+    {
+      "name": "Ibn al-Jawzi",
+      "works": ["Ṣayd al-Khāṭir", "Bustān al-Wāʿiẓīn wa-Riyāḍ al-Sāmiʿīn", "Ṣifat al-Ṣafwa", "Talbīs Iblīs", "Akhbār al-Ḥamqā waʾl-Mughaffalīn", "Birr al-Wālidayn", "Minhāj al-Qāṣidīn"]
+    },
+    {
+      "name": "Ibn al-Qayyim",
+      "works": ["Madārij al-Sālikīn", "al-Tibyān fī Aqsām al-Qurʾān", "Ighāthat al-Lahfān", "Zād al-Maʿād", "ʿUddat al-Ṣābirīn wa-Dhakhīrat al-Shākirīn"]
+    },
+    {
+      "name": "an-Nawawi",
+      "works": ["Riyāḍ al-Ṣāliḥīn", "al-Tibyān fī Ādāb Ḥamalat al-Qurʾān", "al-Majmūʿ Sharḥ al-Muhadhdhab"]
+    },
+    {
+      "name": "Ibn Taymiyyah",
+      "works": ["Majmūʿ al-Fatāwā", "al-ʿUbūdiyya", "al-Kalim al-Ṭayyib"]
+    },
+    {
+      "name": "al-Bukhari",
+      "works": ["Ṣaḥīḥ al-Bukhārī"]
+    },
+    {
+      "name": "adh-Dhahabi",
+      "works": ["Siyar Aʿlām al-Nubalāʾ", "al-Kabāʾir", "al-Ṭibb al-Nabawī"]
+    }
+  ]
+}
