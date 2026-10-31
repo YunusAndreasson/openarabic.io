@@ -37,6 +37,24 @@ The owner's answers from the review of open questions, in the order they were se
 
 Generated imagery contains no lettering. Arabic text and app screens are always real, composited in afterwards.
 
+## Round 4: the founder's story
+
+Asked before the 2026-10-31 crash and answered afterwards. Each answer was picked from a list unless quoted, so only what is written here is established.
+
+| Question | Decision | Notes |
+|---|---|---|
+| Why it was built | The owner's own struggle | Background only: the owner keeps their story off the site |
+| Who it is for | Someone who finished a course but can't read books | Matches the FAQ's starting point |
+| The moment to feel | Reading a classical line without the English | The owner has had this moment and keeps it off the site. The page gives the moment to the visitor |
+| iPhone testing | "i already kno the app works on all phones" | No test devices offered. That answers for the app, not for word colour on the web, which stays unproven on a real iPhone. The one-colour fallback below iOS 26.2 stays in the design |
+| Why it is free | Sadaqah jariyah; the site may say so | Still stated as a fact of today, per Round 2: no "forever" or "always" |
+| Motifs | The Hijri version number is deliberate; اقْرَأْ is not a motif | Removes اقْرَأْ from concept B |
+| Religious content sign-off | "all input is valid so no need for sign off" | **Replaces the named reviewer in plan step 3 and success criterion 3.** The source, attribution and machine-translation disclosure rules still apply |
+| Reaching 5 learners | "check with me" | Stop and ask the owner at step 7 |
+| Public name | Yunus Andréasson | Both stores show "Jonas Andreasson"; changing them is the owner's task |
+| Product name | OpenArabic: Read the Classics | Differs from the live App Store and Play titles and from `app.json` |
+| Al-Fawaid PDF | Free to share | The Terms forbid redistribution, so they need an exception for the PDF, in the app repo |
+
 ## Round 5: measurement and privacy
 
 | Question | Decision | Notes |
