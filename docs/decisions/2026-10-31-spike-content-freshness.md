@@ -4,7 +4,7 @@
 
 ## Decision
 
-**One path: read a full snapshot, compare, rebuild, deploy.** It runs from a scheduled CI job every 6 hours, plus a manual "publish now" run of the same job. No admin features go on the new site, and the old admin keeps writing to Supabase as it does today.
+**One path: read a full snapshot, compare, rebuild, deploy.** It runs from a scheduled CI job every 6 hours, plus a manual "publish now" run of the same job. No admin features go on the new site. *Superseded:* this record assumed the old admin keeps writing to Supabase, but the content write migration stops that once applied. Failure handling and the guard in step 3 are also superseded by the [publishing contract](../site-plan.md#publishing-contract).
 
 1. Fetch the snapshot: 128 sequential reads at no more than 2 a second.
 2. Hash it. If nothing changed since the last published hash, stop.

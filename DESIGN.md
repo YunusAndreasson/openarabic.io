@@ -112,7 +112,7 @@ A string that is in neither the ledger nor this file is draft copy: list it and 
 
 ## Overview
 
-- **The one metric:** store taps per visit, by page type. It is counted first-party and without
+- **The one metric:** store taps per page view, by page type. A static page can't tell a visit from a view. It is counted first-party and without
   cookies, so store links go through `/download-app` and need no script.
 - **The feeling:** "I can read this." The visitor reads a classical line without the English, by
   their own hand, on this page. That moment is the page's, never an app feature.
@@ -449,7 +449,7 @@ Nielsen can veto anything that fails a user.
 - A veto needs an observed failure or a crossed threshold, not an opinion.
 - Understanding the offer and reaching a store are never traded. Minor friction gets weighed.
 - A feeling counts as a use, so Rams can't delete the reason for the page.
-- A page nobody feels isn't finished: cold viewing can hold back a release, not overrule a veto.
+- A page nobody feels isn't finished, but no learner test gates a release: the owner skipped it. Evidence comes after launch.
 
 Excluded from Nolan: outrage, antagonists, ticking clocks, escalation. A relentless page would
 misdescribe a calm app.
@@ -522,7 +522,8 @@ Everything works with no script and with reduced motion. The static state is the
 **JS budget, gzip, enforced in CI** (from `docs/decisions/2026-10-31-spike-word-tap.md`): 0 on word,
 dictionary, category and legal pages; 1KB on the reader; at most 0.25KB on the story page, only if the
 old-iOS colour gate can't be done without script; 1.5KB hard cap on any page, which includes about
-0.5KB reserved for the store-tap counter. Others: LCP at most 2.5s, INP at most 200ms, CLS at most 0.1,
+0.5KB reserved for a store-tap counter, released if the no-script counter survives plan task 3.0. The
+limits describe a visitor who hasn't opted in to GA4. Others: LCP at most 2.5s, INP at most 200ms, CLS at most 0.1,
 CSS at most 12KB gzip, first-view fonts at most 110KB, phone first load at most 1MB.
 
 **Sound.** Silent by default, sound only on a tap. Male voices, no instruments. Silence beats a bad
@@ -599,7 +600,7 @@ the visitor one step towards the app. They share type, colour, the word componen
 
 - **Top line, content pages only:** the product name linking home on the left, "Get the app" on the
   right, in `small`, not sticky.
-- Words use the same `Word`, if the JS and markup budgets allow on long texts.
+- Words in the reader are links to their word page with one shared popover, not the story's per-word `Word`, per `docs/decisions/2026-10-31-spike-word-tap.md`.
 - Say "excerpts", not "complete works". The easier 48 are the curated starting path, and the page is
   honest that the rest are harder.
 - Disclose once per page, near first use: machine-translated English and AI voices.
@@ -608,29 +609,38 @@ the visitor one step towards the app. They share type, colour, the word componen
 
 ## Review
 
-Run these before a page counts as done. `[T]` a tool checks it, `[P]` a person must. A specimen
-passes the `[T]` rows it can run and lists the rest.
+Run the rows the matrix marks for the page type before a page counts as done. `[T]` a tool checks it,
+`[P]` a person must. A specimen passes the `[T]` rows it can run and lists the rest. Applicability
+isn't a judgement call: a blank cell means the row doesn't apply.
 
-| Check | How judged |
-|---|---|
-| `[T]` Offer at first paint | At 390×664, 375×553 and 1280×640 the rects of what, who, price and store links are in the viewport, with no script |
-| `[T]` Peek | At least 48px of the next beat above the fold |
-| `[T]` Native scroll | A 500px wheel moves `scrollY` 500px; no sideways scroll, scroll-snap or phone pin |
-| `[T]` Word target and response | At least 44px; card painted within 100ms; every card in the viewport |
-| `[T]` Reduced motion | The same layout, durations 0 |
-| `[T]` No script | Tap, Close, lift, audio and store links work |
-| `[T]` Budgets | As in `Motion`, in CI |
-| `[T]` Claims | Every sentence traces to `PRODUCT.md` or the draft list; banned phrases absent |
-| `[T]` Tokens | Lint: 0 errors, 0 warnings, a `token-summary` present; generated CSS has no drift; no colour literal below the front matter |
-| `[T]` Accessibility | Automated scan 0 serious; 200% zoom works; heading outline reads as the argument |
-| `[P]` Arabic by eye | In Zen and Chromium: letters join across coloured spans, marks on their letters, shadda and kasra clear, underline clear of marks, no fallback font |
-| `[P]` Real iPhone | Word colour on iOS 18, 26.x and 27.2, and the one-colour path below 26.2 |
-| `[P]` Daylight | Arabic read comfortably outdoors on a phone, on the dark page |
-| `[P]` Tap signifier | Without instruction, at least 4 of 5 tap a word within 10s |
-| `[P]` Emotion test | Five target learners, own phones, unprompted: same image remembered and promise stated by 4 of 5, a matching feeling by 4 of 5, want it for a reason the page gave by 3 of 5. Agent opinions don't count |
-| `[P]` Remembered image | At least 3 of 5 say what changed between the two lines, with no caption |
-| `[P]` Cold view | Every week the page changes: one or two new people |
-| `[P]` Rules only | Is anything here a story about how we got here? Move it to `docs/design-history.md` |
+| Check | How judged | Story | Article | Word | Directory | Legal |
+|---|---|---|---|---|---|---|
+| `[T]` Offer at first paint | At 390×664, 375×553 and 1280×640 the rects of what, who, price and store links are in the viewport, with no script | Yes | | | | |
+| `[T]` Offer in its place | The page's one offer is where `docs/site-plan.md`'s page map puts it, and its store links work | Yes | Yes | Yes | Yes | |
+| `[T]` Peek | At least 48px of the next beat above the fold | Yes | | | | |
+| `[T]` Native scroll | A 500px wheel moves `scrollY` 500px; no sideways scroll, scroll-snap or phone pin | Yes | Yes | Yes | Yes | Yes |
+| `[T]` Word target and response | At least 44px; card painted within 100ms; every card in the viewport | Yes | Yes | | | |
+| `[T]` Reduced motion | The same layout, durations 0 | Yes | Yes | Yes | Yes | Yes |
+| `[T]` No script: lift | Tap, Close, lift, audio and store links work | Yes | | | | |
+| `[T]` No script: page | All content is readable and links work. In the reader, words go to their word page | | Yes | Yes | Yes | Yes |
+| `[T]` Budgets | As in `Motion`, for that page type, in CI | Yes | Yes | Yes | Yes | Yes |
+| `[T]` Claims | Every sentence traces to `PRODUCT.md` or the draft list; banned phrases absent | Yes | Yes | Yes | Yes | Yes |
+| `[T]` Tokens | Lint: 0 errors, 0 warnings, a `token-summary` present; generated CSS has no drift; no colour literal below the front matter | Yes | Yes | Yes | Yes | Yes |
+| `[T]` Accessibility | Automated scan 0 serious; 200% zoom works; heading outline reads as the argument | Yes | Yes | Yes | Yes | Yes |
+| `[P]` Keyboard and screen reader | The interaction contract from plan task 2.0 | Yes | Yes | Yes | Yes | Yes |
+| `[P]` Arabic by eye | In Zen and Chromium: letters join across coloured spans, marks on their letters, shadda and kasra clear, underline clear of marks, no fallback font | Yes | Yes | Yes | Yes | |
+| `[P]` Real iPhone | Word colour on iOS 18, 26.x and 27.2, and the one-colour path below 26.2 | Yes | Yes | | | |
+| `[P]` Daylight | Arabic read comfortably outdoors on a phone, on the dark page | Yes | Yes | | | |
+
+Page types: Directory covers dictionary, letter, category, author and book pages. `/download-app` uses
+the Story column for offer and budgets, without Peek or Word rows.
+
+`[P]` Rules only, for this file: is anything here a story about how we got here? Move it to
+`docs/design-history.md`.
+
+Not run, by the owner's decision, and not a gate: the emotion test, tap signifier, remembered image
+and cold view, which all need recruited people. The owner skipped them. Post-launch signals in
+`docs/site-plan.md` stand in, and they are weaker. Cold viewing stays welcome if a chance arises.
 
 Browsers: Zen is required, because it's the owner's; Chromium is the second. Green in Chromium alone
 is not a pass. Specimens live in `docs/specimens/`, are noindexed, and aren't site code.

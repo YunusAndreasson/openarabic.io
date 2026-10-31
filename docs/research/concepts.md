@@ -2,7 +2,7 @@
 
 Written 2026-10-31 for step 5 of the foundation plan. Specimens are in `docs/specimens/concept-a/`, `concept-b/` and `concept-c/`. Open them through any local static server, because the fonts need same-origin requests. They hold no script.
 
-**What this is:** an agent's reasoning and browser checks. No learner has seen any of this. The critiques below are judgement, and the emotion test in step 7 is still the only evidence that can count.
+**What this is:** an agent's reasoning and browser checks. No learner has seen any of this. The critiques below are judgement, and *(superseded: the owner skipped the emotion test; see `docs/site-plan.md`)* it was to be the only evidence that can count.
 
 **Fixed for all three:**
 
@@ -202,4 +202,4 @@ Everything here is outside the Allowed wording. It is marked with a dashed under
 6. **Replace the hand-marked colour and sampled hues** with the classifier's segments and the app's tokens.
 7. **Treat every line as needing a person's check before it is featured,** given the modern-sounding texts found above.
 8. **Get the owner's words** for the items in the draft table, sadaqah jariyah first.
-9. **Run the emotion test** on the DESIGN.md specimen. Until then this pick is a judgement.
+9. *Superseded:* the owner skipped the emotion test, so this pick stays a judgement until store taps come in after launch. See `docs/site-plan.md`.

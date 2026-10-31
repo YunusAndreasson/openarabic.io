@@ -2,7 +2,7 @@
 
 `DESIGN.md` holds rules only. This file holds the why and the when. Evidence is in `docs/research/`, the owner's answers in `docs/decisions/2026-10-31-owner-review.md`, the concept pick in `docs/decisions/2026-10-31-concept.md`.
 
-Status of all of it: **agent judgement and browser checks.** No learner has seen any of this. The emotion test in plan step 7 is the only evidence that can count for feeling.
+Status of all of it: **agent judgement and browser checks.** No learner has seen any of this. The owner skipped the emotion test in plan step 7, so nothing counts as evidence for feeling until after launch.
 
 ## Owner decisions that overrode research or the plan (2026-10-31)
 
