@@ -4,7 +4,7 @@
 
 - **Never deploy to, rename or delete the Worker `openarabic-web`.** It serves the live openarabic.io and its admin panel. This repo's Worker is `openarabic-site`, set in `wrangler.jsonc`. Keep that file, because without it the adapter would name the Worker after this folder.
 - **Never add a route or custom domain for openarabic.io.** The cutover happens only on the owner's explicit go.
-- **The only deploy allowed is `pnpm ship`, to the noindexed `workers.dev` preview of `openarabic-site`.** Never run `wrangler deploy` directly: it skips every check. Production is cutover, on the owner's explicit go only.
+- **The only deploy allowed is `pnpm ship`, to the noindexed `workers.dev` preview of `openarabic-site`.** Never run `wrangler deploy` directly, including `--temporary`, which needs no login: it skips every check. Production is cutover, on the owner's explicit go only.
 - **Treat Supabase as production.** Read only, with throttled requests, and never print or commit keys.
 - **No admin work here.** The old site is abandoned and this one only promotes the app: no admin, accounts or sign-up. `open-arabic` and its worktrees are read only from this repo.
 
