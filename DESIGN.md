@@ -520,7 +520,8 @@ Everything works with no script and with reduced motion. The static state is the
 
 **Budgets.** The story page's offer, tap, lift, colour gate and store bar use no JavaScript.
 **JS budget, gzip, enforced in CI** (from `docs/decisions/2026-10-31-spike-word-tap.md`): 0 on word,
-dictionary, category and legal pages; 1KB on the reader; at most 0.25KB on the story page, only if the
+dictionary, category and legal pages, plus one inline GA4 choice check of at most 0.25KB on every page;
+1KB on the reader; at most 0.25KB on the story page, only if the
 old-iOS colour gate can't be done without script; 1.5KB hard cap on any page, which includes about
 0.5KB reserved for a store-tap counter, released if the no-script counter survives plan task 3.0. The
 limits describe a visitor who hasn't opted in to GA4. Others: LCP at most 2.5s, INP at most 200ms, CLS at most 0.1,
@@ -593,7 +594,7 @@ the visitor one step towards the app. They share type, colour, the word componen
 
 | Surface | Holds, in order | Offer |
 |---|---|---|
-| Article | Title, scholar and work, Arabic and English lines, disclosures | At the end of the text |
+| Article | Title, scholar and work, the article's image, Arabic and English lines, disclosures | At the end of the text |
 | Word | The word at `fluid.arabic-word`, meaning, audio, example sentence and source | Right after the example, about this word, with a link to the source passage |
 | Dictionary | Search, then results | At the end of the results |
 | Author, book | Name, works with published texts, excerpts by difficulty | Beside the download on a book, at the end on an author |
@@ -601,6 +602,9 @@ the visitor one step towards the app. They share type, colour, the word componen
 - **Top line, content pages only:** the product name linking home on the left, "Get the app" on the
   right, in `small`, not sticky.
 - Words in the reader are links to their word page with one shared popover, not the story's per-word `Word`, per `docs/decisions/2026-10-31-spike-word-tap.md`.
+- The reader shows `word_form` where its letters match the stored sentence, and the stored `arabic` with no tapping on the sentences where they don't. Never alter either.
+- An article's own image sits below its title, is served from the build, never pushes the first Arabic line off the first screen, and doubles as its `og:image`. Crop it, don't overlay text on it.
+- The App Store rating appears only on `/download-app`, with no count, and renders nothing if the lookup fails.
 - Say "excerpts", not "complete works". The easier 48 are the curated starting path, and the page is
   honest that the rest are harder.
 - Disclose once per page, near first use: machine-translated English and AI voices.
