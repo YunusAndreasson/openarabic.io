@@ -12,9 +12,14 @@ import { checkClaims } from './ship/claims.mjs';
 import { checkDevBoots } from './ship/dev-boot.mjs';
 import { hashBuild, previewTarget, readPublished, rollbackTo, upload, uploadCommand, writePreviewUrl, writePublished } from './ship/deploy.mjs';
 import { sha256, smoke } from './ship/smoke.mjs';
+import { fetchSnapshot } from './ship/fetch.mjs';
+import { describeProblems, validateSnapshot } from './ship/validate.mjs';
+import { compareSnapshots, loadBaseline, writeReport } from './ship/compare.mjs';
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
+const approveAt = args.indexOf('--approve');
+const approve = approveAt === -1 ? null : (args[approveAt + 1] ?? '');
 const started = Date.now();
 const results = [];
 const notBuilt = [];
@@ -30,11 +35,37 @@ function stub(step, task, what) {
   report(step, 'NOT BUILT', `${what} Task ${task}. Not a pass.`);
 }
 
-function build() {
+/** Fetch, validate, compare. Returns the snapshot the build may read, or stops the run. */
+async function snapshotSteps(published) {
+  const { snapshot, hash, file, meta } = await fetchSnapshot();
+  const rows = Object.entries(meta.rows).map(([table, count]) => `${table} ${count}`).join(', ');
+  report('fetch', 'PASS', `${hash}: ${rows}. ${meta.supabaseRequests} Supabase reads and ${meta.requests - meta.supabaseRequests} rating lookup in ${(meta.ms / 1000).toFixed(1)} s. Rating ${meta.rating?.average ?? 'unavailable'}`);
+
+  const baseline = loadBaseline(published);
+  const { problems, notes } = validateSnapshot(snapshot, baseline.snapshot);
+  if (problems.length > 0) fail(`The snapshot is broken, so it can't be published or approved. ${problems.length} problem${problems.length === 1 ? '' : 's'}:\n${describeProblems(problems)}`);
+  report('validate', 'PASS', `completeness and relationships hold${notes.length > 0 ? `. ${notes.join('. ')}` : ''}`);
+
+  if (approve !== null && approve !== hash) fail(`HELD AGAIN. --approve names ${approve}, but this fetch is ${hash}, so the data has moved on. Read the new report, then approve that hash.`);
+  const result = compareSnapshots(baseline.snapshot, snapshot, { baselineNote: baseline.note });
+  const approved = result.status === 'held' && approve === hash;
+  if (result.status === 'unchanged') {
+    report('compare', 'PASS', `identical to baseline ${baseline.hash}`);
+    return { hash, file, approved };
+  }
+  const reportFile = writeReport(result, { hash, baselineHash: baseline.hash, approved });
+  if (result.status === 'held' && !approved) {
+    fail(`HELD for approval. Snapshot ${hash}:\n${result.reasons.map((reason) => `  ${reason}`).join('\n')}\nRead ${reportFile}. To publish exactly this snapshot: pnpm ship --approve ${hash}`);
+  }
+  report('compare', 'PASS', `${approved ? 'held, and approved by hash' : 'publishes'}: ${result.changes.length} field changes, ${Object.values(result.added).flat().length} new rows, ${Object.values(result.removed).flat().length} removed. Report: ${reportFile}`);
+  return { hash, file, approved };
+}
+
+function build(snapshotFile) {
   // A stale build or redirect must never be what the guard reads.
   fs.rmSync(path.join(ROOT, 'dist'), { recursive: true, force: true });
   fs.rmSync(path.join(ROOT, '.wrangler/deploy'), { recursive: true, force: true });
-  const result = bin('astro', ['build']);
+  const result = bin('astro', ['build'], { env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', OPENARABIC_SNAPSHOT: snapshotFile } });
   if (result.status !== 0) fail(`astro build failed:\n${result.stdout}\n${result.stderr}`);
 }
 
@@ -67,9 +98,10 @@ async function rollBackAfterFailure(published, url, why) {
 }
 
 async function main() {
-  const unknown = args.filter((arg) => arg !== '--dry-run');
+  const unknown = args.filter((arg, index) => arg !== '--dry-run' && index !== approveAt && (approveAt === -1 || index !== approveAt + 1));
   if (unknown.includes('--production')) fail('--production is refused before the cutover in Phase 6, on the owner\'s explicit go.');
-  if (unknown.length > 0) fail(`Unknown argument: ${unknown.join(' ')}. The only option is --dry-run; the Worker name comes from the checked config, and no check can be skipped.`);
+  if (unknown.length > 0) fail(`Unknown argument: ${unknown.join(' ')}. The only options are --dry-run and --approve <hash>; the Worker name comes from the checked config, and no check can be skipped.`);
+  if (approve !== null && !/^[0-9a-f]{64}$/.test(approve)) fail(`--approve needs the full snapshot hash from a held run's report, not "${approve.slice(0, 80)}".`);
 
   console.log(`pnpm ship${dryRun ? ' --dry-run: everything except the upload' : ''}\n`);
   acquireLock(`pnpm ship${dryRun ? ' --dry-run' : ''}`);
@@ -83,11 +115,9 @@ async function main() {
   const scanned = colourBan();
   report('design', 'PASS', `lint 0 errors, 0 warnings. ${summary} Tokens match DESIGN.md. No colour literal in DESIGN.md's body or ${scanned} source files`);
 
-  stub('fetch', '2.1', 'Reads no Supabase data yet.');
-  stub('validate', '2.2', 'Structural validation has nothing to validate yet.');
-  stub('compare', '2.2', 'No publish guard or baseline yet.');
+  const content = await snapshotSteps(published);
 
-  build();
+  build(content.file);
   report('build', 'PASS', 'astro build, from a clean dist');
 
   const built = checkBuiltConfig();
@@ -126,7 +156,7 @@ async function main() {
   }
   if (!REAL_DEPLOYS_ALLOWED) fail(REAL_DEPLOY_REFUSAL);
 
-  const hash = hashBuild();
+  const buildHash = hashBuild();
   const indexSha256 = sha256(fs.readFileSync(path.join(ROOT, 'dist/client/index.html')));
 
   uploadBegan = true;
@@ -145,9 +175,9 @@ async function main() {
   if (!checked.ok) await rollBackAfterFailure(published, url, checked.problems.join('; '));
   report('smoke', 'PASS', `/ is 200 with this build's bytes, X-Robots-Tag: noindex and the meta, no Set-Cookie; ${routes.length} other route types too (try ${checked.attempts})`);
 
-  const previous = published && { hash: published.hash, hashOf: published.hashOf, workerVersion: published.workerVersion, indexSha256: published.indexSha256, publishedAt: published.publishedAt };
-  writePublished({ worker: WORKER, hash, hashOf: 'build', workerVersion: deployed.version, indexSha256, publishedAt: new Date().toISOString(), ...(previous && { previous }) });
-  report('record', 'PASS', `.ship/published holds version ${deployed.version}, build hash ${hash}`);
+  const previous = published && { hash: published.hash, hashOf: published.hashOf, buildHash: published.buildHash, workerVersion: published.workerVersion, indexSha256: published.indexSha256, publishedAt: published.publishedAt };
+  writePublished({ worker: WORKER, hash: content.hash, hashOf: 'snapshot', buildHash, ...(content.approved && { approved: true }), workerVersion: deployed.version, indexSha256, publishedAt: new Date().toISOString(), ...(previous && { previous }) });
+  report('record', 'PASS', `.ship/published holds version ${deployed.version}, snapshot ${content.hash}`);
 
   console.log(`\nSHIPPED to preview in ${((Date.now() - started) / 1000).toFixed(1)} s. ${url}`);
   console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);

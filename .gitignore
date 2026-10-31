@@ -40,3 +40,5 @@ docs/research/raw/
 .ship/preview-url
 .ship/published.tmp
 .ship/snapshots/
+.ship/reports/
+.ship/baseline

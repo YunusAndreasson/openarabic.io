@@ -47,7 +47,7 @@ export const readPreviewUrl = () => {
 
 export const writePreviewUrl = (url) => fs.writeFileSync(PREVIEW_URL, `${url}\n`);
 
-/** What was built, until the snapshot hash of task 2.1 replaces it. wrangler.json is left out: it holds this machine's paths. */
+/** What was built, recorded beside the snapshot hash, so a rebuild from the saved file can be compared. wrangler.json is left out: it holds this machine's paths. */
 export function hashBuild() {
   const client = path.join(ROOT, 'dist/client');
   const hash = createHash('sha256');
