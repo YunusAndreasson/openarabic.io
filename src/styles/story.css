@@ -168,13 +168,13 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 /* Promo first screen, in the class of qamar360.com. */
 .draft { text-decoration: none; }
 .hero { position: relative; isolation: isolate; min-height: 100svh; overflow: hidden; display: flex; flex-direction: column; background: var(--color-surface); }
-.hero-scene { position: absolute; inset: 0; z-index: -1; background-color: var(--color-surface); background-image: linear-gradient(to bottom, color-mix(in oklch, var(--color-surface) 35%, transparent), transparent 18%, transparent 30%, var(--color-surface) 56%), url('/hero-tall.webp'); background-size: 100% 100%, 100% auto; background-position: top, center top; background-repeat: no-repeat; }
+.hero-scene { position: absolute; inset: 0; z-index: -1; background-color: var(--color-surface); background-image: linear-gradient(to bottom, color-mix(in oklch, var(--color-surface) 35%, transparent), transparent 18%, transparent 28%, var(--color-surface) 50%), url('/hero-tall.webp'); background-size: 100% 100%, 100% auto; background-position: top, center top; background-repeat: no-repeat; }
 .topbar { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1440px; margin-inline: auto; padding: 20px var(--space-gutter); }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-on-surface); font-size: 1.25rem; font-weight: 500; text-decoration: none; }
 .brand svg { color: var(--color-primary); }
 .get { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 18px; border-radius: 999px; background: var(--color-primary); color: var(--color-surface); font-weight: 500; text-decoration: none; }
 .hero-body { flex: 1; display: grid; gap: 40px; width: 100%; max-width: 1440px; margin-inline: auto; padding: 0 var(--space-gutter); }
-.hero-copy { margin-top: 34svh; }
+.hero-copy { margin-top: 44svh; }
 .hero h1 { font-size: clamp(2.75rem, 11vw, 5.5rem); font-weight: 500; line-height: 1.02; letter-spacing: -0.015em; color: var(--color-on-surface); }
 .lede { max-width: 30rem; margin-top: 16px; font-size: clamp(1.125rem, 2vw, 1.375rem); line-height: 1.4; color: var(--color-on-surface); }
 .stores { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
@@ -188,7 +188,7 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 .phone.back { position: absolute; top: 7%; left: -34%; transform: rotate(-6deg); }
 .capture img { border: 6px solid var(--color-surface-raised); outline: 1px solid var(--color-outline); border-radius: 32px; }
 @media (min-width: 56.25rem) {
-  .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 55%, transparent) 38%, transparent 62%), linear-gradient(to bottom, transparent 78%, var(--color-surface)), url('/hero-wide.webp'); background-size: 100% 100%, 100% 100%, cover; background-position: top, top, right center; }
+  .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 40%, transparent) 36%, transparent 55%), linear-gradient(to bottom, transparent 78%, var(--color-surface)), url('/hero-wide.webp'); background-size: 100% 100%, 100% 100%, cover; background-position: top, top, right center; }
   .hero-body { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) minmax(0, 0.8fr); align-items: center; }
   .hero-copy { margin-top: -5svh; }
   .lede { max-width: 25rem; }
