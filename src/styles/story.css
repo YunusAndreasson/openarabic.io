@@ -184,7 +184,8 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 .screen h2 { align-self: stretch; font-size: clamp(1.875rem, 4.2vw, 3.25rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
 .phone { display: block; width: auto; height: min(78svh, 680px); max-width: 100%; border: 7px solid var(--color-surface-raised); outline: 1px solid var(--color-outline); border-radius: 38px; }
 .shelf { justify-content: center; }
-.scholars { align-self: stretch; list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: clamp(1.25rem, 3vw, 2rem); color: var(--color-on-surface-quiet); }
+.scholars { align-self: stretch; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 24px 20px; font-size: clamp(1.25rem, 3vw, 2.25rem); line-height: 1.15; }
+.scholars li { padding-top: 14px; border-top: 1px solid var(--color-outline); }
 
 /* The live demo: a real line in a phone, and a pulse on one word until someone taps. */
 .try-hint { margin-top: 16px; color: var(--color-primary); font-size: clamp(1.125rem, 2vw, 1.375rem); }
@@ -199,12 +200,13 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 @media (prefers-reduced-motion: reduce) { .live .w:nth-of-type(3)::after { animation: none; } }
 
 .phone.live { anchor-name: --live; }
+/* The card opens like the app's sheet: along the bottom of the phone, never outside it. */
 @supports (anchor-name: --a) {
-  .live .card { right: calc(anchor(--live right) + 10px); width: calc(anchor-size(--live width) - 20px); }
+  .live .card { inset: auto; right: calc(anchor(--live right) + 8px); bottom: calc(anchor(--live bottom) + 8px); width: calc(anchor-size(--live width) - 16px); max-height: calc(anchor-size(--live height) * 0.62); position-try-fallbacks: none; border-radius: 26px; }
 }
+.live .card audio { width: 100%; height: 36px; color-scheme: dark; }
 
 .closing { min-height: 90svh; }
-.closing .hero-scene { transform: scaleX(-1); }
 .closing-copy { width: 100%; max-width: 1200px; margin: auto auto 0; padding: 0 var(--space-gutter) 56px; }
 .closing h2 { font-size: clamp(2.25rem, 7vw, 4.5rem); font-weight: 500; line-height: 1.05; }
 .note { max-width: 34rem; margin-top: 20px; color: var(--color-on-surface-quiet); font-size: var(--type-small-size); }
@@ -212,10 +214,12 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 @media (min-width: 56.25rem) {
   .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 45%, transparent) 34%, transparent 52%), linear-gradient(to bottom, transparent 82%, var(--color-surface)), url('/hero-wide.webp'); background-size: 100% 100%, 100% 100%, cover; background-position: top, top, center; }
   .hero-copy { margin-block: auto; padding-bottom: 72px; }
-  .screen { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 72px; }
-  .screen h2 { max-width: 15ch; }
-  .phone.live { height: min(78svh, 680px); }
+  .screen { display: grid; grid-template-columns: 1fr 1fr; align-items: center; column-gap: 48px; padding-block: 40px; }
+  .screen h2 { max-width: 13ch; justify-self: end; font-size: clamp(2.25rem, 4vw, 3.5rem); }
+  .screen > div:first-child { justify-self: end; }
+  .screen .phone { justify-self: center; height: min(88svh, 760px); }
   .shelf { grid-template-columns: 1fr 1fr; }
-  .closing .hero-scene { transform: none; }
+  .closing .hero-scene { background-image: linear-gradient(to right, var(--color-surface), color-mix(in oklch, var(--color-surface) 70%, transparent) 50%, transparent 72%), linear-gradient(to bottom, var(--color-surface), transparent 20%, transparent 82%, var(--color-surface)), url('/hero-wide.webp'); }
+  .closing h2 { max-width: 11ch; }
   .closing-copy { margin-block: auto; }
 }
