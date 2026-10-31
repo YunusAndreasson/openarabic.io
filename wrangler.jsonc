@@ -5,7 +5,8 @@
   // must exist and must keep this name, or a deploy could overwrite the live site.
   "name": "openarabic-site",
 
-  "compatibility_date": "2026-10-31",
+  // No newer than the installed workerd supports, or `astro dev` won't start.
+  "compatibility_date": "2026-10-23",
 
   // No routes and no custom domains until the cutover in docs/site-plan.md.
   "workers_dev": false,
