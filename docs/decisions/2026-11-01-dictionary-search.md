@@ -11,4 +11,4 @@ The plan's gap: `/dictionary/search` exists on the live site, word pages are sta
 | Bundle | 13,627 entries, 766 KB in `dist/server/entry.mjs`, which is also the redirect table, so it costs nothing extra |
 | Freshness | The index is built from the same snapshot as the pages |
 
-**Not measured yet:** CPU on the real platform. Check `wrangler tail` on the preview: the plan's limit is p50 under 10 ms, and if a scan of 13,627 entries goes over, cut the route and rely on letter pages. Live usage is unknown, since GA4 was never read.
+**Measured on the preview, 2026-11-01, by `wrangler tail`:** CPU 1 to 7 ms with one 18 ms outlier across 11 requests, so p50 about 2 ms against the plan's limit of 10. A few requests from one place. Live usage is unknown, since GA4 was never read.
