@@ -6,7 +6,7 @@ import SearchForm from '../../components/SearchForm.astro';
 import LetterNav from '../../components/LetterNav.astro';
 ---
 
-<Content title="Search the dictionary | OpenArabic" description="Search Arabic words by their English meaning or their Arabic letters." canonical="/dictionary/search" crumbs={[{ name: 'Dictionary', path: '/dictionary' }]}>
+<Content title="Search the dictionary | OpenArabic" description="Search Arabic words by their English meaning or their Arabic letters." canonical="/dictionary/search" neverIndex crumbs={[{ name: 'Dictionary', path: '/dictionary' }]}>
   <h1>Search the dictionary</h1>
   <SearchForm />
   <div id="results"></div>

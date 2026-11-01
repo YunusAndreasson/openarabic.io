@@ -10,6 +10,8 @@ export const LIVE_DOMAIN = 'openarabic.io';
 
 // On since task 1.3, under D16: the noindexed workers.dev preview only. The off switch for every upload and rollback.
 export const REAL_DEPLOYS_ALLOWED = true;
+// The owner's go, D15. Off until then. A dry run can always rehearse --production.
+export const PRODUCTION_ALLOWED = false;
 export const REAL_DEPLOY_REFUSAL = 'Real deploys are switched off in scripts/ship/lib.mjs. Use --dry-run.';
 
 /** A check that stops the run. The message is what the owner reads. */

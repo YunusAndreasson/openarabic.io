@@ -81,7 +81,13 @@ export function upload(command) {
   }
 }
 
-export const previewTarget = (targets) => (targets.length === 1 && PREVIEW.test(targets[0]) ? targets[0] : null);
+/** One workers.dev URL. After the cutover the live domain is listed beside it, and only that. */
+export const previewTarget = (targets, production = false) => {
+  const others = targets.filter((target) => !PREVIEW.test(target));
+  const allowedOthers = production ? others.every((target) => /^(https:\/\/)?openarabic\.io\/?\*?$/.test(target)) : others.length === 0;
+  const found = targets.filter((target) => PREVIEW.test(target));
+  return found.length === 1 && allowedOthers ? found[0] : null;
+};
 
 /** The name is this constant, in every caller. Never an argument. */
 export function rollbackTo(target, reason) {

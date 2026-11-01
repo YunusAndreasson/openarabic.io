@@ -8,8 +8,9 @@ interface Env {
   COUNTS?: { writeDataPoint: (point: { blobs: string[]; indexes?: string[] }) => void };
 }
 
-// Removed only by the explicit production flag at the cutover.
-const PREVIEW = true;
+// Only `pnpm ship --production` turns this off.
+declare const __OA_PRODUCTION__: boolean;
+const PREVIEW = !__OA_PRODUCTION__;
 const APP_STORE = 'https://apps.apple.com/app/openarabic/id1594031029';
 const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.edenmind.OpenArabic';
 const SURFACES = new Set(['home', 'word', 'read', 'book', 'qr', 'download']);
@@ -125,16 +126,42 @@ async function searchPage(request: Request, url: URL, env: Env): Promise<Respons
   return finish(new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } }));
 }
 
+/**
+ * Static assets ignore Range and answer 200 with the whole file (measured on the preview, 2026-11-01), and iPhone Safari needs byte ranges to play audio.
+ * Only for this site's own short tracks, which fit in memory: 2.6 MB at most.
+ */
+async function audioFile(request: Request, env: Env): Promise<Response> {
+  const asset = await env.ASSETS.fetch(request);
+  const range = request.headers.get('range')?.match(/^bytes=(\d*)-(\d*)$/);
+  if (asset.status !== 200 || !range) {
+    const whole = new Response(asset.body, asset);
+    whole.headers.set('Accept-Ranges', 'bytes');
+    return finish(whole);
+  }
+  const bytes = await asset.arrayBuffer();
+  const size = bytes.byteLength;
+  const start = range[1] === '' ? Math.max(0, size - Number(range[2])) : Number(range[1]);
+  const end = range[1] === '' || range[2] === '' ? size - 1 : Math.min(Number(range[2]), size - 1);
+  if (start > end || start >= size) return finish(new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${size}` } }));
+  const headers = new Headers(asset.headers);
+  headers.set('Accept-Ranges', 'bytes');
+  headers.set('Content-Range', `bytes ${start}-${end}/${size}`);
+  headers.set('Content-Length', String(end - start + 1));
+  return finish(new Response(request.method === 'HEAD' ? null : bytes.slice(start, end + 1), { status: 206, headers }));
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: unknown): Promise<Response> {
     const url = new URL(request.url);
     const { pathname } = url;
 
     // `pnpm dev` only: pages aren't files yet. The production bundle drops this branch and the import with it.
-    if (import.meta.env.DEV && !/^\/(word|read|author)\/\d+$/.test(pathname) && pathname !== '/download-app' && pathname !== '/v') {
+    if (import.meta.env.DEV && !/^\/(word|read|author)\/\d+$/.test(pathname) && pathname !== '/download-app' && pathname !== '/v' && !pathname.endsWith('.mp3')) {
       const { default: astro } = await import('@astrojs/cloudflare/entrypoints/server');
       return astro.fetch(request, env as never, ctx as never);
     }
+
+    if (pathname.startsWith('/_astro/') && pathname.endsWith('.mp3')) return audioFile(request, env);
 
     if (pathname.length > 1 && pathname.endsWith('/')) return redirect(308, pathname.replace(/\/+$/, '') + url.search);
 

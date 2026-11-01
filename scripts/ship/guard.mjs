@@ -19,7 +19,10 @@ const isEmpty = (value) =>
   value === null || value === undefined || value === false || (Array.isArray(value) ? value.length === 0 : false);
 
 /** Shared by the source file and the generated file, so neither can hold what the other can't. */
-function checkConfig(config, label) {
+// The one route that may ever be added, and only under --production, after the owner has moved the domain. docs/site-plan.md Phase 6.
+const LIVE_ROUTE = JSON.stringify([{ pattern: LIVE_DOMAIN, custom_domain: true }]);
+
+function checkConfig(config, label, production = false) {
   if (config.name !== WORKER) {
     fail(`${label} names the Worker "${config.name}". Only "${WORKER}" may ship.`);
   }
@@ -35,7 +38,9 @@ function checkConfig(config, label) {
   if (Array.isArray(config.definedEnvironments) && config.definedEnvironments.length > 0) {
     fail(`${label} defines environments (${config.definedEnvironments.join(', ')}), which could carry another name or route.`);
   }
+  const liveRoute = production && JSON.stringify(config.routes) === LIVE_ROUTE;
   for (const [trail, key, value] of entries(config)) {
+    if (liveRoute && trail[0] === 'routes') continue;
     if (ROUTE_KEYS.has(key) && !isEmpty(value)) {
       fail(`${label} holds a route at ${trail.join('.')}: ${JSON.stringify(value)}. No routes or domains before the cutover.`);
     }
@@ -52,7 +57,7 @@ function checkConfig(config, label) {
 }
 
 /** wrangler.jsonc, comments ignored: its comment names the live site on purpose and has to stay. */
-export function checkSourceConfig(root = ROOT) {
+export function checkSourceConfig(root = ROOT, production = false) {
   const file = path.join(root, 'wrangler.jsonc');
   if (!fs.existsSync(file)) {
     fail(`wrangler.jsonc is missing. Without it the adapter names the Worker after the package or folder.`);
@@ -62,7 +67,7 @@ export function checkSourceConfig(root = ROOT) {
   if (errors.length > 0) {
     fail(`wrangler.jsonc doesn't parse: ${printParseErrorCode(errors[0].error)} at offset ${errors[0].offset}.`);
   }
-  checkConfig(config, 'wrangler.jsonc');
+  checkConfig(config, 'wrangler.jsonc', production);
   return config;
 }
 
@@ -71,7 +76,7 @@ export function checkSourceConfig(root = ROOT) {
  * .wrangler/deploy/config.json. A pure static build writes it in dist/client, a build with
  * Worker code in dist/server, so every candidate is checked.
  */
-export function checkBuiltConfig(root = ROOT) {
+export function checkBuiltConfig(root = ROOT, production = false) {
   const dist = path.join(root, 'dist');
   const found = fs.existsSync(dist)
     ? fs
@@ -89,7 +94,7 @@ export function checkBuiltConfig(root = ROOT) {
     } catch {
       fail(`${path.relative(root, file)} isn't valid JSON.`);
     }
-    checkConfig(config, `Built config ${path.relative(root, file)}`);
+    checkConfig(config, `Built config ${path.relative(root, file)}`, production);
   }
 
   const redirect = path.join(root, '.wrangler/deploy/config.json');
@@ -99,6 +104,18 @@ export function checkBuiltConfig(root = ROOT) {
     fail(`.wrangler/deploy/config.json sends wrangler to ${target}, not a config this guard checked.`);
   }
   return { file: path.relative(root, target), name: JSON.parse(fs.readFileSync(target, 'utf8')).name };
+}
+
+/** The other direction, for --production: a noindex left on an indexable page would take it out of Google. */
+export function checkIndexable(htmlFiles, root = ROOT) {
+  const headers = fs.readFileSync(path.join(root, 'dist/client/_headers'), 'utf8');
+  if (/X-Robots-Tag/i.test(headers)) fail('dist/client/_headers still has X-Robots-Tag on a production build. It would take the site out of Google.');
+  const allowed = new Set(['dictionary/search.html', 'analytics-choice.html']);
+  for (const file of htmlFiles) {
+    const name = path.relative(path.join(root, 'dist/client'), file);
+    const hasMeta = NOINDEX_META.test(fs.readFileSync(file, 'utf8'));
+    if (hasMeta !== allowed.has(name)) fail(`${rel(file)} ${hasMeta ? 'has a noindex meta on a production build' : 'should be noindex, and is not'}.`);
+  }
 }
 
 /** Task 1.3's rule, already true: noindex by meta on every page and by header on every path. */
@@ -113,19 +130,4 @@ export function checkNoindex(htmlFiles, root = ROOT) {
       fail(`${rel(file)} has no noindex meta. A preview must not be indexed.`);
     }
   }
-}
-
-/**
- * The unbuilt steps may stand only while there is nothing for them to protect: the one prerendered
- * placeholder page. An extra prerendered page, an on-demand route and an endpoint each count as more.
- */
-export function checkPlaceholderOnly(htmlFiles, notBuilt, root = ROOT) {
-  const beyond = (what) => fail(`The build has pages beyond the placeholder (${what}), but ${notBuilt.join(', ')} aren't built. Phase 2 fills them first.`);
-  const home = path.join(root, 'dist/client/index.html');
-  const extraPage = htmlFiles.find((page) => page !== home);
-  if (extraPage) beyond(path.relative(root, extraPage));
-  const extraSource = walk(path.join(root, 'src/pages')).find((file) => path.relative(root, file) !== path.join('src/pages/index.astro'));
-  if (extraSource) beyond(path.relative(root, extraSource));
-  const workerCode = walk(path.join(root, 'dist/server'))[0];
-  if (workerCode) beyond(`Worker code in ${path.relative(root, workerCode)}`);
 }

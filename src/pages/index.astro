@@ -101,7 +101,7 @@ const rememberStops = [
     </section>
 
     <section class="turn" id="turn">
-      <h2 class="turn-words reveal"><span class="draft">You finished the course. Then you opened a real book.</span></h2>
+      <h2 class="turn-words reveal">You finished the course. Then you opened a real book.</h2>
       <p class="turn-line reveal" lang="ar" dir="rtl">{line.arabic}</p>
       <p class="turn-source reveal">{line.scholar}, {line.work}</p>
     </section>
@@ -116,7 +116,7 @@ const rememberStops = [
     </Stage>
 
     <Still name="listen" alt="A man seen from behind, small on a wet street at dusk, wearing earphones.">
-      <p class="still-line reveal"><span class="draft">Play a text on the way home.</span></p>
+      <p class="still-line reveal">Play a text on the way home.</p>
       <div class="still-audio reveal">
         <audio controls preload="metadata" src={textAudio} aria-label="A Path to Mercy, read aloud, English first, then Arabic"></audio>
         <p class="turn-source"><a href="/read/a-path-to-mercy-412">A Path to Mercy</a>. Ibn al-Jawzi, Ṣayd al-Khāṭir</p>
@@ -139,11 +139,11 @@ const rememberStops = [
 
     <section class="payoff lift" id="payoff">
       <input class="lift-input vh" id="lift" type="checkbox" aria-label="Take the English away" />
-      <h2 class="payoff-title"><span class="draft">Tap a word.</span></h2>
+      <h2 class="payoff-title">Tap a word.</h2>
       <p class="payoff-english" lang="en">{line.english}</p>
       <TappableLine prefix="w" />
       <p class="turn-source">{line.scholar}, {line.work}</p>
-      <label class="lift-control" for="lift" aria-hidden="true"><span class="take"><span class="draft">Take the English away</span></span> <span class="bring"><span class="draft">Bring the English back</span></span></label>
+      <label class="lift-control" for="lift" aria-hidden="true"><span class="take">Take the English away</span> <span class="bring">Bring the English back</span></label>
     </section>
 
     <section class="library" id="library">
@@ -158,7 +158,7 @@ const rememberStops = [
         <StoreLinks />
         <div class="qr-plate"><StoreQr /></div>
       </div>
-      <p class="offer-note reveal"><span class="draft">In the app, the English stays above the line.</span> An account is needed in the app. <span class="draft">Free as sadaqah jariyah.</span></p>
+      <p class="offer-note reveal">In the app, the English stays above the line. An account is needed in the app. Free as sadaqah jariyah.</p>
     </Still>
   </main>
 </Base>

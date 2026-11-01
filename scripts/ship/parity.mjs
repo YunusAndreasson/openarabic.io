@@ -115,15 +115,18 @@ export function expectations(root = ROOT) {
 }
 
 /** Runs the table against anything that answers fetch. A preview also has to say noindex and set no cookie on every answer. */
-export async function runParity(origin, fetchImpl, { root = ROOT, concurrency = 12, headers = false } = {}) {
+export async function runParity(origin, fetchImpl, { root = ROOT, concurrency = 12, headers = false, production = false } = {}) {
   const cases = expectations(root);
+  // iPhone Safari needs byte ranges for audio, and static assets alone don't give them.
+  const track = walk(path.join(root, 'dist/client/_astro')).find((file) => file.endsWith('.mp3'));
+  if (track) cases.push({ route: `/_astro/${path.basename(track)}`, status: 206, location: null, range: 'bytes=0-99' });
   const failures = [];
   let next = 0;
   const one = async (item) => {
     let response;
     for (let attempt = 1; ; attempt += 1) {
       try {
-        response = await fetchImpl(`${origin}${item.route}`, { redirect: 'manual', signal: AbortSignal.timeout(30_000), ...(item.agent && { headers: { 'user-agent': item.agent } }) });
+        response = await fetchImpl(`${origin}${item.route}`, { redirect: 'manual', signal: AbortSignal.timeout(30_000), headers: { ...(item.agent && { 'user-agent': item.agent }), ...(item.range && { range: item.range }) } });
         if (response.status < 500 || attempt >= 3) break;
         await response.body?.cancel();
       } catch (error) {
@@ -138,7 +141,9 @@ export async function runParity(origin, fetchImpl, { root = ROOT, concurrency = 
       if (got !== item.location) return `${item.route}: went to "${got}", wanted "${item.location}"`;
     }
     if (headers && item.route === '/v?p=word' && !/no-store/.test(response.headers.get('cache-control') ?? '')) return `${item.route}: not no-store`;
-    if (headers && !/\bnoindex\b/i.test(response.headers.get('x-robots-tag') ?? '')) return `${item.route}: no "X-Robots-Tag: noindex"`;
+    const tagged = /\bnoindex\b/i.test(response.headers.get('x-robots-tag') ?? '');
+    if (headers && !production && !tagged) return `${item.route}: no "X-Robots-Tag: noindex"`;
+    if (headers && production && tagged) return `${item.route}: still "X-Robots-Tag: noindex" on a production ship`;
     if (headers && response.headers.has('set-cookie')) return `${item.route}: sets a cookie`;
     return null;
   };
@@ -198,7 +203,7 @@ const ROUTE_TYPES = [
 ];
 
 /** The plan's "passes when": title, canonical and JSON-LD on every page in the build, in full. */
-export function checkBuiltPages(root = ROOT) {
+export function checkBuiltPages(root = ROOT, production = false) {
   const client = path.join(root, 'dist/client');
   const pages = walk(client).filter((file) => file.endsWith('.html'));
   const problems = [];
@@ -209,7 +214,7 @@ export function checkBuiltPages(root = ROOT) {
     const head = html.slice(0, end);
     const body = html.slice(end);
     if (COUNT(head, /<title>/g) !== 1 || COUNT(body, /<title>/g) !== 0) problems.push(`${route}: not one <title> in <head>`);
-    if (!NOINDEX_META.test(head)) problems.push(`${route}: no noindex meta on the preview`);
+    if (!production && !NOINDEX_META.test(head)) problems.push(`${route}: no noindex meta on the preview`);
     if (/aggregateRating/.test(html)) problems.push(`${route}: aggregateRating`);
     if (route === '/404') continue;
     const canonical = head.match(/<link rel="canonical" href="([^"]+)"/g) ?? [];

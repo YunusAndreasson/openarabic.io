@@ -1,5 +1,5 @@
-# Draft copy: public strings that are in neither PRODUCT.md nor DESIGN.md, one per line,
-# waiting on the owner (D12). `pnpm ship` lets these through and counts them.
+# Public strings that are in neither PRODUCT.md nor DESIGN.md, one per line. Approved by the owner on 2026-11-01 (D12);
+# anything added after that date is draft until the owner says otherwise. `pnpm ship` lets these through and counts them.
 # A banned phrase in PRODUCT.md stays banned even if it is listed here.
 
 # Story page: labels and alt text.
@@ -350,3 +350,9 @@ Meaning of {} in Arabic
 Example sentence
 More example sentences
 Meaning of
+The PDF is free to share.
+Download the free PDF
+The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.
+Al-Fawaid by Ibn al-Qayyim al-Jawziyya — Arabic & English (Free PDF) | OpenArabic
+Download Al-Fawaid (الفوائد) by Ibn al-Qayyim al-Jawziyya as a free PDF, with the Arabic and English side by side.
+All content on OpenArabic, including articles, translations, audio and educational materials, is owned by OpenArabic or licensed to us. You may use it for personal learning but may not redistribute, republish or use it commercially. The exception is the Al-Fawaid PDF, which is free to share.

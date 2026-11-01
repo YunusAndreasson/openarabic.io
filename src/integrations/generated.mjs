@@ -20,6 +20,12 @@ export function workerData(snapshot) {
 export const generated = () => ({
   name: 'openarabic-generated',
   hooks: {
+    // Production only: the preview's site-wide noindex header goes. Nothing else in _headers changes.
+    'astro:build:done': () => {
+      if (process.env.OPENARABIC_PRODUCTION !== '1') return;
+      const file = path.join(process.cwd(), 'dist/client/_headers');
+      fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^\/\*\s*\n[ \t]+X-Robots-Tag: noindex[ \t]*\n/m, ''));
+    },
     'astro:route:setup': ({ route }) => {
       route.prerender = true;
     },

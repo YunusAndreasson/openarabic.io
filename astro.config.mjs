@@ -10,6 +10,8 @@ export default defineConfig({
   trailingSlash: 'never',
   build: { format: 'file' },
   session: false,
+  // Only `pnpm ship --production` sets this. Everything else is a noindexed preview.
+  vite: { define: { __OA_PRODUCTION__: JSON.stringify(process.env.OPENARABIC_PRODUCTION === '1') } },
   // 'server' only so the adapter builds src/worker.ts. The integration prerenders every page: no on-demand page exists.
   output: 'server',
   integrations: [generated()],
