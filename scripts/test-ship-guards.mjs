@@ -173,7 +173,7 @@ function passes(name, seed = () => {}, { args = [], env = {}, inspect = () => tr
   extraEnv = env;
   const { status, output } = run('ship', '--dry-run', ...args);
   extraEnv = {};
-  const ok = status === 0 && /DRY RUN COMPLETE\. Worker: openarabic-site\. Routes: none\. Nothing was uploaded\./.test(output) && !fs.existsSync(SPY_LOG) && inspect(output);
+  const ok = status === 0 && (args.includes('--production') ? /DRY RUN COMPLETE\. Worker: openarabic-site\. Routes: (none|openarabic\.io)\. Production: noindex off\. Nothing was uploaded\./ : /DRY RUN COMPLETE\. Worker: openarabic-site\. Routes: none\. Nothing was uploaded\./).test(output) && !fs.existsSync(SPY_LOG) && inspect(output);
   record(name, ok, ok ? '' : output.slice(-1500), required);
   restore();
 }
@@ -559,10 +559,10 @@ async function main() {
   stops("wrangler's redirect pointing at an unchecked config", () => edit('astro.config.mjs', "integrations: [generated()],", `integrations: [generated(), { name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); fs.writeFileSync('.wrangler/deploy/config.json', JSON.stringify({ configPath: '../../elsewhere.json' })); } } }],`), /sends wrangler to .*elsewhere\.json, not a config this guard checked/);
   stops('A flag trying to name a Worker', () => {}, /Unknown argument: --name openarabic-web/, { args: ['--dry-run', '--name', 'openarabic-web'] });
   stops('A skip flag', () => {}, /Unknown argument: --skip-claims/, { args: ['--dry-run', '--skip-claims'] });
-  passes('--production can be rehearsed in a dry run, with noindex off', () => {}, { args: ['--dry-run', '--production'], inspect: (output) => /Production: noindex off/.test(output) && !/X-Robots-Tag/.test(read('dist/client/_headers')) });
+  passes('--production can be rehearsed in a dry run, with noindex off', () => {}, { args: ['--production'], inspect: (output) => /Production: noindex off/.test(output) && !/X-Robots-Tag/.test(read('dist/client/_headers')) });
   stops('A noindex header left on a production build', () => edit('astro.config.mjs', "integrations: [generated()],", `integrations: [generated(), { name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); fs.appendFileSync(process.cwd() + '/dist/client/_headers', '/word/*\\n  X-Robots-Tag: noindex\\n'); } } }],`), /still has X-Robots-Tag on a production build/, { args: ['--dry-run', '--production'] });
   stops('A noindex meta left on one production page', () => edit('src/pages/privacy.astro', 'canonical="/privacy"', 'canonical="/privacy" neverIndex'), /has a noindex meta on a production build/, { args: ['--dry-run', '--production'] });
-  passes('Under --production, the one live route is allowed', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "openarabic.io", "custom_domain": true }],\n  "workers_dev": true'), { args: ['--dry-run', '--production'], inspect: (output) => /Routes: openarabic\.io\./.test(output) });
+  passes('Under --production, the one live route is allowed', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "openarabic.io", "custom_domain": true }],\n  "workers_dev": true'), { args: ['--production'], inspect: (output) => /Routes: openarabic\.io\./.test(output) });
   stops('Under --production, any other route is still refused', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "example.com", "custom_domain": true }],\n  "workers_dev": true'), /holds a route/, { args: ['--dry-run', '--production'] });
   stops('Without --production, the live route is refused', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "openarabic.io", "custom_domain": true }],\n  "workers_dev": true'), /holds a route/);
   stops('The old Worker name is refused under --production too', () => edit('wrangler.jsonc', '"name": "openarabic-site"', '"name": "openarabic-web"'), /names the Worker "openarabic-web"/, { args: ['--dry-run', '--production'] });
