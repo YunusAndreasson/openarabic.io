@@ -24,7 +24,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Prove the Worker name, after a build | `grep -o '"name":"[^"]*"\|"routes"' dist/*/wrangler.json` prints only `openarabic-site`. A `--name` flag would hide a wrong name |
 | Zen, without touching the owner's | `zen-browser --headless --no-remote --profile "$(mktemp -d)" --screenshot /tmp/z.png <url>` |
 
-**Asked to put it live? Don't, and say why:** that's cutover, and only the owner can call it. No CI, hosted repo or schedule exists, and content reaches readers only when someone runs `pnpm ship`. Never push git.
+**Asked to put it live? Don't, and say why:** that's cutover, and only the owner can call it. No CI or schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the private `edenmind/openarabic-site`, a backup and nothing more: push `main` only when the owner asks.
 
 ## Read first
 
