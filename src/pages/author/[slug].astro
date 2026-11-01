@@ -1,0 +1,29 @@
+---
+import Content from '../../layouts/Content.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import Offer from '../../components/Offer.astro';
+import { site } from '../../lib/snapshot.mjs';
+import { articleSlug, authorSlug } from '../../lib/words.mjs';
+
+export function getStaticPaths() {
+  return site().authorsWithTexts().map((author) => ({ params: { slug: authorSlug(author) }, props: { author } }));
+}
+
+const { author } = Astro.props;
+const articles = site().byDifficulty(site().articlesBy(author.id));
+const works = [...new Set(articles.map((article) => article.book).filter(Boolean))];
+const SITE = 'https://openarabic.io';
+const path = `/author/${authorSlug(author)}`;
+const jsonLd = [
+  { '@type': 'ProfilePage', name: author.name, url: `${SITE}${path}`, mainEntity: { '@type': 'Person', name: author.name } },
+  { '@type': 'ItemList', numberOfItems: articles.length, itemListElement: articles.map((article, index) => ({ '@type': 'ListItem', position: index + 1, name: article.title, url: `${SITE}/read/${articleSlug(article)}` })) },
+];
+---
+
+<Content title={`Texts by ${author.name} - OpenArabic`} description={`Excerpts from classical works by ${author.name}, in Arabic with English under every line.`} canonical={path} jsonLd={jsonLd} ogType="profile">
+  <h1 data-stored>{author.name}</h1>
+  <p class="lead">Excerpts from <span data-stored>{works.join(', ')}</span>.</p>
+  <p>Sorted by difficulty. Most texts are advanced; some are easier.</p>
+  <ArticleList articles={articles} />
+  <Offer from="read" />
+</Content>

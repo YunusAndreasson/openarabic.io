@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import { syncBuiltinESMExports } from 'node:module';
 import timers from 'node:timers/promises';
+import { pathToFileURL } from 'node:url';
 
 const real = globalThis.fetch;
 const previous = process.env.STUB_PREVIOUS_BODY ?? '';
@@ -21,6 +22,8 @@ if (!process.env.STUB_REAL_PACING && process.argv[1]?.endsWith('ship.mjs')) {
 
 function supabase(url, init) {
   const method = init?.method ?? 'GET';
+  // Article images: none in the fixture, and an image that can't be read only costs its picture.
+  if (url.pathname.startsWith('/storage/')) return new Response(null, { status: 404 });
   log(method, url.pathname + url.search, init?.headers);
   if (method !== 'GET' && method !== 'HEAD') throw new Error(`A write reached the fake Supabase: ${method}`);
   const table = url.pathname.split('/').pop();
@@ -48,19 +51,26 @@ function supabase(url, init) {
   return new Response(JSON.stringify(page.map((row) => (targeted && dbMode === 'dropped-column' ? row : Object.fromEntries(columns.map((column) => [column, row[column]]))))), { status: 200 });
 }
 
-function edge(route) {
+let local;
+async function edge(route, url, init) {
   let mode = process.env.STUB_EDGE ?? 'ok';
   const rolled = fs.existsSync('wrangler-spy.log') && fs.readFileSync('wrangler-spy.log', 'utf8').includes('rollback ');
   if (mode === 'bad-until-rollback') mode = rolled ? 'previous' : 'no-header';
   if (mode === 'previous' && route === '/') return new Response(previous, { headers: { 'x-robots-tag': 'noindex' } });
-  const body = route === '/' ? fs.readFileSync('dist/client/index.html') : 'file';
-  return new Response(body, { headers: mode === 'no-header' ? {} : { 'x-robots-tag': 'noindex' } });
+  if (route === '/' && !url.search) return new Response(fs.readFileSync('dist/client/index.html'), { headers: mode === 'no-header' ? {} : { 'x-robots-tag': 'noindex' } });
+  // The real Worker over the built files, so the preview's parity run means something here too.
+  if (!local) local = await (await import(pathToFileURL(`${process.cwd()}/scripts/ship/parity.mjs`).href)).localWorker(process.cwd());
+  const answer = await local(url.href, { redirect: 'manual', headers: init?.headers });
+  const headers = new Headers(answer.headers);
+  if (mode === 'no-header') headers.delete('x-robots-tag');
+  else headers.set('x-robots-tag', 'noindex');
+  return new Response(answer.body, { status: answer.status, headers });
 }
 
 globalThis.fetch = async (input, init) => {
   const url = new URL(String(input?.url ?? input));
   if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') return real(input, init);
-  if (url.hostname.endsWith('.workers.dev')) return edge(url.pathname);
+  if (url.hostname.endsWith('.workers.dev')) return edge(url.pathname, url, init);
   if (url.hostname.endsWith('.supabase.co')) return supabase(url, init);
   if (url.hostname === 'itunes.apple.com') {
     log('GET', url.pathname, init?.headers);

@@ -51,5 +51,5 @@ if (document.documentElement.classList.contains('play')) {
     },
     { rootMargin: '0px 0px -12% 0px' },
   );
-  for (const element of document.querySelectorAll('.reveal')) arrive.observe(element);
+  for (const element of document.querySelectorAll('.reveal, .develop')) arrive.observe(element);
 }

@@ -54,3 +54,6 @@ a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; 
 .credits { margin-top: var(--space-thought); max-width: var(--space-measure); }
 @media (hover: hover) { .footer-links a:hover { text-decoration-thickness: 2px; } }
 @media (min-width: 56.25rem) { .footer-inner { padding-inline: var(--space-gutter-laptop); } }
+
+/* The view count's 1×1 image: outside the layout, so it can't shift anything. */
+.view-count { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }

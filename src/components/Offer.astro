@@ -1,0 +1,15 @@
+---
+// The page's one offer. `body` with store links, in the place the plan's page map gives it. Exact words are the ledger's.
+import StoreLinks from './StoreLinks.astro';
+const { from, heading = 'Get the app', id } = Astro.props;
+---
+
+<section class="offer" id={id}>
+  <h2 id={id ? `${id}-h` : undefined} tabindex={id ? '-1' : undefined}>{heading}</h2>
+  <slot>
+    <p>If you can sound out Arabic script, you can start reading classical texts.</p>
+  </slot>
+  <p>Free. No ads. No subscription.</p>
+  <p class="quiet">An account is needed in the app.</p>
+  <StoreLinks from={from} />
+</section>

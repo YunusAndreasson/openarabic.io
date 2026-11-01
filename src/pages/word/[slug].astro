@@ -1,0 +1,107 @@
+---
+// Plan page map: 0 JS. DESIGN.md `Content surfaces`: word, meaning, audio, example and source, then the offer about this word.
+import Content from '../../layouts/Content.astro';
+import Entries from '../../components/Entries.astro';
+import Offer from '../../components/Offer.astro';
+import { getWordEnrichment } from '../../../vendor/word-enrichment';
+import { site } from '../../lib/snapshot.mjs';
+import { audioUrl, wordSlug } from '../../lib/words.mjs';
+
+export function getStaticPaths() {
+  return site().qualifying.map((root) => ({ params: { slug: wordSlug(root) }, props: { root } }));
+}
+
+const { root } = Astro.props;
+const known = site().wordPaths;
+const { examples, related } = site().wordEntry(root);
+const enrichment = getWordEnrichment(root.id);
+const path = `/word/${wordSlug(root)}`;
+const ar = audioUrl(root.audio_url);
+const en = audioUrl(root.audio_url_en);
+const [first, ...rest] = examples;
+const SITE = 'https://openarabic.io';
+const jsonLd = [
+  { '@type': 'DefinedTerm', name: root.letters, description: `${root.letters}: ${root.meaning}`, termCode: String(root.id), inLanguage: 'ar', url: `${SITE}${path}`, inDefinedTermSet: { '@type': 'DefinedTermSet', name: 'OpenArabic Dictionary', url: `${SITE}/dictionary` } },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Dictionary', item: `${SITE}/dictionary` }, { '@type': 'ListItem', position: 3, name: `${root.letters} (${root.meaning})`, item: `${SITE}${path}` }] },
+  ...(enrichment?.faq?.length ? [{ '@type': 'FAQPage', mainEntity: enrichment.faq.map((item: any) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })) }] : []),
+];
+---
+
+<Content
+  title={`${root.meaning} in Arabic — ${root.letters} | OpenArabic`}
+  description={`${root.letters} means "${root.meaning}" in Arabic. Hear the pronunciation and see it used in real example sentences with grammar notes.`}
+  canonical={path}
+  ogType="article"
+  jsonLd={jsonLd}
+  crumbs={[{ name: 'Dictionary', path: '/dictionary' }, { name: root.meaning }]}
+>
+  <h1 class="word-head"><span class="big-word" lang="ar" dir="rtl">{root.letters}</span> <span class="word-en"><span data-stored>{root.meaning}</span> in Arabic</span></h1>
+  <p class="word-intro"><bdi class="inline-ar" lang="ar">{root.letters}</bdi> is how you say “<span data-stored>{root.meaning}</span>” in Arabic.</p>
+  {enrichment && <p class="quiet word-facts">Root <bdi class="inline-ar" lang="ar">{enrichment.triliteralRoot}</bdi> <span data-stored>{enrichment.rootTransliteration}. {enrichment.partOfSpeech}. {enrichment.headwordTransliteration}.</span></p>}
+  {(ar || en) && (
+    <div class="sounds">
+      {ar && <p class="sound"><span class="quiet">Arabic</span><audio controls preload="none" src={ar} aria-label="This word read aloud in Arabic"></audio></p>}
+      {en && <p class="sound"><span class="quiet">English</span><audio controls preload="none" src={en} aria-label="This word read aloud in English"></audio></p>}
+      <p class="quiet">The audio uses AI voices.</p>
+    </div>
+  )}
+
+  {enrichment?.senses?.length > 0 && (
+    <section>
+      <h2>Meaning of <span data-stored>{root.meaning}</span> in Arabic</h2>
+      <ol class="senses">{enrichment.senses.map((sense: any) => <li data-stored>{sense.gloss}{sense.note && <span class="quiet">{' '}{sense.note}</span>}</li>)}</ol>
+    </section>
+  )}
+
+  {first && (
+    <section>
+      <h2>Example sentence</h2>
+      <div class="example">
+        <p class="reading" lang="ar" dir="rtl">{first.sentenceArabic}</p>
+        <p data-stored>{first.sentenceEnglish}</p>
+        <p class="quiet"><bdi class="inline-ar" lang="ar">{first.wordForm}</bdi> <span data-stored>{first.english}. {first.grammarNote}</span></p>
+        <p><a href={first.articlePath}>From <span data-stored>{first.articleTitle}</span></a></p>
+      </div>
+      <p class="quiet">The English is machine-translated.</p>
+    </section>
+  )}
+
+  <Offer from="word" heading="Practise this word in the app">
+    <p>One tap gives you the meaning, a grammar note and audio.</p>
+    <p>Add the words you don’t know. Practice them with spaced repetition.</p>
+  </Offer>
+
+  {enrichment?.usageNote && <section><h2>How it is used</h2><p class="prose" data-stored>{enrichment.usageNote}</p></section>}
+  {enrichment?.wordFamily?.length > 0 && (
+    <section>
+      <h2>Words from the same root</h2>
+      <ul class="entries">
+        {enrichment.wordFamily.map((member: any) => {
+          const label = <><span class="entry-ar" lang="ar" dir="rtl">{member.letters}</span> <span data-stored>{member.meaning}</span></>;
+          return <li>{member.path && known.has(member.path) ? <a href={member.path}>{label}</a> : <span class="entry-plain">{label}</span>}</li>;
+        })}
+      </ul>
+    </section>
+  )}
+  {rest.length > 0 && (
+    <section>
+      <h2>More example sentences</h2>
+      {rest.map((example: any) => (
+        <div class="example">
+          <p class="reading" lang="ar" dir="rtl">{example.sentenceArabic}</p>
+          <p data-stored>{example.sentenceEnglish}</p>
+          <p class="quiet"><bdi class="inline-ar" lang="ar">{example.wordForm}</bdi> <span data-stored>{example.english}. {example.grammarNote}</span></p>
+          <p><a href={example.articlePath}>From <span data-stored>{example.articleTitle}</span></a></p>
+        </div>
+      ))}
+    </section>
+  )}
+  {enrichment?.faq?.length > 0 && (
+    <section>
+      <h2>Common questions</h2>
+      <dl class="faq">{enrichment.faq.map((item: any) => <><dt data-stored>{item.q}</dt><dd data-stored>{item.a}</dd></>)}</dl>
+    </section>
+  )}
+  {related.length > 0 && <section><h2>Related words</h2><Entries entries={related} /></section>}
+  {enrichment && <p class="quiet source">Definitions synthesised from <a href={enrichment.sourceUrl} rel="noopener"><span data-stored>{enrichment.source}</span></a>.</p>}
+</Content>

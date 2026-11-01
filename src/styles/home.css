@@ -49,7 +49,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .hero h1 span { display: block; animation: arrive var(--t-arrive) var(--home-ease) var(--wait, 0s) both; --faint: 0.01; }
 .hero h1 span:nth-child(2) { --wait: var(--stagger); }
 .hero h1 span:nth-child(3) { --wait: calc(2 * var(--stagger)); }
-.hero .stores { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: clamp(14px, 3svh, 32px); animation: arrive var(--t-arrive) var(--home-ease) calc(3 * var(--stagger) + var(--follow)) both; }
+.hero .stores, .closing .stores { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: clamp(14px, 3svh, 32px); animation: arrive var(--t-arrive) var(--home-ease) calc(3 * var(--stagger) + var(--follow)) both; }
 .badge { display: inline-block; line-height: 0; }
 .badge img { width: auto; height: 48px; }
 /* Google's artwork carries its clear space inside the file, so it is drawn taller to match Apple's. */
@@ -135,10 +135,9 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 }
 .stage[data-stop='1'] .spoken { animation: tap-add 1.8s var(--home-ease) infinite; }
 .play .speak { opacity: clamp(0, var(--t), 1); }
-.play .horizon { opacity: clamp(0, calc(var(--t) - 1), 1); }
-.play .memory { opacity: clamp(0, calc(var(--t) - 2), 1); }
+.play .memory { opacity: clamp(0, calc(var(--t) - 1), 1); }
 .play .memory img { height: 100%; object-fit: cover; object-position: top; }
-.play .word-list { opacity: clamp(0, calc(var(--t) - 3), 1); }
+.play .word-list { opacity: clamp(0, calc(var(--t) - 2), 1); }
 .stage-caption { color: var(--color-on-surface-quiet); font-size: 0.75rem; line-height: 1.3; text-align: center; }
 
 /* The scholars: what you get, named straight after the first screen. */
@@ -146,13 +145,66 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .names span { white-space: nowrap; }
 .scholars { max-width: var(--home-wide); margin: clamp(96px, 18svh, 200px) auto; padding-inline: var(--home-gutter); }
 .scholars h2 { max-width: 13em; font-size: clamp(2.5rem, 7vw, 7.5rem); font-weight: 300; line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
-.scholars-lede { max-width: 34em; margin-top: 20px; color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.3vw, 1.1875rem); line-height: 1.45; }
 .scholar-list { display: grid; gap: 0; margin: clamp(40px, 8svh, 88px) 0 0; padding: 0; list-style: none; }
 .scholar { padding-block: 18px 20px; border-top: 1px solid var(--color-outline); }
 .scholar h3 { margin: 0; font-size: clamp(1.5rem, 2.3vw, 2.25rem); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
 .scholar-works { margin-top: 8px; color: var(--color-on-surface-quiet); font-size: 0.875rem; line-height: 1.45; }
 
+/* The turn: the line, unread, alone. */
+.turn { display: flex; flex-direction: column; justify-content: center; min-height: 100svh; max-width: var(--home-wide); margin-inline: auto; padding: clamp(40px, 8svh, 80px) var(--home-gutter); }
+.turn-words { max-width: 15em; font-size: clamp(1.625rem, 3.2vw, 3rem); font-weight: 300; line-height: 1.12; letter-spacing: -0.025em; text-wrap: balance; }
+.turn-line { margin-top: clamp(28px, 6svh, 64px); font-family: var(--type-arabic-line-family); font-size: var(--the-line); line-height: 2.1; letter-spacing: 0; text-align: right; }
+.turn-source { margin-top: 8px; color: var(--color-on-surface-quiet); font-size: 0.875rem; text-align: right; }
+
+/* A still: a whole screen of photograph, dissolving into the page at both ends. */
+.still { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: 100svh; }
+.still-photo { position: absolute; inset: 0; z-index: -1; overflow: hidden; mask-image: linear-gradient(to bottom, transparent 0%, var(--color-surface) 14%, var(--color-surface) 42%, transparent 82%); }
+.still-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; }
+.play .develop { transition: opacity var(--t-light) var(--home-ease), filter var(--t-light) var(--home-ease); }
+.play .develop:not(.is-visible) { opacity: 0; filter: brightness(var(--unlit)); }
+.still-words { width: 100%; max-width: var(--home-wide); margin-inline: auto; padding: 0 var(--home-gutter) clamp(56px, 13svh, 128px); }
+.still-line { max-width: 14em; font-size: clamp(2rem, 4.4vw, 4.5rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.03em; }
+
+/* The library: real texts. */
+.library { max-width: var(--home-wide); margin: clamp(96px, 18svh, 200px) auto; padding-inline: var(--home-gutter); }
+.library h2 { font-size: clamp(2.25rem, 6.2vw, 6.5rem); font-weight: 300; line-height: 1.02; letter-spacing: -0.035em; text-wrap: balance; }
+.library-lede { margin-top: 16px; color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.3vw, 1.1875rem); line-height: 1.45; }
+.wall { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 12px; margin: clamp(32px, 7svh, 72px) 0 0; padding: 0; list-style: none; }
+.wall-card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
+.wall-card h3 { margin: 10px 0 0; font-size: 1rem; font-weight: 500; line-height: 1.25; letter-spacing: -0.01em; }
+.wall-card:nth-child(n + 9) { display: none; }
+.wall-card p { margin-top: 2px; color: var(--color-on-surface-quiet); font-size: 0.8125rem; line-height: 1.35; }
+
+/* The payoff: the same line and size as the turn, and the visitor takes the English away. */
+:root { --the-line: clamp(3rem, 7.6vw, 7.5rem); }
+.payoff { display: flex; flex-direction: column; justify-content: center; min-height: 100svh; max-width: var(--home-wide); margin-inline: auto; padding: clamp(40px, 8svh, 80px) var(--home-gutter); }
+.payoff-title { font-size: clamp(1.625rem, 3.2vw, 3rem); font-weight: 300; line-height: 1.12; letter-spacing: -0.025em; }
+.payoff-english { margin-top: clamp(16px, 3svh, 32px); color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.6vw, 1.5rem); line-height: 1.4; text-align: right; }
+.payoff .line { --arabic-line: var(--the-line); font-size: var(--the-line); line-height: 2.1; }
+.payoff-title, .payoff-english { transition: opacity var(--duration-lift) var(--ease), visibility var(--duration-lift) var(--ease); }
+.payoff .w { transition: border-color var(--duration-lift) var(--ease); }
+.lift-input:checked ~ .payoff-title, .lift-input:checked ~ .payoff-english { opacity: 0; visibility: hidden; }
+.lift-input:checked ~ .line .w:not(:active):not(:has(+ :popover-open)) { border-bottom-color: transparent; }
+.payoff .lift-control { align-self: flex-start; margin-top: clamp(20px, 4svh, 40px); }
+.still-audio { max-width: 22rem; margin-top: 16px; }
+.still-audio audio { margin-left: 0; }
+.still-audio .turn-source { text-align: left; }
+
+/* The close */
+.closing { min-height: 110svh; }
+.closing h2 { max-width: 11em; text-wrap: balance; font-size: clamp(2.25rem, 7vw, 7rem); font-weight: 300; line-height: 1; letter-spacing: -0.035em; }
+.closing-offer { display: flex; align-items: center; gap: 28px; }
+.closing .offer-note { margin-top: 14px; animation: none; }
+.qr-plate { padding: 6px; background: var(--color-on-surface); border-radius: 10px; line-height: 0; }
+.qr { width: 84px; height: 84px; }
+
 @media (min-width: 56.25rem) {
+  .wall-card:nth-child(n + 9) { display: block; }
+  .wall { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 36px clamp(16px, 2vw, 28px); }
+  .still-photo { mask-image: linear-gradient(to bottom, transparent 0%, var(--color-surface) 22%, var(--color-surface) 76%, transparent 100%); }
+  .still-photo img { object-position: 50% 50%; }
+  .closing h2 { font-size: min(5.6vw, 11svh); }
+  .still-words { padding-bottom: clamp(80px, 20svh, 200px); }
   .scholar-list { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 3.4vw, 56px); row-gap: 28px; }
   .hero { height: 100svh; }
   .hero-photo { mask-image: linear-gradient(to top, transparent 0%, color-mix(in oklch, var(--color-surface) 50%, transparent) 8%, var(--color-surface) 24%); }
@@ -178,3 +230,6 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
   .chapter { font-size: 2.5rem; }
   .stop h3 { font-size: 1.125rem; }
 }
+.wall-card a { display: block; color: inherit; text-decoration: none; }
+.wall-card a:hover h3 { text-decoration: underline; }
+.still-audio .turn-source a { color: inherit; }

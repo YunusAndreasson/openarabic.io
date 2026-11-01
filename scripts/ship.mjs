@@ -4,7 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { acquireLock, bin, fail, REAL_DEPLOY_REFUSAL, REAL_DEPLOYS_ALLOWED, ROOT, ShipFailure, walk, WORKER } from './ship/lib.mjs';
-import { checkBuiltConfig, checkNoindex, checkPlaceholderOnly, checkSourceConfig } from './ship/guard.mjs';
+import { checkBuiltConfig, checkNoindex, checkSourceConfig } from './ship/guard.mjs';
 import { colourBan, driftCheck, lintGate } from './ship/design-check.mjs';
 import { checkBudgets } from './ship/budgets.mjs';
 import { checkInBrowser } from './ship/browser-budgets.mjs';
@@ -12,9 +12,12 @@ import { checkClaims } from './ship/claims.mjs';
 import { checkDevBoots } from './ship/dev-boot.mjs';
 import { hashBuild, previewTarget, readPublished, rollbackTo, upload, uploadCommand, writePreviewUrl, writePublished } from './ship/deploy.mjs';
 import { sha256, smoke } from './ship/smoke.mjs';
+import { prepareImages } from './ship/images.mjs';
+import { checkBuiltPages, localWorker, requireParity, runParity } from './ship/parity.mjs';
 import { fetchSnapshot } from './ship/fetch.mjs';
 import { describeProblems, validateSnapshot } from './ship/validate.mjs';
 import { compareSnapshots, loadBaseline, writeReport } from './ship/compare.mjs';
+import { readSnapshot } from './ship/fetch.mjs';
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
@@ -117,6 +120,9 @@ async function main() {
 
   const content = await snapshotSteps(published);
 
+  const images = await prepareImages(readSnapshot(content.hash));
+  report('images', 'PASS', `${images.images} article images in the build, ${images.fetched} newly copied${images.missing.length > 0 ? `. Stored but not downloadable, so their articles show no image: ${images.missing.join(', ')}` : ''}`);
+
   build(content.file);
   report('build', 'PASS', 'astro build, from a clean dist');
 
@@ -125,20 +131,27 @@ async function main() {
 
   const budgets = checkBudgets();
   checkNoindex(budgets.pages);
+  // Every page was checked. One line per page type, with its heaviest page.
+  const heaviest = new Map();
   for (const fact of budgets.facts) {
-    report('budgets', 'PASS', `${fact.route} (${fact.type}): JS ${fact.js} B, CSS ${fact.css} B, fonts ${fact.fontBytes} B; ${budgets.files} files`);
+    const entry = heaviest.get(fact.type) ?? { ...fact, pages: 0 };
+    heaviest.set(fact.type, { route: fact.js >= entry.js ? fact.route : entry.route, type: fact.type, js: Math.max(entry.js, fact.js), css: Math.max(entry.css, fact.css), fontBytes: Math.max(entry.fontBytes, fact.fontBytes), pages: entry.pages + 1 });
+  }
+  for (const fact of heaviest.values()) {
+    report('budgets', 'PASS', `${fact.type}, ${fact.pages} pages, heaviest ${fact.route}: JS ${fact.js} B, CSS ${fact.css} B, fonts ${fact.fontBytes} B; ${budgets.files} files`);
   }
   for (const fact of await checkInBrowser(budgets.pages)) {
-    report('budgets, browser', 'PASS', `${fact.route}: no third-party request, ${fact.transferred} B transferred, LCP ${fact.lcp} ms, CLS ${fact.cls} (lab)`);
+    report('budgets, browser', 'PASS', `${fact.route}: ${fact.route.endsWith('opted in') ? `only Google's script, stood in at ${fact.transferred} B` : `no third-party request, ${fact.transferred} B transferred`}, LCP ${fact.lcp} ms, CLS ${fact.cls} (lab)`);
   }
 
   const claims = checkClaims();
   report('claims', 'PASS', `${claims.phrases} banned phrases absent from ${claims.files} files. ${claims.strings} public strings trace: ${claims.ledger} ledger, ${claims.designed} DESIGN.md, ${claims.draft} draft`);
   for (const item of claims.forPerson) console.log(`[claims] for a person, not machine-checkable: ${item}`);
 
-  stub('parity', '2.7', 'No URL parity test yet.');
-  checkPlaceholderOnly(budgets.pages, notBuilt);
-  report('placeholder', 'PASS', `one prerendered page and no Worker code, so ${notBuilt.join(', ')} have nothing to protect yet`);
+  const local = await runParity('https://local.test', await localWorker(), { concurrency: 1 });
+  const builtPages = checkBuiltPages();
+  requireParity(local, builtPages);
+  report('parity', 'PASS', `${local.checked} URLs answer as docs/site-plan.md's table says, on the built Worker and files. ${builtPages.pages} pages have one title and canonical in <head> and the right JSON-LD. sitemap.xml holds ${builtPages.sitemap} URLs, with the data`);
 
   const dev = await checkDevBoots();
   report('dev runtime', 'PASS', `astro dev answered 200 on / in ${(dev.ms / 1000).toFixed(1)} s, on free port ${dev.port}, from a throwaway copy`);
@@ -151,7 +164,7 @@ async function main() {
     report('smoke', 'WOULD RUN', 'Needs the preview URL an upload returns. Not run');
     report('record', 'WOULD RUN', '.ship/published is untouched');
     console.log(`\nDRY RUN COMPLETE. Worker: ${WORKER}. Routes: none. Nothing was uploaded.`);
-    console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);
+    if (notBuilt.length > 0) console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);
     return;
   }
   if (!REAL_DEPLOYS_ALLOWED) fail(REAL_DEPLOY_REFUSAL);
@@ -175,12 +188,16 @@ async function main() {
   if (!checked.ok) await rollBackAfterFailure(published, url, checked.problems.join('; '));
   report('smoke', 'PASS', `/ is 200 with this build's bytes, X-Robots-Tag: noindex and the meta, no Set-Cookie; ${routes.length} other route types too (try ${checked.attempts})`);
 
+  const edgeParity = await runParity(url, fetch, { headers: true });
+  if (edgeParity.failures.length > 0) await rollBackAfterFailure(published, url, `URL parity failed on ${edgeParity.failures.length} of ${edgeParity.checked}: ${edgeParity.failures.slice(0, 5).join('; ')}`);
+  report('parity, preview', 'PASS', `${edgeParity.checked} URLs answer as the table says on the preview, each noindexed with no cookie`);
+
   const previous = published && { hash: published.hash, hashOf: published.hashOf, buildHash: published.buildHash, workerVersion: published.workerVersion, indexSha256: published.indexSha256, publishedAt: published.publishedAt };
   writePublished({ worker: WORKER, hash: content.hash, hashOf: 'snapshot', buildHash, ...(content.approved && { approved: true }), workerVersion: deployed.version, indexSha256, publishedAt: new Date().toISOString(), ...(previous && { previous }) });
   report('record', 'PASS', `.ship/published holds version ${deployed.version}, snapshot ${content.hash}`);
 
   console.log(`\nSHIPPED to preview in ${((Date.now() - started) / 1000).toFixed(1)} s. ${url}`);
-  console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);
+  if (notBuilt.length > 0) console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);
 }
 
 main().catch((error) => {

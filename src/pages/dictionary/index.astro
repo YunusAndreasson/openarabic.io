@@ -1,0 +1,23 @@
+---
+import Content from '../../layouts/Content.astro';
+import Entries from '../../components/Entries.astro';
+import Offer from '../../components/Offer.astro';
+import SearchForm from '../../components/SearchForm.astro';
+import LetterNav from '../../components/LetterNav.astro';
+import { site } from '../../lib/snapshot.mjs';
+
+const SITE = 'https://openarabic.io';
+const jsonLd = [
+  { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: `${SITE}/dictionary`, inLanguage: 'en', isPartOf: { '@id': `${SITE}/#website` } },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Dictionary', item: `${SITE}/dictionary` }] },
+];
+---
+
+<Content title="Arabic Dictionary: Words with Audio and Example Sentences | OpenArabic" description="Arabic words with their English meanings, audio, and example sentences from classical texts." canonical="/dictionary" jsonLd={jsonLd}>
+  <h1>Arabic dictionary</h1>
+  <p class="lead">Arabic words with their meanings, audio, and example sentences from classical texts.</p>
+  <SearchForm />
+  <section><h2>Browse by letter</h2><LetterNav /></section>
+  <section><h2>Most used words</h2><Entries entries={site().mostUsed(300)} /></section>
+  <Offer from="word" />
+</Content>

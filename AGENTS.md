@@ -19,6 +19,8 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Prove the ship's guards still work, after changing `scripts/ship*` | `pnpm ship:test` |
 | Deploy to preview; undo it | `pnpm ship`; `pnpm ship:rollback` |
 | Generate tokens after changing `DESIGN.md` | `pnpm tokens` |
+| Reader's and GA4's real-input checks, on a served build | `node scripts/check-reader.mjs <origin> chromium\|zen`; `node scripts/check-analytics.mjs <origin>` |
+| Serve a build locally, no upload | `wrangler dev -c dist/server/wrangler.json --port 4400` |
 | Prove the Worker name, after a build | `grep -o '"name":"[^"]*"\|"routes"' dist/*/wrangler.json` prints only `openarabic-site`. A `--name` flag would hide a wrong name |
 | Zen, without touching the owner's | `zen-browser --headless --no-remote --profile "$(mktemp -d)" --screenshot /tmp/z.png <url>` |
 
@@ -32,7 +34,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Any public sentence | `PRODUCT.md`: use ledger wording; banned phrases stay banned even if asked for. Other new copy is listed as draft |
 | Any image | `DESIGN.md` `Imagery`: Codex generates, Claude directs and critiques every candidate. App UI is always a real capture, and images hold no lettering |
 | Word tapping, reader or JS | `docs/decisions/2026-10-31-spike-word-tap.md` |
-| Word pages, Worker config or cache | `docs/decisions/2026-10-31-spike-word-pages.md` |
+| Word pages, Worker config or cache | `docs/decisions/2026-10-31-spike-word-pages.md`, `docs/decisions/2026-11-01-content-pages.md` |
 | Fetching data or publishing edits | `docs/decisions/2026-10-31-spike-content-freshness.md` |
 | URLs and redirects | `docs/research/current-site.md`, `docs/decisions/2026-10-31-spike-category-urls.md` |
 | Build order and scope | `docs/site-plan.md` |
@@ -50,6 +52,7 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 | Bare-id or stale word URL, real 404, `/word/*/` | Worker: 308 or 404 |
 | `/?category=N` | Worker: 301 to `/category/<name>`, keeping other params. Assets ignore the query and `_redirects` can't match it |
 | `/download-app?to=&from=` | Worker: counts the tap with no cookie and no script |
+| `/dictionary/search?q=` | Worker: fills the prerendered file from its bundled index. `docs/decisions/2026-11-01-dictionary-search.md` |
 | Any other on-demand route | Not without a new decision record |
 
 **Island or plain script.** No islands: no `client:*`, no UI framework, no `ClientRouter`. The hard cap is 1.5 KB gzip of JS on any page except the home page, which is the app's promo and has 60 KB of JS and 24 KB of CSS (`docs/decisions/2026-10-31-home-rebuild.md`).
@@ -64,7 +67,7 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 **Arabic text.**
 
 - Never normalise or alter vocalised text you show: no `.normalize()`, mark stripping, re-vocalising, kashida or joining. The one exception is the throwaway copy used for the letter comparison below. If stored text looks wrong, show it as stored and report it.
-- The reader shows `sentence_words.word_form`, in `position` order with real spaces, where its letters match `article_sentences.arabic`. On the 352 where they don't, it shows the stored `arabic`, with no tapping. 3 sentences have no words: report them, don't fill them in.
+- The reader shows `sentence_words.word_form`, in `position` order with real spaces, where its letters match `article_sentences.arabic`. On the 350 where they don't, it shows the stored `arabic`, with no tapping. 3 sentences have no words: report them, don't fill them in.
 
 ## Done
 

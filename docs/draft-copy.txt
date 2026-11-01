@@ -73,11 +73,8 @@ The app’s playlist of texts, each with its scholar and length, and a Play all 
 A man seen from behind, small in a dark room, reading a book at a table by a window at dusk.
 Add the words you don’t know. Practice them with spaced repetition.
 The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.
-The app’s practice screen: how many words you would recall right now, and how long a typical word holds.
 The app’s memory horizon: how many practised words hold for days, weeks and months.
 The app’s list of your words, each with its meaning and a bar for how strong it is.
-See how long each word holds before it needs you again.
-New words pause by themselves when your recall drops.
 Every word you add stays in one list, with how strong it is.
 The numbers shown are from an example account.
 Remember
@@ -94,3 +91,262 @@ Excerpts from classical works by six scholars
 Sorted by difficulty. Most texts are advanced; some are easier.
 Listen
 The app’s reader with its player open along the bottom, playing a text aloud.
+
+# Article titles as stored, not new copy.
+Ten Daily Supplications
+Returning to God
+Prayer During Illness
+Brotherhood in Islam
+Praise and Petition in Prayer
+The Prophet's Character
+A Path to Mercy
+The Verse of the Throne
+The Night of the Migration
+Patience in Hard Times
+The Barley Loaf That Fed Eighty
+Sincere Worship
+
+# Home page, second slice.
+You finished the course. Then you opened a real book.
+Play a text on the way home.
+A man seen from behind, small on a wet street at dusk, wearing earphones.
+A closed book and a phone on a small table under a window, in the first light before dawn.
+Tap a word.
+Take the English away
+Bring the English back
+You choose 10, 20 or 30 new words a day. New words pause by themselves when your recall drops.
+In the app, the English stays above the line.
+Free as sadaqah jariyah.
+
+# Content pages. {} is text from the database or the enrichment file, shown as stored. Templates must match a whole string.
+{} in Arabic — {} | OpenArabic
+{} means "{}" in Arabic. Hear the pronunciation and see it used in real example sentences with grammar notes.
+{} - OpenArabic
+Texts by {} - OpenArabic
+Excerpts from classical works by {}, in Arabic with English under every line.
+Excerpts from classical works on {}, in Arabic with English under every line.
+{}: classical Arabic texts | OpenArabic
+Arabic words starting with {} | OpenArabic Dictionary
+Arabic words starting with {}
+{} words whose English meaning starts with {}.
+Arabic words whose English meaning starts with {}, each with audio and example sentences from classical texts.
+Dictionary / {}
+From {}
+More from {}
+Excerpts from {}.
+
+# Content pages, plain strings. Legal text is ported from the old site with the owner still to approve it: plan task 4.9.
+Page not found | OpenArabic
+This page does not exist.
+Search the dictionary or go to the home page.
+Browse
+Dictionary Al-Fawaid Creed Fiqh Ḥadīth Qurʾān Sīrah Iḥsān Tafsīr
+Ibn al-Jawzi Ibn al-Qayyim an-Nawawi Ibn Taymiyyah al-Bukhari adh-Dhahabi
+Privacy Terms Contact Account deletion Analytics choice
+Account Deletion | OpenArabic
+How to delete your OpenArabic account and its data.
+OpenArabic by Yunus Andréasson.
+To delete your OpenArabic account and data, send an email to yunus@edenmind.com.
+What gets deleted
+Your account profile and sign-in credentials
+Your reading progress and article history
+Your vocabulary data and practice records
+Your preferences and settings
+All data is deleted within 7 business days after verification. No personal data is retained.
+How it is verified
+We send a verification link to your email.
+Click the link to confirm the deletion.
+Your account is deleted within 7 business days.
+Account deletion is permanent and cannot be undone.
+Al-Fawaid by Ibn al-Qayyim al-Jawziyya: Arabic and English (PDF) | OpenArabic
+Download Al-Fawaid (الفوائد) by Ibn al-Qayyim al-Jawziyya as a PDF, with the Arabic and English side by side.
+Al-Fawaid
+By Ibn al-Qayyim al-Jawziyya, .
+Download the PDF 411 pages · 18 MB
+The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase.
+Read classical texts in the app
+About the book
+Al-Fawaid, "the benefits" or points of benefit, is one of Ibn al-Qayyim's best-loved shorter works. Rather than a systematic treatise, it gathers reflections that came to him over the years: a short meditation on a verse of the Qur'an, an insight drawn from a hadith, a note on the ailments and cures of the heart.
+He is said to have recorded each "benefit" as it occurred to him, which gives the book its character: a string of self-contained pearls rather than chapters building a single argument. This edition presents its 209 sections.
+A sample from the book
+What's inside
+About the author
+Ibn al-Qayyim al-Jawziyya, in full Shams al-Din Muhammad ibn Abi Bakr ibn Ayyub al-Zurʿi al-Dimashqi al-Hanbali, was a scholar of the Hanbali school in Damascus, born in 1292 (691 AH) and died in 1350 (751 AH). His name, "son of the qayyim of al-Jawziyya", comes from his father, who directed the al-Jawziyya madrasa in the city.
+He was the foremost student of Ibn Taymiyya, studying with him for some sixteen years and sharing his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zad al-Maʿad, Madarij al-Salikin and Iʿlam al-Muwaqqiʿin. He is buried at the Bab al-Saghir cemetery in Damascus.
+Biographical details from Wikipedia.
+Contact | OpenArabic
+How to reach OpenArabic.
+Write to yunus@edenmind.com.
+Also on X, Instagram and Facebook.
+Arabic Dictionary: Words with Audio and Example Sentences | OpenArabic
+Arabic words with their English meanings, audio, and example sentences from classical texts.
+Arabic dictionary
+Arabic words with their meanings, audio, and example sentences from classical texts.
+Search the dictionary
+A meaning or an Arabic word
+Search
+Browse by letter
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+Y
+Z
+Other
+Most used words
+Search the dictionary | OpenArabic
+Search Arabic words by their English meaning or their Arabic letters.
+Breadcrumb
+Dictionary
+Dictionary /
+Download OpenArabic: Read the Classics
+If you can sound out Arabic script, you can start reading classical texts. Free. No ads. No subscription.
+5.0 on the US App Store
+The app's reader: an English line above each classical Arabic line, with parts of the words in colour.
+The app's sheet for the word كِتَاب: book, an audio button, and the root it comes from.
+The app's voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.
+Privacy Policy | OpenArabic
+What OpenArabic collects, how it is used, and your rights.
+Privacy Policy
+Effective date: January 1, 2025. Last updated: November 1, 2026.
+This policy explains what information we collect, how we use it, and your rights.
+Information we collect
+Account information
+When you create an account, we collect your email address. If you use Apple or Google Sign In, we receive basic profile information from those services.
+Learning data
+We store your reading progress, vocabulary lists, practice session history, review performance, and app preferences such as theme, audio settings and notifications.
+Voice answers
+Usage analytics
+In the app, we use Mixpanel to record events like sign in, sign up, practice sessions and the title and category of the texts you open, linked to your account. On this website, and only if you agree, we use Google Analytics to see how visitors find and use it.
+How we use your information
+We use your data to provide the learning service, sync your progress across devices, personalize your learning, send practice reminders if you enable them, and improve the app.
+Third-party services
+Supabase
+We use Supabase for authentication, database and file storage.
+Mixpanel
+We use Mixpanel in the app to understand which features get used and to improve the learning experience. Its events are linked to your account. The app does not currently ask before sending them.
+Meta (Facebook)
+The app sends a small number of app events to Meta, so we can tell whether an ad was worth running: that the app was opened, an account was created, the intro was finished, or a practice session was completed, along with the technical details the Meta SDK attaches, such as device model and system version. On Android your device advertising ID is included. This applies whether or not you installed from an ad, and the app does not currently ask first. We do not send Meta your name, your email or what you study. We never ask to track you across other apps.
+Google Analytics
+Only if you agree on this website, we use Google Analytics to see how visitors find and use it, such as page views and referral sources. It sets cookies, and the data goes to Google. Because this site is about Islamic texts, visits could suggest your beliefs. If you refuse, or make no choice, nothing is loaded from Google and no analytics cookie is set. Your choice is stored in your browser, and it applies to this website, not the app. You can change it at any time on the analytics choice page.
+Sentry
+We use Sentry for error tracking and crash reporting.
+Apple and Google
+If you sign in with Apple or Google, their privacy policies apply to the sign-in.
+Data security
+We take reasonable measures to protect your data, including encrypted connections and secure authentication. No internet service is completely secure.
+Your rights
+You can access, update or delete your account data. To delete your account and its data, see account deletion.
+Children
+OpenArabic is not intended for children under 13. We do not knowingly collect information from children under 13.
+Changes to this policy
+We may update this policy from time to time. We will tell you about significant changes through the app or by email.
+Questions about privacy? Write to yunus@edenmind.com.
+Terms of Service | OpenArabic
+The terms for using OpenArabic.
+Terms of Service
+Effective date: January 1, 2025.
+Welcome to OpenArabic. By using our app, you agree to these terms.
+Our service
+OpenArabic provides classical Arabic texts, audio content, vocabulary tools and spaced repetition features for reading Arabic.
+Your account
+You can create an account using email and password, Apple Sign In, or Google Sign In. You are responsible for the security of your account. Provide accurate information and keep your password confidential.
+Acceptable use
+Use OpenArabic for personal learning only. Do not attempt to harm the service, access it through unauthorized means, or use it for any unlawful purpose.
+Content and rights
+All content on OpenArabic, including articles, translations, audio and educational materials, is owned by OpenArabic or licensed to us. You may use it for personal learning but may not redistribute, republish or use it commercially.
+Your data
+You own your learning data: reading progress, vocabulary lists and practice history. We collect and use this data as described in our Privacy Policy to provide and improve the service.
+Disclaimers
+OpenArabic is provided "as is" without warranties of any kind. We strive for accuracy but cannot guarantee that all content is error-free. Your use of the app is at your own risk.
+Limitation of liability
+OpenArabic and its developers are not liable for any indirect, incidental or consequential damages arising from your use of the service.
+Changes to these terms
+We may update these terms from time to time. Continued use of OpenArabic after changes means you accept the updated terms.
+Termination
+We may suspend or terminate your access if you violate these terms. You may stop using OpenArabic at any time.
+Questions about these terms? Write to yunus@edenmind.com.
+Fiqh
+. Easier.
+. Advanced.
+. Expert.
+, . Sīrah. Advanced.
+The English is machine-translated. The audio uses AI voices.
+Skip past the text
+Each Arabic line is a button. Press it to go through its words, then press a word for its meaning.
+Play
+Full entry
+in Arabic
+Root
+Arabic
+English
+This word read aloud in English
+Meaning
+In a classical text
+From
+Practise this word in the app
+Add the words you don't know. Practice them with spaced repetition.
+How it is used
+Words from the same root
+Common questions
+Related words
+Definitions synthesised from .
+Easier
+Advanced
+Expert
+No entries match. Try another word, or browse by letter.
+Creed
+Ḥadīth
+Iḥsān
+Qurʾān
+Sīrah
+Tafsīr
+Fiqh
+0–9
+This text read aloud in Arabic
+This word read aloud in English
+More from
+More examples
+In a classical text
+How it is used
+Words from the same root
+Related words
+Common questions
+Meaning
+Definitions synthesised from {}.
+Practise this word in the app
+Arabic
+English
+Analytics choice | OpenArabic
+Turn Google Analytics on or off for this website.
+Google Analytics is off on this website unless you turn it on here. If you do, it sets cookies and the data goes to Google. Because this site is about Islamic texts, visits could suggest your beliefs.
+Your choice is stored in your browser, and it applies to this website, not the app. See the privacy policy.
+Without JavaScript, Google Analytics can’t run, so there is nothing to choose.
+Refuse
+Allow
+A Path to Mercy, read aloud, English first, then Arabic
+{} is how you say “{}” in Arabic.
+is how you say
+Meaning of {} in Arabic
+Example sentence
+More example sentences
+Meaning of

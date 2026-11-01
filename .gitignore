@@ -42,3 +42,10 @@ docs/research/raw/
 .ship/snapshots/
 .ship/reports/
 .ship/baseline
+
+# Generated from the snapshot at build
+src/generated/
+public/img/
+public/reader.js
+.ship/images/
+.ship/segments/

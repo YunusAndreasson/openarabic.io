@@ -14,12 +14,12 @@ import { canonical, hashOf, TABLES } from './ship/fetch.mjs';
 import { compareSnapshots, MAX_TOUCHED_SENTENCES } from './ship/compare.mjs';
 import { validateSnapshot } from './ship/validate.mjs';
 import { indexSnapshot, loadSnapshot } from '../src/lib/snapshot.mjs';
-import { doctor, fixture } from './ship-test/fixture.mjs';
+import { doctor, fixture, fixtureSitemap } from './ship-test/fixture.mjs';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const COPY = fs.mkdtempSync(path.join(os.tmpdir(), 'openarabic-ship-test-'));
-const SOURCES = ['astro.config.mjs', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'tsconfig.json', 'wrangler.jsonc', 'DESIGN.md', 'PRODUCT.md', 'docs/draft-copy.txt', 'public', 'scripts', 'src', 'vendor'];
-const GENERATED = new Set(['node_modules', 'dist', '.astro', '.wrangler', '.ship']);
+const SOURCES = ['astro.config.mjs', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'tsconfig.json', 'wrangler.jsonc', 'DESIGN.md', 'PRODUCT.md', 'docs/draft-copy.txt', 'docs/research/parity', 'public', 'scripts', 'src', 'vendor'];
+const GENERATED = new Set(['node_modules', 'dist', '.astro', '.wrangler', '.ship', 'generated', 'img', 'reader.js']);
 const SPY_LOG = path.join(COPY, 'wrangler-spy.log');
 const FAKE_NETWORK = path.join(REPO, 'scripts/ship-test/fake-network.mjs');
 const REQUEST_LOG = path.join(COPY, 'requests.log');
@@ -81,6 +81,8 @@ function seedData() {
   fs.mkdirSync(path.join(COPY, '.ship/snapshots'), { recursive: true });
   fs.writeFileSync(path.join(COPY, `.ship/snapshots/${BASE_HASH}.json`), BASE_BYTES);
   fs.writeFileSync(path.join(COPY, '.ship/baseline'), `${BASE_HASH}\n`);
+  // The frozen list as this data would have written it, so the parity table runs in full on the fixture.
+  fs.writeFileSync(path.join(COPY, 'docs/research/parity/sitemap-2026-11-01.txt'), `${fixtureSitemap(fixture())}\n`);
 }
 
 /** The next fetch reads the fake database with this done to it. */
@@ -143,7 +145,7 @@ const HEADING = '<p class="lede">If you can sound out Arabic script, you can sta
 // A page that isn't home, because the home page has its own limits: docs/decisions/2026-10-31-home-rebuild.md.
 const OTHER_PAGE = (head, body = '') => `<!doctype html><html lang="en"><head><meta name="robots" content="noindex, nofollow" /><title>OpenArabic: Read the Classics</title>${head}</head><body>${body}</body></html>`;
 const BUILD_HOOK = (change) =>
-  `integrations: [{ name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); const f = process.cwd() + '/dist/client/wrangler.json'; const c = JSON.parse(fs.readFileSync(f, 'utf8')); ${change}; fs.writeFileSync(f, JSON.stringify(c)); } } }],\n  trailingSlash: 'never',`;
+  `integrations: [generated(), { name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); const f = process.cwd() + '/dist/server/wrangler.json'; const c = JSON.parse(fs.readFileSync(f, 'utf8')); ${change}; fs.writeFileSync(f, JSON.stringify(c)); } } }],`;
 
 const results = [];
 
@@ -236,9 +238,8 @@ function realRuns() {
   let result = runReal('ship');
   let calls = spyCalls();
   let after = publishedNow();
-  record('Real run, first ever: uploads from the built config, with no --name, then records', result.status === 0 && calls.length === 1 && calls[0] === 'deploy --config dist/client/wrangler.json' && /\[worker\] dist\/client\/wrangler\.json names: openarabic-site/.test(result.output), calls.join(' | ') + (result.status === 0 ? '' : result.output.slice(-800)));
+  record('Real run, first ever: uploads from the built config, with no --name, then records', result.status === 0 && calls.length === 1 && calls[0] === 'deploy --config dist/server/wrangler.json' && /\[worker\] dist\/server\/wrangler\.json names: openarabic-site/.test(result.output), calls.join(' | ') + (result.status === 0 ? '' : result.output.slice(-800)));
   record('Real run: published holds the snapshot hash, version and time, and no URL', after?.workerVersion === NEW_VERSION && after?.hash === BASE_HASH && after?.hashOf === 'snapshot' && Boolean(after?.publishedAt) && !JSON.stringify(after).includes('workers.dev') && read('.ship/preview-url').trim() === PREVIEW, JSON.stringify(after));
-  record('Real run: the unbuilt steps still print NOT BUILT', /NOT BUILT, so not passed: parity\./.test(result.output) && !/\[(fetch|validate|compare)\] NOT BUILT/.test(result.output));
   reset();
 
   seedRecorded();
@@ -487,7 +488,7 @@ function repoAloneCases() {
   const loaded = loadSnapshot(file);
   const index = indexSnapshot(loaded);
   const entry = index.wordEntry(index.qualifying[0]);
-  record('The loader reads a saved snapshot and indexes it as the spike did', loaded.hash === BASE_HASH && entry.usageCount > 0 && entry.examples.length > 0 && entry.related.every((other) => other.path.startsWith('/word/')) && index.articleWords(559).length === 2);
+  record('The loader reads a saved snapshot and indexes it as the spike did', loaded.hash === BASE_HASH && entry.examples.length > 0 && entry.related.every((other) => other.path.startsWith('/word/')) && index.articleText(559).length === 2);
   const tampered = path.join(dir, `${'0'.repeat(64)}.json`);
   fs.writeFileSync(tampered, BASE_BYTES);
   let refused = false;
@@ -499,11 +500,11 @@ function repoAloneCases() {
   record('The loader refuses a file that does not match its name', refused);
   let noFile = false;
   try {
-    loadSnapshot(undefined);
+    loadSnapshot(null);
   } catch {
     noFile = true;
   }
-  record('The loader has no other source to fall back on', noFile);
+  record('With no file, the loader has no other source to fall back on', noFile);
 
   const segments = path.join(dir, 'segments.json');
   const classifier = spawnSync(process.execPath, [at('vendor/classifier/analyze.mjs'), file, segments], { cwd: dir, encoding: 'utf8' });
@@ -552,20 +553,17 @@ async function main() {
   stops('A custom domain in wrangler.jsonc', () => edit('wrangler.jsonc', '"workers_dev": true', '"route": { "pattern": "x.example", "custom_domain": true },\n  "workers_dev": true'), /holds a route/);
   stops('An environment in wrangler.jsonc that could carry another name', () => edit('wrangler.jsonc', '"workers_dev": true', '"env": { "prod": { "name": "openarabic-web" } },\n  "workers_dev": true'), /defines environments/);
   stops('A service binding to the live Worker', () => edit('wrangler.jsonc', '"workers_dev": true', '"services": [{ "binding": "OLD", "service": "openarabic-web" }],\n  "workers_dev": true'), /refers to the live Worker/);
-  stops('Wrong name only in the built config, source clean', () => edit('astro.config.mjs', "trailingSlash: 'never',", BUILD_HOOK("c.name = 'openarabic-web'")), /Built config dist\/client\/wrangler\.json names the Worker "openarabic-web"/);
-  stops('A route only in the built config, source clean', () => edit('astro.config.mjs', "trailingSlash: 'never',", BUILD_HOOK("c.routes = ['x.example/*']")), /Built config dist\/client\/wrangler\.json holds a route/);
-  stops('openarabic.io only in the built config, source clean', () => edit('astro.config.mjs', "trailingSlash: 'never',", BUILD_HOOK("c.vars = { S: 'openarabic.io' }")), /Built config dist\/client\/wrangler\.json mentions openarabic\.io/);
-  stops("wrangler's redirect pointing at an unchecked config", () => edit('astro.config.mjs', "trailingSlash: 'never',", `integrations: [{ name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); fs.writeFileSync('.wrangler/deploy/config.json', JSON.stringify({ configPath: '../../elsewhere.json' })); } } }],\n  trailingSlash: 'never',`), /sends wrangler to .*elsewhere\.json, not a config this guard checked/);
+  stops('Wrong name only in the built config, source clean', () => edit('astro.config.mjs', "integrations: [generated()],", BUILD_HOOK("c.name = 'openarabic-web'")), /Built config dist\/server\/wrangler\.json names the Worker "openarabic-web"/);
+  stops('A route only in the built config, source clean', () => edit('astro.config.mjs', "integrations: [generated()],", BUILD_HOOK("c.routes = ['x.example/*']")), /Built config dist\/server\/wrangler\.json holds a route/);
+  stops('openarabic.io only in the built config, source clean', () => edit('astro.config.mjs', "integrations: [generated()],", BUILD_HOOK("c.vars = { S: 'openarabic.io' }")), /Built config dist\/server\/wrangler\.json mentions openarabic\.io/);
+  stops("wrangler's redirect pointing at an unchecked config", () => edit('astro.config.mjs', "integrations: [generated()],", `integrations: [generated(), { name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); fs.writeFileSync('.wrangler/deploy/config.json', JSON.stringify({ configPath: '../../elsewhere.json' })); } } }],`), /sends wrangler to .*elsewhere\.json, not a config this guard checked/);
   stops('A flag trying to name a Worker', () => {}, /Unknown argument: --name openarabic-web/, { args: ['--dry-run', '--name', 'openarabic-web'] });
   stops('A skip flag', () => {}, /Unknown argument: --skip-claims/, { args: ['--dry-run', '--skip-claims'] });
   stops('--production before the cutover', () => {}, /--production is refused/, { args: ['--dry-run', '--production'] });
   stops('Noindex meta removed', () => edit('src/layouts/Base.astro', '<meta name="robots" content="noindex, nofollow" />', ''), /has no noindex meta/);
   stops('Noindex header removed', () => write('public/_headers', '# none\n'), /has no "X-Robots-Tag: noindex"/);
-  stops('A second page while Phase 2 steps are unbuilt', () => write('src/pages/extra.astro', '---\nimport Base from "../layouts/Base.astro";\n---\n<Base><main></main></Base>\n'), /pages beyond the placeholder/);
 
   stops('workers_dev switched off', () => edit('wrangler.jsonc', '"workers_dev": true', '"workers_dev": false'), /workers_dev false/);
-  stops('An on-demand page, with no HTML file to see', () => write('src/pages/live.astro', '---\nexport const prerender = false;\n---\n<p></p>\n'), /pages beyond the placeholder/);
-  stops('An endpoint, with no HTML file to see', () => write('src/pages/data.json.ts', 'export const GET = () => new Response("{}");\n'), /pages beyond the placeholder/);
   stops('--production on a real run', () => {}, /--production is refused/, { args: ['--production'] });
   stops('The off switch refuses a real run at the upload', () => edit('scripts/ship/lib.mjs', 'REAL_DEPLOYS_ALLOWED = true', 'REAL_DEPLOYS_ALLOWED = false'), /switched off/, { args: [] });
   stops('A published record for another Worker stops the ship', seedPublished({ worker: 'openarabic-web' }), /is for "openarabic-web"/);

@@ -1,0 +1,41 @@
+---
+// DESIGN.md: "side by side", the size line and free to share may go here only. Free to share waits on the Terms exception, plan task 4.10.
+import Content from '../../layouts/Content.astro';
+import Offer from '../../components/Offer.astro';
+import book from '../../data/al-fawaid.json';
+
+const SITE = 'https://openarabic.io';
+const jsonLd = [
+  { '@type': 'Book', name: 'Al-Fawaid', alternateName: 'الفوائد', author: { '@type': 'Person', name: 'Ibn al-Qayyim al-Jawziyya', alternateName: 'ابن قيّم الجوزيّة', sameAs: 'https://en.wikipedia.org/wiki/Ibn_Qayyim_al-Jawziyya' }, inLanguage: ['ar', 'en'], numberOfPages: 411, url: `${SITE}/books/al-fawaid`, publisher: { '@id': `${SITE}/#organization` }, isAccessibleForFree: true, workExample: { '@type': 'Book', bookFormat: 'https://schema.org/EBook', encodingFormat: 'application/pdf', url: `${SITE}/books/al-fawaid.pdf` } },
+];
+---
+
+<Content title="Al-Fawaid by Ibn al-Qayyim al-Jawziyya: Arabic and English (PDF) | OpenArabic" description="Download Al-Fawaid (الفوائد) by Ibn al-Qayyim al-Jawziyya as a PDF, with the Arabic and English side by side." canonical="/books/al-fawaid" jsonLd={jsonLd}>
+  <h1>Al-Fawaid</h1>
+  <p class="book-ar" lang="ar" dir="rtl">الفوائد</p>
+  <p class="lead">By Ibn al-Qayyim al-Jawziyya, <bdi class="inline-ar" lang="ar">ابن قيّم الجوزيّة</bdi>.</p>
+  <p class="download"><a class="button" href="/books/al-fawaid.pdf" download>Download the PDF</a> <span class="quiet">411 pages · 18 MB</span></p>
+  <p class="prose">The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase.</p>
+  <Offer from="book" heading="Read classical texts in the app">
+    <p>If you can sound out Arabic script, you can start reading classical texts.</p>
+  </Offer>
+  <section>
+    <h2>About the book</h2>
+    <p class="prose">Al-Fawaid, “the benefits” or points of benefit, is one of Ibn al-Qayyim’s best-loved shorter works. Rather than a systematic treatise, it gathers reflections that came to him over the years: a short meditation on a verse of the Qur’an, an insight drawn from a hadith, a note on the ailments and cures of the heart.</p>
+    <p class="prose">He is said to have recorded each “benefit” as it occurred to him, which gives the book its character: a string of self-contained pearls rather than chapters building a single argument. This edition presents its {book.sections} sections.</p>
+  </section>
+  <section>
+    <h2>A sample from the book</h2>
+    {book.sample.map((line) => <div class="example"><p class="reading" lang="ar" dir="rtl">{line.arabic}</p><p data-stored>{line.english}</p></div>)}
+  </section>
+  <section>
+    <h2>What’s inside</h2>
+    <ul class="topics">{book.topics.map((topic) => <li data-stored>{topic.english}</li>)}</ul>
+  </section>
+  <section>
+    <h2>About the author</h2>
+    <p class="prose">Ibn al-Qayyim al-Jawziyya, in full Shams al-Din Muhammad ibn Abi Bakr ibn Ayyub al-Zurʿi al-Dimashqi al-Hanbali, was a scholar of the Hanbali school in Damascus, born in 1292 (691 AH) and died in 1350 (751 AH). His name, “son of the qayyim of al-Jawziyya”, comes from his father, who directed the al-Jawziyya madrasa in the city.</p>
+    <p class="prose">He was the foremost student of Ibn Taymiyya, studying with him for some sixteen years and sharing his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zad al-Maʿad, Madarij al-Salikin and Iʿlam al-Muwaqqiʿin. He is buried at the Bab al-Saghir cemetery in Damascus.</p>
+    <p class="quiet">Biographical details from <a href="https://en.wikipedia.org/wiki/Ibn_Qayyim_al-Jawziyya" rel="noopener">Wikipedia</a>.</p>
+  </section>
+</Content>

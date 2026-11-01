@@ -8,6 +8,8 @@ const TEXT_FILE = /\.(html|css|js|mjs|json|xml|txt|svg|webmanifest|map)$/;
 const NOT_SERVED = new Set(['wrangler.json', '.assetsignore']);
 // Only the book's page may say this: PRODUCT.md `Banned`, DESIGN.md `Content surfaces`.
 const EXEMPT = { 'side by side': /^\/books\/al-fawaid(\.|$)/ };
+// 265 stored grammar notes say two Arabic nouns sit "side by side". That is grammar, not the claim about the reader's layout, and stored text stays as stored. So this one phrase is judged on our own copy only.
+const OWN_COPY_ONLY = new Set(['side by side']);
 
 const unquoteAll = (text) => [...text.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
 const squash = (text) =>
@@ -77,7 +79,7 @@ export function readAllowed(product, design, draftText) {
 const BLOCK_BREAK = new Set(['address', 'article', 'aside', 'blockquote', 'body', 'br', 'button', 'caption', 'dd', 'details', 'dialog', 'div', 'dl', 'dt', 'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hr', 'label', 'legend', 'li', 'main', 'nav', 'noscript', 'ol', 'option', 'p', 'pre', 'section', 'select', 'summary', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'ul']);
 const SKIP = new Set(['script', 'style', 'template']);
 const COPY_ATTRS = new Set(['alt', 'title', 'aria-label', 'aria-description', 'aria-roledescription', 'aria-placeholder', 'placeholder', 'summary']);
-const COPY_META = /^(description|og:.+|twitter:.+|application-name|apple-mobile-web-app-title)$/i;
+const COPY_META = /^(description|og:(title|description|site_name)|twitter:(title|description)|application-name|apple-mobile-web-app-title)$/i;
 const attrOf = (node, name) => node.attrs?.find((a) => a.name === name)?.value;
 
 /** What a reader or a screen reader meets: text by block, title and copy-bearing attributes. Arabic runs are data, not claims. */
@@ -112,11 +114,17 @@ export function publicStrings(html) {
         }
       }
       if (tag === 'meta') {
+        if (attrOf(node, 'data-stored') !== undefined) return;
         const key = attrOf(node, 'name') ?? attrOf(node, 'property') ?? '';
         if (COPY_META.test(key) && squash(attrOf(node, 'content') ?? '')) strings.push(squash(attrOf(node, 'content')));
         return;
       }
       if (SKIP.has(tag)) return;
+      // Text from the database or the enrichment file, marked in the template: shown as stored, never a sentence of ours. Banned phrases still see it in the raw file.
+      if (attrOf(node, 'data-stored') !== undefined) {
+        buffer += ' ';
+        return;
+      }
       if (attrOf(node, 'lang')?.startsWith('ar')) {
         buffer += ' ';
         // A word card sits inside its Arabic line with lang="en", and it is copy like any other.
@@ -130,7 +138,7 @@ export function publicStrings(html) {
     if (node.content) visit(node.content);
     if (isBlock) flush();
   };
-  visit(parse(html));
+  visit(parse(html, { scriptingEnabled: false }));
   flush();
   return strings;
 }
@@ -140,24 +148,32 @@ function phraseRegex(phrase) {
   return new RegExp(`(?<![\\w-])${body}(?![\\w-])`, 'i');
 }
 
+const patterns = new Map();
+
 /** Removes known strings, longest first. Anything left over traces to nothing. */
 function traceString(text, lists) {
+  // A draft line with {} is a template around stored text: the whole string has to match it.
+  if (lists.templates.some((pattern) => pattern.test(text))) return { rest: '', used: { ledger: 0, designed: 0, draft: 1 } };
   let rest = text;
   const used = { ledger: 0, designed: 0, draft: 0 };
   const all = [
     ...[...lists.ledger].map((value) => [value, 'ledger']),
     ...[...lists.designed].map((value) => [value, 'designed']),
-    ...[...lists.draft].map((value) => [value, 'draft']),
+    ...[...lists.draft].filter((value) => !value.includes('{}')).map((value) => [value, 'draft']),
   ].sort((a, b) => b[0].length - a[0].length);
   for (const [value, kind] of all) {
     // Whole words only, so a short entry like "on" can't eat part of a longer word.
     const known = squash(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    rest = rest.replace(new RegExp(`(?<![\\p{L}\\p{N}])${known}(?![\\p{L}\\p{N}])`, 'gu'), () => {
+    let pattern = patterns.get(known);
+    if (!pattern) patterns.set(known, (pattern = new RegExp(`(?<![\\p{L}\\p{N}])${known}(?![\\p{L}\\p{N}])`, 'gu')));
+    rest = rest.replace(pattern, () => {
       used[kind] += 1;
       return ' ';
     });
   }
-  return { rest: squash(rest), used };
+  // What's left around stored text and known words is only punctuation.
+  const left = squash(rest);
+  return { rest: /[\p{L}\p{N}]/u.test(left) ? left : '', used };
 }
 
 export function checkClaims(root = ROOT) {
@@ -165,12 +181,16 @@ export function checkClaims(root = ROOT) {
   const product = read('PRODUCT.md');
   const { phrases, forPerson } = readBanned(product);
   const lists = readAllowed(product, read('DESIGN.md'), read('docs/draft-copy.txt'));
+  lists.templates = [...lists.draft].filter((value) => value.includes('{}')).map((value) => new RegExp(`^${squash(value).split('{}').map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`, 'su'));
+  const traced = new Map();
+  const phrasePatterns = phrases.map((phrase) => [phrase, phraseRegex(phrase)]);
   const dist = path.join(root, 'dist');
   const clientDir = path.join(dist, 'client');
   const files = walk(dist).filter((file) => TEXT_FILE.test(file) && !NOT_SERVED.has(path.basename(file)));
 
   const hits = [];
   const untraced = [];
+  const reported = new Set();
   const counts = { strings: 0, ledger: 0, designed: 0, draft: 0 };
 
   for (const file of files) {
@@ -179,21 +199,25 @@ export function checkClaims(root = ROOT) {
     const isHtml = file.endsWith('.html');
     const strings = isHtml ? publicStrings(raw) : [];
     const visible = strings.join(' ');
-    for (const phrase of phrases) {
+    for (const [phrase, pattern] of phrasePatterns) {
       if (EXEMPT[phrase]?.test(route)) continue;
-      const pattern = phraseRegex(phrase);
       // "i+1" is copy in a sentence and everyday code in a script, so it's judged only on text a reader sees.
       const isCodeLike = /[+]/.test(phrase);
-      const target = isCodeLike ? (isHtml ? [visible] : []) : [visible, raw];
+      const target = isCodeLike ? (isHtml ? [visible] : []) : OWN_COPY_ONLY.has(phrase) ? [visible] : [visible, raw];
       if (target.some((text) => pattern.test(text))) hits.push(`${route}: "${phrase}"`);
     }
     for (const text of strings) {
       counts.strings += 1;
-      const { rest, used } = traceString(text, lists);
+      let result = traced.get(text);
+      if (!result) traced.set(text, (result = traceString(text, lists)));
+      const { rest, used } = result;
       counts.ledger += used.ledger;
       counts.designed += used.designed;
       counts.draft += used.draft;
-      if (rest) untraced.push(`${route}: "${rest}"`);
+      if (rest && !reported.has(rest)) {
+        reported.add(rest);
+        untraced.push(`${route}: "${rest}"`);
+      }
     }
   }
 

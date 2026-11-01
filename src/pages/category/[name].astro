@@ -1,0 +1,28 @@
+---
+import Content from '../../layouts/Content.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import Offer from '../../components/Offer.astro';
+import { site } from '../../lib/snapshot.mjs';
+import { articleSlug, CATEGORIES } from '../../lib/words.mjs';
+
+export function getStaticPaths() {
+  return site().categories.filter((category) => site().articlesIn(category.id).length > 0).map((category) => ({ params: { name: category.name }, props: { category } }));
+}
+
+const { category } = Astro.props;
+const label = CATEGORIES[category.name] ?? category.name;
+const articles = site().byDifficulty(site().articlesIn(category.id));
+const SITE = 'https://openarabic.io';
+const path = `/category/${category.name}`;
+const jsonLd = [
+  { '@type': 'CollectionPage', name: label, url: `${SITE}${path}`, inLanguage: 'en' },
+  { '@type': 'ItemList', numberOfItems: articles.length, itemListElement: articles.map((article, index) => ({ '@type': 'ListItem', position: index + 1, name: article.title, url: `${SITE}/read/${articleSlug(article)}` })) },
+];
+---
+
+<Content title={`${label}: classical Arabic texts | OpenArabic`} description={`Excerpts from classical works on ${label}, in Arabic with English under every line.`} canonical={path} jsonLd={jsonLd}>
+  <h1>{label}</h1>
+  <p class="lead">Sorted by difficulty. Most texts are advanced; some are easier.</p>
+  <ArticleList articles={articles} authorOf={(article: any) => site().author(article.author_id).name} />
+  <Offer from="read" />
+</Content>

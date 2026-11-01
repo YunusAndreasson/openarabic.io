@@ -320,6 +320,17 @@ at once. Close is a left-aligned `primary` text button, full card width, 44px ta
 - Anchored, the word stays visible and all 18 cards stay in the viewport at all three sizes. The
   sheet is a fallback for old browsers and may cover a word on a laptop.
 
+**Reader text.** From `docs/decisions/2026-10-31-spike-accessibility.md`, variant C.
+
+- Each sentence that can be tapped is a `<p lang="ar" dir="rtl">` of word links. With script, a sentence is one tab stop: `role="button"`, `tabindex="0"`, `aria-label` holding its own text, its words plain text with no `href`, role or tabindex. Enter, Space or a screen reader's press opens it: it loses those three, and each word gets `role="button"` and `tabindex="0"`, focus on the first. Escape, or focus leaving the sentence, undoes it. One sentence is open at a time. A sentence that can't be tapped is plain text with no stop.
+- Words move by Tab, never by arrow keys: Orca keeps the arrow keys in browse mode.
+- A direct tap or click on a word opens its card, with no sentence step. A press on the sentence itself opens the sentence: tell them apart by the event target, never by `detail` or `pointerType`.
+- The reader card is one shared `popover`: `role="dialog"`, `aria-labelledby` its gloss, `tabindex="-1"`, `lang="en"`, `dir="ltr"`. It shows at once, and focus moves to it when the gloss is filled, with no outline. Escape, Close, Tab off Close, Shift+Tab off the card and tapping outside all close it and put focus back on the same word with `preventScroll`. Tab off the card is caught on `keydown`.
+- Close stays in every card. Android Back doesn't close a popover, and may leave the page.
+- Skip link: before the first word of every reader page, in the HTML, working with no script. `Skip past the text`, off-screen until focused, then fixed at `gutter` with the focus ring. Its target is the next section's `h2`, with `tabindex="-1"`.
+- One instruction: a visually hidden English line above the text, shown by the script only. Never an `aria-description` per sentence: on `lang="ar"` it is read by the Arabic voice.
+- A focused sentence has a 2px `primary` outline, offset 2px.
+
 **Coloured word and English.** Each word sits in its own `inline-block`. Inside, adjacent spans
 change only `color`, by class. The same gate covers a word's matching English, which has no
 meaning without the colour; a real space separates its parts, outside the colour. A word with no
@@ -601,7 +612,7 @@ the visitor one step towards the app. They share type, colour, the word componen
 
 - **Top line, content pages only:** the product name linking home on the left, "Get the app" on the
   right, in `small`, not sticky.
-- Words in the reader are links to their word page with one shared popover, not the story's per-word `Word`, per `docs/decisions/2026-10-31-spike-word-tap.md`.
+- Words in the reader are links to their word page in the HTML and with no script. With script they follow `Reader text`.
 - The reader shows `word_form` where its letters match the stored sentence, and the stored `arabic` with no tapping on the sentences where they don't. Never alter either.
 - An article's own image sits below its title, is served from the build, never pushes the first Arabic line off the first screen, and doubles as its `og:image`. Crop it, don't overlay text on it.
 - The App Store rating appears only on `/download-app`, with no count, and renders nothing if the lookup fails.
@@ -623,6 +634,7 @@ isn't a judgement call: a blank cell means the row doesn't apply.
 | `[T]` Offer in its place | The page's one offer is where `docs/site-plan.md`'s page map puts it, and its store links work | Yes | Yes | Yes | Yes | |
 | `[T]` Peek | At least 48px of the next beat above the fold | Yes | | | | |
 | `[T]` Native scroll | A 500px wheel moves `scrollY` 500px; no sideways scroll, scroll-snap or phone pin | Yes | Yes | Yes | Yes | Yes |
+| `[T]` Tab stops | With script, page top to the first control after the text takes at most sentences + 2 Tabs, past the page's own links | | Yes | | | |
 | `[T]` Word target and response | At least 44px; card painted within 100ms; every card in the viewport | Yes | Yes | | | |
 | `[T]` Reduced motion | The same layout, durations 0 | Yes | Yes | Yes | Yes | Yes |
 | `[T]` No script: lift | Tap, Close, lift, audio and store links work | Yes | | | | |

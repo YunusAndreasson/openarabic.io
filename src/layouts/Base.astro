@@ -10,12 +10,43 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  /** The page's own path, or null on a page with no canonical. */
+  canonical?: string | null;
+  jsonLd?: unknown[];
+  ogType?: string;
+  ogImage?: string | null;
+  /** The description is text from the database, shown as stored. */
+  storedDescription?: boolean;
 }
 
 const {
   title = 'OpenArabic: Read the Classics',
   description = 'If you can sound out Arabic script, you can start reading classical texts.',
+  canonical = '/',
+  jsonLd = [],
+  ogType = 'website',
+  ogImage = null,
+  storedDescription = false,
 } = Astro.props;
+// The page-view count, first-party, with no script and no cookie. Type only, never the page itself.
+const firstPart = canonical?.split('/')[1] ?? 'other';
+const VIEW: Record<string, string> = { '': 'home', word: 'word', read: 'read', dictionary: 'dictionary', category: 'category', author: 'author', books: 'book', 'download-app': 'download', privacy: 'legal', terms: 'legal', contact: 'legal', 'account-deletion': 'legal' };
+const viewType = VIEW[firstPart] ?? 'other';
+const storedMark = storedDescription ? { 'data-stored': '' } : {};
+
+const SITE = 'https://openarabic.io';
+const canonicalUrl = canonical === null ? null : canonical === '/' ? SITE : `${SITE}${canonical}`;
+const NAME = 'OpenArabic: Read the Classics';
+// Docs/site-plan.md `URL parity`: the global set on every page, and no aggregateRating, ever.
+const graph = [
+  { '@type': 'Organization', '@id': `${SITE}/#organization`, name: NAME, url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/oa-logo.png` }, sameAs: ['https://x.com/openarabicio', 'https://www.instagram.com/openarabic.io/', 'https://www.facebook.com/OpenArabic.io/'], founder: { '@id': `${SITE}/#person` } },
+  { '@type': 'WebSite', '@id': `${SITE}/#website`, name: NAME, url: SITE, inLanguage: 'en', publisher: { '@id': `${SITE}/#organization` } },
+  { '@type': 'Person', '@id': `${SITE}/#person`, name: 'Yunus Andréasson' },
+  { '@type': 'MobileApplication', '@id': `${SITE}/#app`, name: NAME, operatingSystem: 'iOS, Android', applicationCategory: 'EducationalApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: { '@id': `${SITE}/#person` }, publisher: { '@id': `${SITE}/#organization` } },
+  ...jsonLd,
+];
+// Escaped so stored text can't close the script element.
+const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -25,15 +56,30 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={description} {...storedMark} />
+    {/* Search Console's HTML-tag ownership check, the same token as the old site. Without it the property loses verification at the cutover. */}
+    <meta name="google-site-verification" content="7Ph-VBorESFEHDcvOZq7wp9DHLUe88ARuxlwaPseG00" />
     <meta name="theme-color" content={themeColorHex} />
-    <link rel="icon" href="data:," />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:site_name" content={NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} {...storedMark} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    {ogImage && <meta property="og:image" content={`${SITE}${ogImage}`} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <link rel="icon" href="/mark-64.png" type="image/png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <script is:inline type="application/ld+json" set:html={ld}></script>
+    {/* D7: the one check, at most 0.25 KB. Nothing else loads until a visitor has opted in at /analytics-choice. */}
+    <script is:inline>try{if(localStorage.getItem("oa-analytics-consent")=="granted"){var s=document.createElement("script");s.src="/ga.js";document.head.append(s)}}catch(e){}</script>
     <link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={amiriUrl} as="font" type="font/woff2" crossorigin />
-    {Astro.url.pathname === '/' && <script is:inline>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('play');</script>}
+    {Astro.routePattern === '/' && <script is:inline>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('play');</script>}
   </head>
   <body>
     <slot />
     <Footer />
+    <img class="view-count" src={`/v?p=${viewType}`} width="1" height="1" alt="" decoding="async" />
   </body>
 </html>

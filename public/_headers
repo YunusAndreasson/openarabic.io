@@ -1,3 +1,19 @@
 # Noindex everywhere until the cutover in docs/site-plan.md. `pnpm ship` checks this line.
 /*
   X-Robots-Tag: noindex
+
+# docs/decisions/2026-10-31-spike-word-pages.md: the edge serves hits, browsers revalidate, a deploy clears the edge.
+/word/*
+  Cache-Control: public, max-age=0, s-maxage=86400
+/read/*
+  Cache-Control: public, max-age=0, s-maxage=86400
+/gl/*
+  Cache-Control: public, max-age=0, s-maxage=86400
+/dictionary/*
+  Cache-Control: public, max-age=0, s-maxage=86400
+/author/*
+  Cache-Control: public, max-age=0, s-maxage=86400
+/category/*
+  Cache-Control: public, max-age=0, s-maxage=86400
+/img/*
+  Cache-Control: public, max-age=86400

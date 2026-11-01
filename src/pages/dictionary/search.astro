@@ -1,0 +1,15 @@
+---
+// The file the Worker fills. docs/decisions/2026-11-01-dictionary-search.md.
+import Content from '../../layouts/Content.astro';
+import Offer from '../../components/Offer.astro';
+import SearchForm from '../../components/SearchForm.astro';
+import LetterNav from '../../components/LetterNav.astro';
+---
+
+<Content title="Search the dictionary | OpenArabic" description="Search Arabic words by their English meaning or their Arabic letters." canonical="/dictionary/search" crumbs={[{ name: 'Dictionary', path: '/dictionary' }]}>
+  <h1>Search the dictionary</h1>
+  <SearchForm />
+  <div id="results"></div>
+  <section><h2>Browse by letter</h2><LetterNav /></section>
+  <Offer from="word" />
+</Content>

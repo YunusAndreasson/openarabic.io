@@ -1,0 +1,19 @@
+---
+// A full-screen photograph that dissolves into the page at both ends. `name` is a wide and a tall export in public/.
+interface Props {
+  name: string;
+  alt: string;
+  class?: string;
+}
+const { name, alt, class: className } = Astro.props;
+---
+
+<section class:list={['still', className]}>
+  <picture class="still-photo develop">
+    <source media="(max-width: 56.24rem)" type="image/avif" srcset={`/${name}-tall.avif`} />
+    <source media="(max-width: 56.24rem)" type="image/webp" srcset={`/${name}-tall.webp`} />
+    <source type="image/avif" srcset={`/${name}-wide.avif`} />
+    <img src={`/${name}-wide.webp`} width="1672" height="941" alt={alt} loading="lazy" decoding="async" />
+  </picture>
+  <div class="still-words"><slot /></div>
+</section>

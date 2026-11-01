@@ -1,0 +1,10 @@
+---
+import { site } from '../lib/snapshot.mjs';
+import { bucketLabel, BUCKETS } from '../lib/words.mjs';
+const { active } = Astro.props;
+const present = site().buckets();
+---
+
+<ul class="letters">
+  {BUCKETS.filter((bucket) => present.has(bucket)).map((bucket) => <li><a href={`/dictionary/${bucket}`} aria-current={bucket === active ? 'page' : undefined}>{bucketLabel(bucket)}</a></li>)}
+</ul>

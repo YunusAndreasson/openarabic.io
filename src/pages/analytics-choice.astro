@@ -1,0 +1,18 @@
+---
+// Plan task 3.4: reached only from the footer, noindexed, not in the sitemap. Default off.
+import Content from '../layouts/Content.astro';
+---
+
+<Content title="Analytics choice | OpenArabic" description="Turn Google Analytics on or off for this website." canonical="/analytics-choice">
+  <div class="legal">
+    <h1>Analytics choice</h1>
+    <p>Google Analytics is off on this website unless you turn it on here. If you do, it sets cookies and the data goes to Google. Because this site is about Islamic texts, visits could suggest your beliefs.</p>
+    <p>Your choice is stored in your browser, and it applies to this website, not the app. See the <a href="/privacy#analytics">privacy policy</a>.</p>
+    <noscript><p>Without JavaScript, Google Analytics can’t run, so there is nothing to choose.</p></noscript>
+    <div id="choice" hidden>
+      <p id="choice-status" role="status"></p>
+      <p class="choice-buttons"><button type="button" data-choice="denied" aria-pressed="false">Refuse</button> <button type="button" data-choice="granted" aria-pressed="false">Allow</button></p>
+    </div>
+  </div>
+  <script is:inline src="/analytics-choice.js" defer></script>
+</Content>

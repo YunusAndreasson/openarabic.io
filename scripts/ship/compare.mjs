@@ -11,7 +11,7 @@ export const MAX_FALL = 0.01;
 export const MAX_TOUCHED_SENTENCES = 200;
 // Not in the plan's table: a mass rewrite of meanings touches no sentence row, so it would pass unseen. Same limit, as a judgement.
 export const MAX_CHANGED_ROOTS = 200;
-const ATTRIBUTION = { articles: ['author_id'], authors: ['name'] };
+const ATTRIBUTION = { articles: ['author_id', 'book'], authors: ['name'] };
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /** Field-level differences, plus what the layers need to know about each row. */
@@ -34,6 +34,8 @@ function diff(baseline, snapshot) {
       }
       let differs = false;
       for (const field of TABLES[table]) {
+        // A column first read after this baseline was saved has nothing to compare with: `newColumns` reports it, once.
+        if (!(field in old)) continue;
         if (!same(old[field], row[field])) {
           differs = true;
           changes.push({ table, row: id, field, before: old[field], after: row[field] });
@@ -135,9 +137,13 @@ export function compareSnapshots(baseline, snapshot, { baselineNote = 'No baseli
 
   if (!same(baseline.rating ?? null, snapshot.rating ?? null)) changes.push({ table: 'rating', row: 'us', field: 'average', before: baseline.rating?.average ?? null, after: snapshot.rating?.average ?? null });
 
+  const newColumns = Object.keys(TABLES).flatMap((table) => {
+    const sample = baseline.tables[table][0];
+    return sample ? TABLES[table].filter((field) => !(field in sample)).map((field) => `${table}.${field}`) : [];
+  });
   const growth = { articles: added.articles.length, sentences: growthSentences.size, words: growthWords.length, roots: growthRoots.length };
-  const total = changes.length + Object.values(added).flat().length + Object.values(removed).flat().length;
-  return { status: reasons.length > 0 ? 'held' : total > 0 ? 'publish' : 'unchanged', reasons, changes, added, removed, growth, touched: touched.size, flags };
+  const total = changes.length + newColumns.length + Object.values(added).flat().length + Object.values(removed).flat().length;
+  return { status: reasons.length > 0 ? 'held' : total > 0 ? 'publish' : 'unchanged', reasons, changes, added, removed, growth, touched: touched.size, flags, newColumns };
 }
 
 /** The last published snapshot, or before the first such publish, the hash in .ship/baseline. Plan task 2.2's baseline. */
@@ -165,6 +171,7 @@ export function writeReport(result, { hash, baselineHash, approved = false }, ro
   ];
   if (result.growth) lines.push(`- Expected growth: ${result.growth.articles} articles, ${result.growth.sentences} sentences, ${result.growth.words} words, ${result.growth.roots} roots`);
   if (result.touched !== undefined) lines.push(`- Existing sentences touched: ${result.touched}`);
+  if (result.newColumns?.length > 0) lines.push(`- Columns first read in this run, so not compared with anything: ${result.newColumns.join(', ')}`);
   if (result.reasons.length > 0) lines.push('', '## Why it was held', '', ...result.reasons.map((reason) => `- ${reason}`));
   lines.push('', '## Changes', '', '| Table | Row | Field | Before | After | Layer |', '|---|---|---|---|---|---|');
   const flagOf = (table, row, field) => result.flags.get(`${table}/${row}/${field}`) ?? result.flags.get(`${table}/${row}/`) ?? '';

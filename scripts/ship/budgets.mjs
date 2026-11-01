@@ -39,6 +39,8 @@ function elements(node, out = []) {
 
 const attr = (node, name) => node.attrs?.find((a) => a.name === name)?.value;
 const textOf = (node) => (node.childNodes ?? []).map((child) => child.value ?? '').join('');
+// DESIGN.md `Audio`: nothing moves until a press, so a preload="none" track from the app's bucket isn't a load-time request. The browser run proves it.
+const AUDIO_ORIGIN = 'https://kkmnzbeugdoajtzfjkxg.supabase.co/storage/v1/object/public/audio/';
 const isExternal = (url) => /^(?:https?:)?\/\//i.test(url ?? '');
 const gz = (data) => gzipSync(data, { level: 9 }).length;
 const br = (data) => brotliCompressSync(data).length;
@@ -65,6 +67,7 @@ function checkPage(page, clientDir, facts) {
   for (const node of nodes) {
     for (const name of RESOURCE_ATTRS[node.tagName] ?? []) {
       const value = attr(node, name);
+      if (node.tagName === 'audio' && attr(node, 'preload') === 'none' && value?.startsWith(AUDIO_ORIGIN)) continue;
       if (isExternal(value)) fail(`${route} loads a third-party resource: <${node.tagName} ${name}="${value}">. Budget: no third-party request.`);
     }
     if (node.tagName === 'script') {

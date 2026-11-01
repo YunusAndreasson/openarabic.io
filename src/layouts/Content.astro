@@ -1,0 +1,24 @@
+---
+// DESIGN.md `Content surfaces`: opens on its content, one offer, a top line that isn't sticky.
+import Base from './Base.astro';
+import '../styles/content.css';
+
+const { crumbs = [], ...base } = Astro.props;
+---
+
+<Base {...base}>
+  <header class="top">
+    <a class="top-name" href="/">OpenArabic</a>{' '}
+    <a class="top-app" href="/download-app">Get the app</a>
+  </header>
+  <main class="content">
+    {crumbs.length > 0 && (
+      <nav class="crumbs quiet" aria-label="Breadcrumb">
+        {crumbs.map((crumb: { name: string; path?: string }, index: number) => (
+          <>{index > 0 && ' / '}{crumb.path ? <a href={crumb.path}>{crumb.name}</a> : <span data-stored>{crumb.name}</span>}</>
+        ))}
+      </nav>
+    )}
+    <slot />
+  </main>
+</Base>

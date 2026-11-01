@@ -1,0 +1,59 @@
+---
+// The reader: docs/decisions/2026-10-31-spike-word-tap.md variant C, -spike-accessibility.md's contract. Words are links with no script.
+import Content from '../../layouts/Content.astro';
+import ArticleList from '../../components/ArticleList.astro';
+import Offer from '../../components/Offer.astro';
+import { imageOf } from '../../lib/images.mjs';
+import { escapeHtml, wordHtml } from '../../lib/segments.mjs';
+import { site } from '../../lib/snapshot.mjs';
+import { articleSlug, audioUrl, authorSlug, levelName, wordSlug, CATEGORIES } from '../../lib/words.mjs';
+
+export function getStaticPaths() {
+  return site().published.map((article) => ({ params: { slug: articleSlug(article) }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const author = site().author(article.author_id);
+const category = site().category(article.category_id);
+const image = imageOf(article.image_url);
+const path = `/read/${articleSlug(article)}`;
+let index = 0;
+const html = site()
+  .articleText(article.id)
+  .map((sentence) => {
+    if (!sentence.words) return `<p class=reading lang=ar dir=rtl>${escapeHtml(sentence.arabic)}</p><p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
+    const words = sentence.words.map((word) => `<a class=w href=/word/${wordSlug(word.root)} data-i=${index++}>${wordHtml(site().hash, site().words, word)}</a>`).join(' ');
+    return `<p class="reading t" lang=ar dir=rtl>${words}</p><p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
+  })
+  .join('');
+const more = site().byDifficulty(site().articlesBy(article.author_id).filter((other) => other.id !== article.id)).slice(0, 3);
+const SITE = 'https://openarabic.io';
+const audio = audioUrl(article.audio_url);
+const jsonLd = [
+  { '@type': 'Article', headline: article.title, description: article.summary, url: `${SITE}${path}`, datePublished: article.created_at, inLanguage: ['ar', 'en'], author: { '@type': 'Person', name: author.name }, publisher: { '@id': `${SITE}/#organization` }, ...(image && { image: `${SITE}${image.og}` }) },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: CATEGORIES[category.name] ?? category.name, item: `${SITE}/category/${category.name}` }, { '@type': 'ListItem', position: 3, name: article.title, item: `${SITE}${path}` }] },
+];
+---
+
+<Content title={`${article.title} - OpenArabic`} description={article.summary} storedDescription canonical={path} ogType="article" ogImage={image?.og} jsonLd={jsonLd}>
+  <h1 class="article-title" data-stored>{article.title}</h1>
+  <p class="quiet"><a href={`/author/${authorSlug(author)}`}><span data-stored>{author.name}</span></a>, <span data-stored>{article.book}</span>. <a href={`/category/${category.name}`}>{CATEGORIES[category.name] ?? category.name}</a>. {levelName(article.difficulty_level)}.</p>
+  {image && <img class="article-image" src={image.src(960)} srcset={image.srcset} sizes="(min-width: 44rem) 42rem, 100vw" width={image.width} height={image.height} alt="" decoding="async" fetchpriority="high" />}
+  {audio && <audio class="article-audio" controls preload="none" src={audio} aria-label="This text read aloud in Arabic"></audio>}
+  <p class="quiet disclosures">The English is machine-translated. The audio uses AI voices.</p>
+  <a class="skip" href="#after-h">Skip past the text</a>
+  <div id="reader" data-gl={`/gl/${article.id}.json`}>
+    <p id="hint" class="vh" hidden>Each Arabic line is a button. Press it to go through its words, then press a word for its meaning.</p>
+    <Fragment set:html={html} />
+  </div>
+  <div id="sheet" popover role="dialog" aria-labelledby="se" tabindex="-1" lang="en" dir="ltr">
+    <p id="se" class="card-gloss" tabindex="-1"></p>
+    <p id="sn" class="quiet"></p>
+    <button id="sa" type="button" hidden>Play</button>
+    <a id="sl">Full entry</a>
+    <button id="sc" type="button" popovertarget="sheet" popovertargetaction="hide">Close</button>
+  </div>
+  <Offer from="read" id="after" />
+  {more.length > 0 && <section><h2>More from <span data-stored>{author.name}</span></h2><ArticleList articles={more} /></section>}
+  <script is:inline src="/reader.js" defer></script>
+</Content>

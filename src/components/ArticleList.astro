@@ -1,0 +1,21 @@
+---
+// Article cards, hardest last. Text as stored. Images are served from the build.
+import { articleSlug, levelName } from '../lib/words.mjs';
+import { imageOf } from '../lib/images.mjs';
+const { articles, authorOf } = Astro.props;
+---
+
+<ul class="cards">
+  {articles.map((article: any) => {
+    const image = imageOf(article.image_url);
+    return (
+      <li class="card">
+        <a href={`/read/${articleSlug(article)}`}>
+          {image && <img src={image.src(480)} width={480} height={Math.round((480 * image.height) / image.width)} alt="" loading="lazy" decoding="async" />}
+          <span class="card-title" data-stored>{article.title}</span>
+        </a>
+        <p class="quiet"><span data-stored>{authorOf ? authorOf(article) : article.book}</span>{'. '}{levelName(article.difficulty_level)}.</p>
+      </li>
+    );
+  })}
+</ul>

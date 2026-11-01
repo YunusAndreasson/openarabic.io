@@ -22,7 +22,7 @@ export const TABLES = {
   categories: ['id', 'name'],
   authors: ['id', 'name'],
   word_types: ['id', 'name'],
-  articles: ['id', 'title', 'summary', 'author_id', 'category_id', 'content_hash', 'created_at', 'difficulty_level', 'image_url', 'audio_url', 'audio_url_bilingual', 'published'],
+  articles: ['id', 'title', 'summary', 'author_id', 'category_id', 'book', 'content_hash', 'created_at', 'difficulty_level', 'image_url', 'audio_url', 'audio_url_bilingual', 'published'],
   article_sentences: ['id', 'arabic', 'english', 'article_id', 'position', 'audio_url', 'audio_url_bilingual', 'audio_url_english', 'arabic_repeat', 'english_repeat'],
   sentence_words: ['id', 'word_form', 'english', 'grammar_note', 'sentence_id', 'root_id', 'word_type_id', 'position', 'difficulty_level', 'audio_url'],
   roots: ['id', 'letters', 'meaning', 'audio_url', 'audio_url_en'],

@@ -1,10 +1,16 @@
 ---
 import mark from '../assets/story/mark-dark-64.png?url';
+import { CATEGORIES } from '../lib/words.mjs';
+import scholars from '../data/footer-scholars.json';
 ---
 
 <footer>
   <div class="footer-inner">
     <img class="mark" src={mark} width="32" height="32" alt="" />
+    <nav aria-label="Browse">
+      <p class="footer-links"><a href="/dictionary">Dictionary</a>{' '}<a href="/books/al-fawaid">Al-Fawaid</a>{' '}{Object.entries(CATEGORIES).map(([name, label]) => <><a href={`/category/${name}`}>{label}</a>{' '}</>)}</p>
+      <p class="footer-links">{scholars.map((scholar) => <><a href={scholar.path}>{scholar.name}</a>{' '}</>)}</p>
+    </nav>
     <p class="footer-links"><a href="/privacy">Privacy</a>{' '}<a href="/terms">Terms</a>{' '}<a href="/contact">Contact</a>{' '}<a href="/account-deletion">Account deletion</a>{' '}<a href="/analytics-choice">Analytics choice</a></p>
     <p class="quiet credits">Amiri and Inter are used under the SIL Open Font License. App Store is a trademark of Apple Inc. Google Play is a trademark of Google LLC.</p>
   </div>

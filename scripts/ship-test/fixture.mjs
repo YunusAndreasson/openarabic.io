@@ -3,10 +3,10 @@ const FATHA = 'كِتَابٌ';
 const row = (id, over) => ({ id, ...over });
 
 export function fixture() {
-  const categories = [1, 2, 3, 4, 5, 6, 7].map((id) => row(id, { name: `category ${id}` }));
+  const categories = ['aqeedah', 'fiqh', 'hadith', 'quran', 'seerah', 'ihsan', 'tafsir'].map((name, index) => row(index + 1, { name }));
   const authors = [1, 2, 3, 104].map((id) => row(id, { name: `Author ${id}` }));
   const article = (id, category, published = true) => ({
-    id, title: `Title ${id}`, summary: `Summary ${id}`, author_id: id === 559 ? 104 : 1, category_id: category, content_hash: `h${id}`, created_at: '2026-03-10T00:00:00+00:00',
+    id, title: `Title ${id}`, summary: `Summary ${id}`, author_id: id === 559 ? 104 : 1, category_id: category, book: `Book ${id}`, content_hash: `h${id}`, created_at: '2026-03-10T00:00:00+00:00',
     difficulty_level: 3, image_url: `image-${id}.webp`, audio_url: `a${id}.mp3`, audio_url_bilingual: `b${id}.mp3`, published,
   });
   const articles = [article(10, 2), article(20, 3), article(30, 3), article(372, 1), article(559, 6), article(600, 4, false)];
@@ -56,3 +56,14 @@ export const doctor = {
     db.articles.find((a) => a.category_id === 2 && a.published).title += ' [SPIKE-EDIT]';
   },
 };
+
+/** The frozen sitemap list as it would read for this data, in the same form as docs/research/parity/. */
+export function fixtureSitemap(db) {
+  const slug = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const used = new Set(db.sentence_words.map((word) => word.root_id));
+  const words = db.roots.filter((root) => used.has(root.id)).map((root) => `/word/${slug(root.meaning)}-${root.id}`);
+  const articles = db.articles.map((article) => `/read/${slug(article.title)}-${article.id}`);
+  const authors = db.authors.map((author) => `/author/${slug(author.name)}-${author.id}`);
+  const present = new Set(db.roots.filter((root) => used.has(root.id)).map((root) => root.meaning[0]));
+  return [...db.categories.map((category) => `/?category=${category.id}`), ...words, ...articles, ...authors, '/dictionary', ...[...present].map((letter) => `/dictionary/${letter}`), '/download-app', '/books/al-fawaid', '/privacy', '/terms', '/contact', '/account-deletion'].join('\n');
+}
