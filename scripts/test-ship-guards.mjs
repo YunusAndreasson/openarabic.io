@@ -566,7 +566,7 @@ async function main() {
   stops('Under --production, any other route is still refused', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "example.com", "custom_domain": true }],\n  "workers_dev": true'), /holds a route/, { args: ['--dry-run', '--production'] });
   stops('Without --production, the live route is refused', () => edit('wrangler.jsonc', '"workers_dev": true', '"routes": [{ "pattern": "openarabic.io", "custom_domain": true }],\n  "workers_dev": true'), /holds a route/);
   stops('The old Worker name is refused under --production too', () => edit('wrangler.jsonc', '"name": "openarabic-site"', '"name": "openarabic-web"'), /names the Worker "openarabic-web"/, { args: ['--dry-run', '--production'] });
-  stops('Noindex meta removed', () => edit('src/layouts/Base.astro', '<meta name="robots" content="noindex, nofollow" />', ''), /has no noindex meta/);
+  stops('Noindex meta removed', () => edit('src/layouts/Base.astro', '{robots && <meta name="robots" content={robots} />}', ''), /has no noindex meta/);
   stops('Noindex header removed', () => write('public/_headers', '# none\n'), /has no "X-Robots-Tag: noindex"/);
 
   stops('workers_dev switched off', () => edit('wrangler.jsonc', '"workers_dev": true', '"workers_dev": false'), /workers_dev false/);
