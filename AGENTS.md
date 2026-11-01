@@ -38,7 +38,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Fetching data or publishing edits | `docs/decisions/2026-10-31-spike-content-freshness.md` |
 | URLs and redirects | `docs/research/current-site.md`, `docs/decisions/2026-10-31-spike-category-urls.md` |
 | Build order and scope | `docs/site-plan.md` |
-| Anything an owner settled | `docs/decisions/2026-10-31-owner-review.md`. It overrides the plan and research |
+| Anything an owner settled | `docs/decisions/2026-10-31-owner-review.md`, `docs/decisions/2026-11-01-owner-go.md`. They override the plan and research |
 
 ## Decisions
 
