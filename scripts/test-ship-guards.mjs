@@ -148,6 +148,10 @@ const BUILD_HOOK = (change) =>
   `integrations: [generated(), { name: 'seed', hooks: { 'astro:build:done': async () => { const fs = await import('node:fs'); const f = process.cwd() + '/dist/server/wrangler.json'; const c = JSON.parse(fs.readFileSync(f, 'utf8')); ${change}; fs.writeFileSync(f, JSON.stringify(c)); } } }],`;
 
 const results = [];
+// `pnpm ship:test --only <regex>`: only the seeded dry runs whose names match, plus every unit and real-run case. The full suite takes about an hour.
+const onlyAt = process.argv.indexOf('--only');
+const ONLY = onlyAt === -1 ? null : new RegExp(process.argv[onlyAt + 1], 'i');
+const skipped = (name) => ONLY !== null && !ONLY.test(name);
 
 function record(name, ok, detail, required = false) {
   results.push({ name, ok, detail, required });
@@ -156,6 +160,7 @@ function record(name, ok, detail, required = false) {
 
 /** The seed must stop the dry run, with this message, before the deploy step, with wrangler untouched. */
 function stops(name, seed, expected, { required = false, args = ['--dry-run'], env = {}, inspect = () => true } = {}) {
+  if (skipped(name)) return;
   seed();
   extraEnv = env;
   const { status, output } = run('ship', ...args);
@@ -169,6 +174,7 @@ function stops(name, seed, expected, { required = false, args = ['--dry-run'], e
 }
 
 function passes(name, seed = () => {}, { args = [], env = {}, inspect = () => true, required = false } = {}) {
+  if (skipped(name)) return;
   seed();
   extraEnv = env;
   const { status, output } = run('ship', '--dry-run', ...args);
