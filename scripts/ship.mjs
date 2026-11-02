@@ -182,7 +182,7 @@ async function main() {
   report('deploy', 'PASS', `${WORKER} version ${deployed.version}`);
 
   const url = previewTarget(deployed.targets, production);
-  if (!url) await rollBackAfterFailure(published, null, `wrangler reported targets ${JSON.stringify(deployed.targets)}, not one workers.dev preview URL`);
+  if (!url) await rollBackAfterFailure(published, null, `wrangler reported targets ${JSON.stringify(deployed.targets)}, not one place this ship can check`);
   writePreviewUrl(url);
 
   const routes = otherRoutes();

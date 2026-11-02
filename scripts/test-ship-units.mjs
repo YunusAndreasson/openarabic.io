@@ -67,7 +67,9 @@ refuses('The live Worker name', () => checkSourceConfig(source({ ...BASE, name: 
 refuses('Any other name', () => checkSourceConfig(source({ ...BASE, name: 'other' })), /names the Worker "other"/);
 refuses('wrangler.jsonc missing', () => checkSourceConfig(project()), /wrangler\.jsonc is missing/);
 refuses('Broken JSON', () => checkSourceConfig(project({ 'wrangler.jsonc': '{ "name": ' })), /doesn't parse/);
-refuses('workers_dev off', () => checkSourceConfig(source({ ...BASE, workers_dev: false })), /workers_dev false/);
+refuses('workers_dev off on a preview', () => checkSourceConfig(source({ ...BASE, workers_dev: false })), /workers_dev false/);
+refuses('workers_dev off with no live domain, under --production', () => checkSourceConfig(source({ ...BASE, workers_dev: false }), true), /workers_dev false/);
+allows('workers_dev off with the live domain, under --production', () => checkSourceConfig(source({ ...BASE, workers_dev: false, routes: LIVE }), true));
 refuses('An environment that could carry another name', () => checkSourceConfig(source({ ...BASE, env: { prod: { name: LIVE_WORKER } } })), /defines environments/);
 refuses('A service binding to the live Worker', () => checkSourceConfig(source({ ...BASE, services: [{ binding: 'OLD', service: LIVE_WORKER }] })), /refers to the live Worker/);
 refuses('The live domain as a value', () => checkSourceConfig(source({ ...BASE, vars: { SITE: 'https://openarabic.io' } })), /mentions openarabic\.io/);
@@ -153,7 +155,9 @@ refuses('A template must match the whole string', () => claims('<p>Texts by Some
 const PREVIEW = 'https://openarabic-site.acc.workers.dev';
 check('One preview URL is the target', previewTarget([PREVIEW]) === PREVIEW);
 check('A preview refuses any other target', previewTarget([PREVIEW, 'openarabic.io (custom domain)']) === null);
-check("Production accepts wrangler's label for the live domain", previewTarget([PREVIEW, 'openarabic.io (custom domain)'], true) === PREVIEW);
+check("Production checks the live domain, by wrangler's label", previewTarget([PREVIEW, 'openarabic.io (custom domain)'], true) === 'https://openarabic.io');
+check('Production with workers.dev off still has somewhere to check', previewTarget(['openarabic.io (custom domain)'], true) === 'https://openarabic.io');
+check('Production before the domain is attached checks workers.dev', previewTarget([PREVIEW], true) === PREVIEW);
 check('Production refuses another domain', previewTarget([PREVIEW, 'example.com (custom domain)'], true) === null);
 check('Two workers.dev URLs are refused', previewTarget([PREVIEW, 'https://openarabic-site.other.workers.dev']) === null);
 check('Another Worker on workers.dev is refused', previewTarget(['https://openarabic-web.acc.workers.dev'], true) === null);

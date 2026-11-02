@@ -42,7 +42,7 @@ export function writePublished(record) {
 
 export const readPreviewUrl = () => {
   const url = fs.existsSync(PREVIEW_URL) ? fs.readFileSync(PREVIEW_URL, 'utf8').trim() : '';
-  return PREVIEW.test(url) ? url : null;
+  return PREVIEW.test(url) || url === 'https://openarabic.io' ? url : null;
 };
 
 export const writePreviewUrl = (url) => fs.writeFileSync(PREVIEW_URL, `${url}\n`);
@@ -81,12 +81,15 @@ export function upload(command) {
   }
 }
 
-/** One workers.dev URL. After the cutover the live domain is listed beside it, and only that. */
+const LIVE_TARGET = /^(https:\/\/)?openarabic\.io(\/?\*?| \(custom domain\))$/;
+
+/** Where to check a new version. Under --production that is the live domain whenever it is attached; otherwise the one workers.dev URL. Any other target is refused. */
 export const previewTarget = (targets, production = false) => {
-  const others = targets.filter((target) => !PREVIEW.test(target));
-  const allowedOthers = production ? others.every((target) => /^(https:\/\/)?openarabic\.io(\/?\*?| \(custom domain\))$/.test(target)) : others.length === 0;
-  const found = targets.filter((target) => PREVIEW.test(target));
-  return found.length === 1 && allowedOthers ? found[0] : null;
+  const preview = targets.filter((target) => PREVIEW.test(target));
+  const live = targets.filter((target) => LIVE_TARGET.test(target));
+  if (preview.length + live.length !== targets.length) return null;
+  if (production && live.length === 1 && preview.length <= 1) return 'https://openarabic.io';
+  return live.length === 0 && preview.length === 1 ? preview[0] : null;
 };
 
 /** The name is this constant, in every caller. Never an argument. */

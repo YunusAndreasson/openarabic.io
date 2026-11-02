@@ -13,7 +13,6 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const COPY = fs.mkdtempSync(path.join(os.tmpdir(), 'openarabic-e2e-'));
 const SOURCES = ['astro.config.mjs', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'tsconfig.json', 'wrangler.jsonc', 'DESIGN.md', 'PRODUCT.md', 'docs/draft-copy.txt', 'docs/research/parity', 'public', 'scripts', 'src', 'vendor'];
 const SPY = path.join(COPY, 'wrangler-spy.log');
-const PREVIEW = 'https://openarabic-site.stub.workers.dev';
 const VERSION = 'aaaaaaaa-2222-4333-8444-555555555555';
 const at = (file) => path.join(COPY, file);
 
@@ -24,7 +23,7 @@ for (const name of fs.readdirSync(path.join(REPO, 'node_modules'))) if (name !==
 for (const name of fs.readdirSync(path.join(REPO, 'node_modules/.bin'))) if (name !== 'wrangler') fs.copyFileSync(path.join(REPO, 'node_modules/.bin', name), at(`node_modules/.bin/${name}`));
 fs.writeFileSync(at('node_modules/.bin/wrangler'), `#!/bin/sh
 echo "$@" >> "${SPY}"
-[ "$1" = deploy ] && printf '{"type":"deploy","version":1,"worker_name":"openarabic-site","version_id":"${VERSION}","targets":["${PREVIEW}","openarabic.io (custom domain)"]}\\n' > "$WRANGLER_OUTPUT_FILE_PATH"
+[ "$1" = deploy ] && printf '{"type":"deploy","version":1,"worker_name":"openarabic-site","version_id":"${VERSION}","targets":["openarabic.io (custom domain)"]}\\n' > "$WRANGLER_OUTPUT_FILE_PATH"
 exit 0
 `, { mode: 0o755 });
 
@@ -64,7 +63,7 @@ let run = ship('--production', '--dry-run');
 check('A wrong Worker name stops the run, before any upload', run.status === 1 && /names the Worker "openarabic-web"/.test(run.output) && spyCalls().length === 0, run.output);
 undo();
 run = ship('--dry-run');
-check('A plain ship is refused while the live domain is in the config', run.status === 1 && /holds a route/.test(run.output) && spyCalls().length === 0, run.output);
+check('A plain ship is refused while the live domain is in the config', run.status === 1 && /has workers_dev false|holds a route/.test(run.output) && spyCalls().length === 0, run.output);
 undo = edit('src/styles/tokens.generated.css', '--color-primary: oklch(0.7323', '--color-primary: oklch(0.8');
 run = ship('--production', '--dry-run');
 check('A hand-edited token stops the run', run.status === 1 && /tokens\.generated\.css has drifted/.test(run.output), run.output);

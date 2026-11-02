@@ -21,6 +21,6 @@
 
   // The owner's go, 2026-11-02. Must stay here: a deploy without it could detach the domain. Under `pnpm ship --production` only.
   "routes": [{ "pattern": "openarabic.io", "custom_domain": true }],
-  "workers_dev": true,
+  "workers_dev": false,
   "preview_urls": false
 }

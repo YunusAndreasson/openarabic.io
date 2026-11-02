@@ -72,7 +72,7 @@ async function edge(route, url, init) {
 globalThis.fetch = async (input, init) => {
   const url = new URL(String(input?.url ?? input));
   if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') return real(input, init);
-  if (url.hostname.endsWith('.workers.dev')) return edge(url.pathname, url, init);
+  if (url.hostname.endsWith('.workers.dev') || url.hostname === 'openarabic.io') return edge(url.pathname, url, init);
   if (url.hostname.endsWith('.supabase.co')) return supabase(url, init);
   if (url.hostname === 'itunes.apple.com') {
     log('GET', url.pathname, init?.headers);

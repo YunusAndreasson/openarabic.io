@@ -29,8 +29,10 @@ function checkConfig(config, label, production = false) {
   if (config.topLevelName !== undefined && config.topLevelName !== WORKER) {
     fail(`${label} has topLevelName "${config.topLevelName}". Only "${WORKER}" may ship.`);
   }
-  if (config.workers_dev !== true) {
-    fail(`${label} has workers_dev ${JSON.stringify(config.workers_dev)}. The preview lives on workers.dev, so it must be true.`);
+  // Off only once the live domain is what serves the site: otherwise the Worker would answer nowhere.
+  const liveOnly = production && JSON.stringify(config.routes) === LIVE_ROUTE && config.workers_dev === false;
+  if (config.workers_dev !== true && !liveOnly) {
+    fail(`${label} has workers_dev ${JSON.stringify(config.workers_dev)}. It may be off only under --production, with the live domain attached.`);
   }
   if (config.env && Object.keys(config.env).length > 0) {
     fail(`${label} defines environments (${Object.keys(config.env).join(', ')}), which could carry another name or route.`);
