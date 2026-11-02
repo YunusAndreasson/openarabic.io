@@ -1,4 +1,12 @@
 {
-  "story": { "sentence": 7106, "article": 559 },
-  "startingPathArticles": []
+  "story": {
+    "sentence": 7106,
+    "article": 559
+  },
+  "startingPathArticles": [
+    374,
+    347,
+    378,
+    383
+  ]
 }

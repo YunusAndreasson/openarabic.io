@@ -251,3 +251,8 @@ main img { color: transparent; }
 
 /* On a wide screen the man and his table move right, clear of the words. The room's dark wall holds the left. */
 @media (min-width: 56.25rem) { .problem .still-photo img { transform: translateX(22%); mask-image: linear-gradient(to right, transparent, var(--color-surface) 32%); } .problem-big { max-width: 9.5em; } }
+
+/* The starting path: short, easier texts, plain links. */
+.start-title { margin-top: clamp(32px, 6svh, 64px); font-size: clamp(1.25rem, 2vw, 1.75rem); font-weight: 400; letter-spacing: -0.015em; }
+.start-list { margin: 8px 0 0; padding: 0; list-style: none; }
+.start-list a { display: inline-flex; align-items: center; min-height: 44px; }
