@@ -143,7 +143,7 @@ export function checkBudgets(root = ROOT) {
       const limit = homeFiles.has(file) ? HOME_CSS : CSS_GZIP;
       if (zipped > limit) fail(`${rel(file)} is ${kb(zipped)} of CSS gzip, over the ${kb(limit)} budget.`);
     }
-    if (rel(file).startsWith(`dist${path.sep}client${path.sep}gl${path.sep}`)) {
+    if (path.relative(clientDir, file).startsWith(`gl${path.sep}`)) {
       const size2 = br(fs.readFileSync(file));
       if (size2 > GLOSSARY_BROTLI) fail(`${rel(file)} is ${kb(size2)} of glossary brotli, over the ${kb(GLOSSARY_BROTLI)} budget.`);
     }

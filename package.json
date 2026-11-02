@@ -9,7 +9,8 @@
     "tokens": "node scripts/ship/generate-tokens.mjs --write",
     "ship": "node scripts/ship.mjs",
     "ship:rollback": "node scripts/ship-rollback.mjs",
-    "ship:test": "node scripts/test-ship-guards.mjs"
+    "ship:test": "node scripts/test-ship-units.mjs && node scripts/test-ship-e2e.mjs",
+    "ship:test:unit": "node scripts/test-ship-units.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "14.4.3",

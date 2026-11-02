@@ -57,11 +57,11 @@ export function readAnonKey() {
 }
 
 /** Sequential by construction, with starts at least MIN_GAP_MS apart, and only ever GET or HEAD. */
-function client(key, fetchImpl) {
+function client(key, fetchImpl, gapMs = MIN_GAP_MS) {
   let last = 0;
   const stats = { requests: 0, supabaseRequests: 0, bytes: 0 };
   const paced = async (url, init, what) => {
-    const wait = last + MIN_GAP_MS - Date.now();
+    const wait = last + gapMs - Date.now();
     if (wait > 0) await sleep(wait);
     last = Date.now();
     stats.requests += 1;
@@ -205,10 +205,10 @@ export function readSnapshot(hash, root = ROOT) {
   return JSON.parse(bytes.toString('utf8'));
 }
 
-export async function fetchSnapshot({ fetchImpl = globalThis.fetch, root = ROOT } = {}) {
+export async function fetchSnapshot({ fetchImpl = globalThis.fetch, root = ROOT, gapMs = MIN_GAP_MS } = {}) {
   const started = Date.now();
   const key = readAnonKey();
-  const api = client(key, fetchImpl);
+  const api = client(key, fetchImpl, gapMs);
   const tables = {};
   const restricted = [];
   for (const table of Object.keys(TABLES)) {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // `pnpm ship:rollback`: restores the previous version of openarabic-site and nothing else.
 // The name is fixed here and the version comes from .ship/published, never from an argument.
-import { acquireLock, fail, REAL_DEPLOY_REFUSAL, REAL_DEPLOYS_ALLOWED, ShipFailure, WORKER } from './ship/lib.mjs';
+import { acquireLock, fail, REAL_DEPLOY_REFUSAL, REAL_DEPLOYS_ALLOWED, ROOT, ShipFailure, WORKER } from './ship/lib.mjs';
 import { checkSourceConfig } from './ship/guard.mjs';
 import { readPreviewUrl, readPublished, rollbackCommandText, rollbackTo, writePublished } from './ship/deploy.mjs';
 import { smoke } from './ship/smoke.mjs';
@@ -15,13 +15,16 @@ async function main() {
   if (unknown.length > 0) fail(`Unknown argument: ${unknown.join(' ')}. The only option is --dry-run; this command only ever acts on ${WORKER}.`);
 
   acquireLock(`pnpm ship:rollback${dryRun ? ' --dry-run' : ''}`);
-  checkSourceConfig();
-  console.log(`[guard] PASS: wrangler.jsonc names ${WORKER}, with no route and no live domain`);
+  const config = checkSourceConfig(ROOT, true);
+  const live = (config.routes?.length ?? 0) > 0;
+  console.log(`[guard] PASS: wrangler.jsonc names ${WORKER}, with ${live ? 'only the live domain' : 'no route'}`);
 
   const published = readPublished();
   if (!published) fail('.ship/published does not exist, so there is no recorded version to roll back to.');
   const target = published.previous;
   if (!target?.workerVersion || !target?.hash) fail('.ship/published records no previous version and hash.');
+  // A preview version carries noindex. With the domain attached, rolling back to one would take the whole site out of Google.
+  if (live && target.production !== true) fail(`The previous version, ${target.workerVersion}, is a noindexed preview, and openarabic.io is attached. Rolling back to it would take the site out of Google. Fix forward with pnpm ship --production instead.`);
 
   const reason = `pnpm ship:rollback to ${target.hash}`;
   if (dryRun) {
@@ -37,9 +40,9 @@ async function main() {
 
   const url = readPreviewUrl();
   if (url) {
-    const edge = await smoke(url, { expectedSha: target.indexSha256 ?? null });
+    const edge = await smoke(url, { expectedSha: target.indexSha256 ?? null, production: target.production === true });
     if (!edge.ok) fail(`Wrangler rolled back to ${target.workerVersion}, but the edge did not confirm it: ${edge.problems.join('; ')}. .ship/published is unchanged, so it no longer matches. Check before shipping.`);
-    console.log(`[smoke] PASS: / is 200 with the bytes of that version, X-Robots-Tag: noindex and the meta, no Set-Cookie (try ${edge.attempts})`);
+    console.log(`[smoke] PASS: / is 200 with the bytes of that version, ${target.production === true ? 'with no noindex' : 'X-Robots-Tag: noindex and the meta'}, no Set-Cookie (try ${edge.attempts})`);
   } else {
     console.log('[smoke] NOT RUN: .ship/preview-url is missing, so the edge was not checked.');
   }

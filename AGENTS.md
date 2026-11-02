@@ -16,7 +16,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 |---|---|
 | Dev | `pnpm dev` |
 | Everything except the upload, the one check to run at the end | `pnpm ship --production --dry-run` |
-| Prove the ship's guards still work, after changing `scripts/ship*` | `pnpm ship:test` |
+| Prove the ship's guards still work, after changing `scripts/ship*` | `pnpm ship:test`, about a minute. `pnpm ship:test:unit` alone takes seconds |
 | Deploy, which goes live; undo it | `pnpm ship --production`; `pnpm ship:rollback` |
 | Generate tokens after changing `DESIGN.md` | `pnpm tokens` |
 | Reader's and GA4's real-input checks, on a served build | `node scripts/check-reader.mjs <origin> chromium\|zen`; `node scripts/check-analytics.mjs <origin>` |

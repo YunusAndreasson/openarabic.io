@@ -54,15 +54,17 @@ function supabase(url, init) {
 let local;
 async function edge(route, url, init) {
   let mode = process.env.STUB_EDGE ?? 'ok';
+  if (mode === 'broken') return new Response('down', { status: 500 });
   const rolled = fs.existsSync('wrangler-spy.log') && fs.readFileSync('wrangler-spy.log', 'utf8').includes('rollback ');
   if (mode === 'bad-until-rollback') mode = rolled ? 'previous' : 'no-header';
   if (mode === 'previous' && route === '/') return new Response(previous, { headers: { 'x-robots-tag': 'noindex' } });
-  if (route === '/' && !url.search) return new Response(fs.readFileSync('dist/client/index.html'), { headers: mode === 'no-header' ? {} : { 'x-robots-tag': 'noindex' } });
+  const production = process.argv.includes('--production');
+  if (route === '/' && !url.search) return new Response(fs.readFileSync('dist/client/index.html'), { headers: mode === 'no-header' || production ? {} : { 'x-robots-tag': 'noindex' } });
   // The real Worker over the built files, so the preview's parity run means something here too.
   if (!local) local = await (await import(pathToFileURL(`${process.cwd()}/scripts/ship/parity.mjs`).href)).localWorker(process.cwd());
   const answer = await local(url.href, { redirect: 'manual', headers: init?.headers });
   const headers = new Headers(answer.headers);
-  if (mode === 'no-header') headers.delete('x-robots-tag');
+  if (mode === 'no-header' || production) headers.delete('x-robots-tag');
   else headers.set('x-robots-tag', 'noindex');
   return new Response(answer.body, { status: answer.status, headers });
 }
