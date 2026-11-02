@@ -25,8 +25,6 @@ import speakAvif from '../assets/story/ios-05-speak.avif?url';
 import speakWebp from '../assets/story/ios-05-speak.webp?url';
 import horizonAvif from '../assets/story/horizon.avif?url';
 import horizonWebp from '../assets/story/horizon.webp?url';
-import wordsAvif from '../assets/story/ios-07-vocabulary.avif?url';
-import wordsWebp from '../assets/story/ios-07-vocabulary.webp?url';
 
 const readAlt = 'The app’s reader: an English line above each classical Arabic line, with parts of the words in colour.';
 const tapAlt = 'The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from.';
@@ -35,7 +33,6 @@ const listenAlt = 'The app’s playlist of texts, each with its scholar and leng
 const audioAlt = 'The app’s reader with its player open along the bottom, playing a text aloud.';
 const speakAlt = 'The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.';
 const horizonAlt = 'The app’s memory horizon: how many practised words hold for days, weeks and months.';
-const wordsAlt = 'The app’s list of your words, each with its meaning and a bar for how strong it is.';
 
 const readStops = [
   { title: 'English above every Arabic line.', note: 'The English is machine-translated.' },
@@ -50,10 +47,9 @@ const listenStops = [
 ];
 
 const rememberStops = [
-  { title: 'Add the words you don’t know. Practice them with spaced repetition.', note: 'Tap for the meaning. Long-press to save it.' },
-  { title: 'You answer out loud before the app shows the meaning.', note: 'Hear the Arabic, then say what it means in English. The app grades your answer.' },
-  { title: 'Words return when your predicted recall falls to 90%.', note: 'You choose 10, 20 or 30 new words a day. New words pause by themselves when your recall drops.' },
-  { title: 'Every word you add stays in one list, with how strong it is.' },
+  { title: 'Add the words you don’t know. Practice them with spaced repetition.' },
+  { title: 'You answer out loud before the app shows the meaning.' },
+  { title: 'Words return when your predicted recall falls to 90%.' },
 ];
 ---
 
@@ -77,22 +73,22 @@ const rememberStops = [
         <div class="hero-words">
           <h1 aria-label="Read the classics in Arabic."><span>Read</span> <span>the classics</span> <span>in Arabic.</span></h1>
           <p class="names"><span>Ibn al-Jawzi,</span> <span>Ibn al-Qayyim,</span> <span>an-Nawawi,</span> <span>Ibn Taymiyyah,</span> <span>al-Bukhari,</span> <span>adh-Dhahabi.</span></p>
-          <StoreLinks />
           <p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>
+          <StoreLinks />
           <p class="offer-note">Free. No ads. No subscription. An account is needed in the app.</p>
         </div>
       </section>
     </div>
 
     <section class="scholars" id="scholars">
-      <h2 class="reveal">Excerpts from classical works by six scholars</h2>
+      <h2 class="reveal">Excerpts from the works of classical scholars</h2>
       <ul class="scholar-list">
         {
           scholarData.scholars.map((scholar) => (
             <li class="scholar reveal">
               <h3>{scholar.name}</h3>
               <div class="scholar-works">
-                <p>{scholar.works.join(', ')}</p>
+                <p data-stored>{scholar.works.slice(0, 2).join(', ')}</p>
               </div>
             </li>
           ))
@@ -105,6 +101,13 @@ const rememberStops = [
       <p class="turn-line reveal" lang="ar" dir="rtl">{line.arabic}</p>
       <p class="turn-source reveal">{line.scholar}, {line.work}</p>
     </section>
+
+    <Still name="stuck" alt="A man seen from behind at a small table at night, his head in his hand, with books left open in front of him." class="problem">
+      <h2 class="problem-big reveal">You can sound it out.<br />You can’t read it.</h2>
+      <p class="problem-small reveal">Every word is a trip to the dictionary.</p>
+    </Still>
+
+    <p class="bridge reveal">In the app, the meaning is one tap away.</p>
 
     <Stage id="read" marker="Read" stops={readStops}>
       <div class="zoomer">
@@ -134,21 +137,22 @@ const rememberStops = [
       <Screen avif={speakAvif} webp={speakWebp} alt={speakAlt} class="speak" />
       <span class="spoken only-played" aria-hidden="true"></span>
       <Screen avif={horizonAvif} webp={horizonWebp} alt={horizonAlt} class="memory" />
-      <Screen avif={wordsAvif} webp={wordsWebp} alt={wordsAlt} class="word-list" />
     </Stage>
 
     <section class="payoff lift" id="payoff">
-      <input class="lift-input vh" id="lift" type="checkbox" aria-label="Take the English away" />
-      <h2 class="payoff-title">Tap a word.</h2>
+      <input class="lift-input vh" id="lift" type="checkbox" aria-label="Hide the English and read it" />
+      <h2 class="payoff-title"><span class="ask">The line from before. Tap a word you don’t know.</span> <span class="read">Now read it.</span></h2>
       <p class="payoff-english" lang="en">{line.english}</p>
       <TappableLine prefix="w" />
+      <label class="lift-control" for="lift" aria-hidden="true"><span class="take">Hide the English and read it</span> <span class="bring">Show the English</span></label>
       <p class="turn-source">{line.scholar}, {line.work}</p>
-      <label class="lift-control" for="lift" aria-hidden="true"><span class="take">Take the English away</span> <span class="bring">Bring the English back</span></label>
+      <p class="payoff-note">In the app, the English stays above the line.</p>
+      <StoreLinks />
     </section>
 
     <section class="library" id="library">
-      <h2 class="reveal">Creed, fiqh, sīrah, ḥadīth, tafsīr.</h2>
-      <p class="library-lede reveal">Sorted by difficulty. Most texts are advanced; some are easier.</p>
+      <h2 class="reveal">Pick a text. Read it now.</h2>
+      <p class="library-lede reveal">Creed, fiqh, sīrah, ḥadīth, tafsīr. Sorted by difficulty. Most texts are advanced; some are easier.</p>
       <ArticleWall />
     </section>
 
@@ -158,7 +162,7 @@ const rememberStops = [
         <StoreLinks />
         <div class="qr-plate"><StoreQr /></div>
       </div>
-      <p class="offer-note reveal">In the app, the English stays above the line. An account is needed in the app. Free as sadaqah jariyah.</p>
+      <p class="offer-note reveal">An account is needed in the app. Free as sadaqah jariyah.</p>
     </Still>
   </main>
 </Base>
