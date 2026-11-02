@@ -1,6 +1,6 @@
 # Content scan: texts labelled classical that read as modern
 
-Task 4.5 (T1), and T4 and T5 at the end. Read from snapshot `e8196b90` on 2026-11-01, with no Supabase load beyond the normal fetch. **A report only: nothing was edited.** The owner decides what to do (D13). Until then the plan's default holds: flagged texts are never featured and stay out of the starting path.
+Task 4.5 (T1), and T4 and T5 at the end. Read from snapshot `e8196b90` on 2026-11-01, with no Supabase load beyond the normal fetch. **A report only: nothing was edited.** The owner decides what to do (D13). Until then the plan's default holds: flagged texts are never featured and stay out of the starting path. The 16 at high confidence, listed in `src/data/flagged-texts.json`, sort last on category and author pages and so never appear under "More from".
 
 An agent read the English of all 239 published articles, and found both known cases by itself. Four high findings were spot-checked against the text (307, 361, 558, 577) and matched. It judged the English alone: it says nothing about fidelity to any edition, and a clean article isn't proof. Confidence and reasons are the scan's own.
 
@@ -36,6 +36,10 @@ An agent read the English of all 239 published articles, and found both known ca
 Keyword pass, also read in context: 64 hits, all innocent in context apart from those above (river banks, "watch over", "the science of"). Words the keyword list missed, such as "screens", were caught only by reading.
 
 Also seen: articles 311 and 312 repeat article 308's content under different ids.
+
+## T2: sentence 7106
+
+**Not done: no printed edition checked.** One web search on 2026-11-02 found the sentence attributed to Ibn al-Jawzi only in an Al Jazeera blog post, with no chapter or page. A web text doesn't count under plan task 4.6. It needs an edition's page number, from a scan or a physical copy. It is unconfirmed, not disproved.
 
 ## T4: article 318
 

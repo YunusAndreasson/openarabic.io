@@ -3,6 +3,9 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { articleSlug, authorSlug, bucketOf, wordSlug } from './words.mjs';
+import flaggedTexts from '../data/flagged-texts.json' with { type: 'json' };
+
+const flagged = new Set(flaggedTexts.articles);
 
 /** `pnpm ship` names the file. `pnpm dev` takes the newest one saved here. Null if this folder has none. */
 export function snapshotFile(root = process.cwd()) {
@@ -102,8 +105,8 @@ export function indexSnapshot(snapshot) {
     },
     author: (id) => authorById.get(id),
     category: (id) => categoryById.get(id),
-    /** Hardest last: "sorted by difficulty" is the ledger's promise. */
-    byDifficulty: (list) => [...list].sort((a, b) => a.difficulty_level - b.difficulty_level || a.title.localeCompare(b.title, 'en')),
+    /** Hardest last: "sorted by difficulty" is the ledger's promise. Flagged texts follow everything, so none leads a page (D13's default). */
+    byDifficulty: (list) => [...list].sort((a, b) => flagged.has(a.id) - flagged.has(b.id) || a.difficulty_level - b.difficulty_level || a.title.localeCompare(b.title, 'en')),
     articlesBy: (authorId) => published.filter((article) => article.author_id === authorId),
     articlesIn: (categoryId) => published.filter((article) => article.category_id === categoryId),
     authorsWithTexts: () => authors.filter((author) => published.some((article) => article.author_id === author.id)),
