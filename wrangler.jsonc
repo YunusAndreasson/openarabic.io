@@ -19,7 +19,8 @@
   // Page views and store taps: page type, event and day only. docs/decisions/2026-11-01-counters.md.
   "analytics_engine_datasets": [{ "binding": "COUNTS", "dataset": "openarabic_site_counts" }],
 
-  // No routes and no custom domains until the cutover in docs/site-plan.md.
+  // The owner's go, 2026-11-02. Must stay here: a deploy without it could detach the domain. Under `pnpm ship --production` only.
+  "routes": [{ "pattern": "openarabic.io", "custom_domain": true }],
   "workers_dev": true,
   "preview_urls": false
 }

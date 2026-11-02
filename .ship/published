@@ -1,17 +1,18 @@
 {
   "worker": "openarabic-site",
+  "production": true,
   "hash": "e8196b9054b1488084fe54012ed16c3e41869c717c541cfb83d5bdc30c3f54cb",
   "hashOf": "snapshot",
-  "buildHash": "e7f585fba08b3de4af274194261165ad35e5ff41b467d9e83df541fc69aa2621",
-  "workerVersion": "7f559778-f78c-4d2a-a7eb-966b52c4ae7e",
-  "indexSha256": "ddfb32cc199a5f5e69241e29f2a2faea6721adcfbf928f33e4bc7d383f220286",
-  "publishedAt": "2026-11-01T21:27:11.376Z",
+  "buildHash": "fd2ff5931b933718728a2a1cf694e3627601f559decb654cc4a0b8ace9c64703",
+  "workerVersion": "31933ad8-20db-4c40-a29d-d839458a5f05",
+  "indexSha256": "914b319d934f73483025ab600823d20edeae08740657e0a76a3305b2059e2128",
+  "publishedAt": "2026-11-02T18:04:36.805Z",
   "previous": {
     "hash": "e8196b9054b1488084fe54012ed16c3e41869c717c541cfb83d5bdc30c3f54cb",
     "hashOf": "snapshot",
-    "buildHash": "ff5a0785bca304f1ae6807806867c4666e201b8cd9a70a1f95a7d082986ec42b",
-    "workerVersion": "27b9f233-53d1-4a74-a959-e2da203f0870",
-    "indexSha256": "a7281d18c80c40d82ab0e7529f77a553ac3ec553ae77f8a170565e058c8690a8",
-    "publishedAt": "2026-11-01T21:12:50.617Z"
+    "buildHash": "e7f585fba08b3de4af274194261165ad35e5ff41b467d9e83df541fc69aa2621",
+    "workerVersion": "7f559778-f78c-4d2a-a7eb-966b52c4ae7e",
+    "indexSha256": "ddfb32cc199a5f5e69241e29f2a2faea6721adcfbf928f33e4bc7d383f220286",
+    "publishedAt": "2026-11-01T21:27:11.376Z"
   }
 }
