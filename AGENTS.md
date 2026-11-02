@@ -3,8 +3,8 @@
 ## Hard rules
 
 - **Never deploy to, rename or delete the Worker `openarabic-web`.** It serves the live openarabic.io and its admin panel. This repo's Worker is `openarabic-site`, set in `wrangler.jsonc`. Keep that file, because without it the adapter would name the Worker after this folder.
-- **Never add a route or custom domain for openarabic.io.** The cutover happens only on the owner's explicit go.
-- **The only deploy allowed is `pnpm ship`, to the noindexed `workers.dev` preview of `openarabic-site`.** Never run `wrangler deploy` directly, including `--temporary`, which needs no login: it skips every check. Production is cutover, on the owner's explicit go only.
+- **Keep the one custom domain in `wrangler.jsonc`.** A deploy without it could detach the live site. Add no other route or domain.
+- **openarabic.io has been served by `openarabic-site` since 2026-11-02.** Every deploy goes live: `pnpm ship --production`, only when the owner asks. Never run `wrangler deploy` directly, including `--temporary`, which needs no login: it skips every check. A plain `pnpm ship` is refused while the domain is in `wrangler.jsonc`.
 - **Treat Supabase as production.** Read only, with throttled requests, and never print or commit keys.
 - **No admin work here.** The old site is abandoned and this one only promotes the app: no admin, accounts or sign-up. `open-arabic` and its worktrees are read only from this repo.
 
@@ -15,16 +15,16 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Task | Command |
 |---|---|
 | Dev | `pnpm dev` |
-| Everything except the upload, the one check to run at the end | `pnpm ship --dry-run` |
+| Everything except the upload, the one check to run at the end | `pnpm ship --production --dry-run` |
 | Prove the ship's guards still work, after changing `scripts/ship*` | `pnpm ship:test` |
-| Deploy to preview; undo it | `pnpm ship`; `pnpm ship:rollback` |
+| Deploy, which goes live; undo it | `pnpm ship --production`; `pnpm ship:rollback` |
 | Generate tokens after changing `DESIGN.md` | `pnpm tokens` |
 | Reader's and GA4's real-input checks, on a served build | `node scripts/check-reader.mjs <origin> chromium\|zen`; `node scripts/check-analytics.mjs <origin>` |
 | Serve a build locally, no upload | `wrangler dev -c dist/server/wrangler.json --port 4400` |
 | Prove the Worker name, after a build | `grep -o '"name":"[^"]*"\|"routes"' dist/*/wrangler.json` prints only `openarabic-site`. A `--name` flag would hide a wrong name |
 | Zen, without touching the owner's | `zen-browser --headless --no-remote --profile "$(mktemp -d)" --screenshot /tmp/z.png <url>` |
 
-**Asked to put it live? Don't, and say why:** that's cutover, and only the owner can call it. No CI or schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the private `edenmind/openarabic-site`, a backup and nothing more: push `main` only when the owner asks.
+No CI or schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the private `edenmind/openarabic-site`, a backup and nothing more: push `main` only when the owner asks.
 
 ## Read first
 
@@ -71,7 +71,7 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 
 ## Done
 
-1. `pnpm ship --dry-run` passes. It proves the Worker name is `openarabic-site` with no routes. Steps marked `NOT BUILT` aren't passes.
+1. `pnpm ship --production --dry-run` passes. It proves the Worker name is `openarabic-site` with only the live domain. Steps marked `NOT BUILT` aren't passes.
 2. UI: the `DESIGN.md` `Review` `[T]` rows your change touches were run.
 3. UI: checked once in Zen, with Chromium second. Green in Chromium alone isn't a pass.
 4. Copy: every sentence is in `PRODUCT.md` or on a draft list.
