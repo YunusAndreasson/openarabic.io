@@ -4,16 +4,16 @@
   "hash": "e8196b9054b1488084fe54012ed16c3e41869c717c541cfb83d5bdc30c3f54cb",
   "hashOf": "snapshot",
   "buildHash": "dd6fe2975defede7655104460b3bcdffd049d27e3f7377745999a50cbc6c4949",
-  "workerVersion": "8c27a2dd-6bc5-4316-86ae-657b321bfcfc",
+  "workerVersion": "31901997-7a77-49a9-b4c9-e4e70a59eb3a",
   "indexSha256": "a5714236b653606e97f605cfb77ba6801d8fad72c08b942ebd626dc61e26787f",
-  "publishedAt": "2026-11-02T19:32:58.481Z",
+  "publishedAt": "2026-11-02T20:00:36.359Z",
   "previous": {
     "production": true,
     "hash": "e8196b9054b1488084fe54012ed16c3e41869c717c541cfb83d5bdc30c3f54cb",
     "hashOf": "snapshot",
-    "buildHash": "c036f86782ba525c75d5139da1ee9bbe9aa3e2a96aa62775f1d04fd1acd0e370",
-    "workerVersion": "fac0efeb-f1ea-4dda-ae2e-3fee72c34ee5",
-    "indexSha256": "7cb00713987ed532d3ea37ce5668cc1b5fe6d4394c92833be87429907a832c7c",
-    "publishedAt": "2026-11-02T19:26:56.779Z"
+    "buildHash": "dd6fe2975defede7655104460b3bcdffd049d27e3f7377745999a50cbc6c4949",
+    "workerVersion": "8c27a2dd-6bc5-4316-86ae-657b321bfcfc",
+    "indexSha256": "a5714236b653606e97f605cfb77ba6801d8fad72c08b942ebd626dc61e26787f",
+    "publishedAt": "2026-11-02T19:32:58.481Z"
   }
 }
