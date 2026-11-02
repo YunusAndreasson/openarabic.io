@@ -60,7 +60,7 @@ export function readAllowed(product, design, draftText) {
 
   const flat = design.replace(/\s*\n\s*/g, ' ');
   const designed = new Set([
-    ...unquoteAll(section(design, '## Story', '## Motion')),
+    ...unquoteAll(section(flat, '**The tap section.**', '**Audio.**')),
     ...unquoteAll(section(flat, '**Footer.**', '**Page frame.**')),
     ...unquoteAll(section(flat, '**Attribution.**', '**Footer.**')).slice(0, 1),
   ]);
@@ -70,7 +70,7 @@ export function readAllowed(product, design, draftText) {
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith('#')),
   );
-  if (ledger.size < 20 || designed.size < 15) {
+  if (ledger.size < 20 || designed.size < 4) {
     fail(`The allowed lists parsed to ${ledger.size} ledger and ${designed.size} design strings, so their format changed. Fix the check before shipping.`);
   }
   return { ledger, designed, draft };

@@ -377,3 +377,31 @@ The Vastness of God's Mercy
 Praises That Elevate the Poor
 Avoid Envy and Suspicion
 A Handful of Dates and Paradise
+
+# From DESIGN.md `Story`, before it was rewritten on 2026-11-02.
+An account is needed in the app.
+Arabic audio on every word and every line.
+Bring the English
+  back
+Colour shows how multi-part words are built.
+Counted on 31 October 2026.
+Emulator capture of a development build,
+  1448.5.5.
+English above every Arabic line.
+Every text plays English first, then Arabic, or Arabic only.
+Excerpts from 22 classical works by six scholars
+Free. No ads. No subscription.
+Ibn al-Jawzi, Ibn al-Qayyim, an-Nawawi, Ibn Taymiyyah, al-Bukhari, adh-Dhahabi.
+Ibn al-Qayyim, Ighāthat al-Lahfān.
+If you can sound out Arabic script, you can start reading classical texts.
+Nothing explains it
+One tap gives you the meaning, a grammar note and audio.
+OpenArabic: Read the Classics
+Read the line
+Sorted by difficulty. Most texts are advanced; 48 are easier.
+That was this page.
+The English is machine-translated.
+The audio uses AI voices.
+Words return when your predicted recall falls to 90%.
+You answer out loud before the app shows the meaning.
+rtl

@@ -72,7 +72,7 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 ## Done
 
 1. `pnpm ship --production --dry-run` passes. It proves the Worker name is `openarabic-site` with only the live domain. Steps marked `NOT BUILT` aren't passes.
-2. UI: the `DESIGN.md` `Review` `[T]` rows your change touches were run.
+2. UI: the `DESIGN.md` `Review` rows your change touches were run.
 3. UI: checked once in Zen, with Chromium second. Green in Chromium alone isn't a pass.
 4. Copy: every sentence is in `PRODUCT.md` or on a draft list.
 5. Your last message lists what you did not verify. No iPhone or WebKit is available here, so those stay unproven.

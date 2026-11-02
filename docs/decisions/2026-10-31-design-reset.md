@@ -13,3 +13,5 @@ The owner rejected the first home page, which followed `DESIGN.md`, saying the c
 5. `DESIGN.md` gets rewritten short afterwards, describing what was approved.
 
 Still in force: `PRODUCT.md`, the owner review, tokens, Arabic text rules, `pnpm ship`, URL parity and budgets.
+
+**Done 2026-11-02:** `DESIGN.md` was rewritten from 650 lines to about 225, describing what the owner approved. Strings its old `Story` section allowed moved to `docs/draft-copy.txt`.
