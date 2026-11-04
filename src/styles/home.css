@@ -50,10 +50,6 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .hero h1 span:nth-child(2) { --wait: var(--stagger); }
 .hero h1 span:nth-child(3) { --wait: calc(2 * var(--stagger)); }
 .hero .stores, .closing .stores { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: clamp(14px, 3svh, 32px); animation: arrive var(--t-arrive) var(--home-ease) calc(3 * var(--stagger) + var(--follow)) both; }
-.badge { display: inline-block; line-height: 0; }
-.badge img { width: auto; height: 48px; }
-/* Google's artwork carries its clear space inside the file, so it is drawn taller to match Apple's. */
-.badge img[src*='google'] { height: 70px; margin-block: -11px; margin-inline: -9px; }
 .lede, .offer-note { max-width: 42em; color: var(--quiet-over); font-size: 0.875rem; line-height: 1.4; animation: arrive var(--t-arrive) var(--home-ease) calc(4 * var(--stagger) + var(--follow)) both; }
 .lede { margin-top: clamp(12px, 2.4svh, 22px); color: var(--color-on-surface); font-size: clamp(1rem, 1.25vw, 1.125rem); }
 

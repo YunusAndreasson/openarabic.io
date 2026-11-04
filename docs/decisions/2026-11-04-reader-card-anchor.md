@@ -6,7 +6,8 @@
 
 - **Laptop, 56.25rem and up, where `anchor-name` is supported:** the one shared `#sheet` popover is placed against the open word. The script already marks that word `data-on`, so CSS makes it the anchor (`#reader .w[data-on] { anchor-name: --word }`). No script changed, 0 bytes added to the reader budget.
 - It hangs from the word's right edge (`position-area: bottom span-left`), because Arabic reads from the right, and tries `bottom span-right`, `top span-left` and `top span-right` when it would leave the screen.
-- **Phones, and browsers without anchor positioning:** unchanged, the sheet along the bottom. On a touch screen a bottom sheet is in reach of the thumb and never covers the line being read from above.
+- **Phones, and browsers without anchor positioning:** the sheet along the bottom, in reach of the thumb.
+- **Amended the same day:** the bottom sheet did cover its own word when the word was in the lower part of the screen. At 390×664, 3 of 7 sampled taps were hidden, with the word's bottom at 661px and the sheet's top at 362–407px. At 375×553 the 70svh sheet covers everything below about 166px. Once the card is filled, the script now scrolls the page so the word sits 16px above the card. It is instant, because content pages have no motion, and the word keeps its `data-on` highlight. The anchored laptop card never meets the condition. The cost is 66 B gzip: reader.js went from 950 to 1,016 B, and with the inline check the page is under its 1,250 B limit. `scripts/check-reader.mjs` checks it: "The card leaves its word in view".
 
 ## Why
 

@@ -14,7 +14,9 @@ function open(w){
 var h=w.dataset.h;enter(w.parentNode);c=w;w.dataset.on=1;
 $('se').textContent=$('sn').textContent='';$('sl').href=h;$('sa').hidden=true;
 s.showPopover();
-load().then(function(g){var x=g[w.dataset.i];$('se').textContent=x[0];$('sn').textContent=x[1]||'';a=x[2];$('sa').hidden=!a;s.focus()},function(){location=h});
+load().then(function(g){var x=g[w.dataset.i];$('se').textContent=x[0];$('sn').textContent=x[1]||'';a=x[2];$('sa').hidden=!a;s.focus();
+// A bottom sheet over its own word: move the page so the word sits just above the card. The anchored laptop card sits beside its word, so never overlaps it.
+var W=w.getBoundingClientRect(),R=s.getBoundingClientRect();if(W.bottom>R.top&&W.top<R.bottom)scrollBy(0,W.bottom-R.top+16)},function(){location=h});
 }
 r.addEventListener('pointerdown',load,{once:true});
 s.addEventListener('toggle',function(e){if(e.newState=='closed'&&c){delete c.dataset.on;c.focus({preventScroll:true});c=0}});

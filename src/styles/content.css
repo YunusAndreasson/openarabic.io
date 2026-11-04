@@ -24,6 +24,8 @@
 .crumbs { margin-bottom: var(--space-word); }
 .crumbs a { color: var(--color-on-surface-quiet); }
 .crumbs a:hover { color: var(--color-on-surface); }
+/* Meta and breadcrumb links are the way on from a text or a word. Their hit area grows to 40px, and the line doesn't move. */
+.meta a, .crumbs a { padding-block: 10px; margin-block: -10px; }
 a:hover { text-decoration-thickness: 2px; }
 
 /* English running text wraps without a lone last word. Never where Arabic is in the box: DESIGN.md `Typography`. */
@@ -64,11 +66,12 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 /* The one offer */
 .offer { margin-top: var(--fluid-beat-gap); padding: var(--space-block) var(--space-thought); background: var(--color-surface-raised); border: 1px solid var(--color-outline); border-radius: var(--radius-card); }
 .offer .stores { margin-top: var(--space-thought); }
+/* The download page's badges follow the account note: the same gap as in the offer, not touching it. */
+.content > .stores { margin-top: var(--space-thought); }
 .offer .price { margin-top: var(--space-thought); font-weight: 500; }
 .content .offer .price + .quiet { margin-top: 2px; }
 .price { font-weight: 500; }
 .stores { display: flex; flex-wrap: wrap; gap: var(--space-store-gap); }
-.badge { display: inline-block; line-height: 0; }
 .rating { margin-top: var(--space-word); }
 .button { display: inline-flex; align-items: center; min-height: 48px; padding-inline: var(--space-store-inset); background: var(--color-primary); color: var(--color-on-primary); border-radius: var(--radius-control); text-decoration: none; }
 .button:hover { background: var(--color-primary-hover); }
@@ -95,6 +98,15 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 /* A field's edge is how it is found, so it meets 3:1 against the page (3.4:1); a hairline would be 1.5:1. */
 .search button { min-height: 48px; padding-inline: var(--space-store-inset); font: inherit; font-weight: 500; color: var(--color-on-primary); background: var(--color-primary); border: 0; border-radius: var(--radius-control); cursor: pointer; }
 #results { margin-block: var(--space-block); }
+/* On a phone the whole placeholder fits at 375px: 16px, the size below which iOS zooms into the field, and tighter insets. */
+@media (width < 56.25rem) {
+  .search input, .search button { font-size: 1rem; }
+  .search input { padding-inline: 12px; }
+  .search button { padding-inline: 14px; }
+  /* Inside the offer's padding the two badges need 293px at the home page's short-screen size, so they stay on one row down to 375px with a scrollbar. */
+  .offer .badge img { height: 44px; }
+  .offer .badge img[src*='google'] { height: 64px; margin-block: -10px; margin-inline: -8px; }
+}
 
 .cards { list-style: none; margin: var(--space-block) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-block) 12px; }
 .card a { display: block; color: var(--color-on-surface); text-decoration: none; }

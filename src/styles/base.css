@@ -62,3 +62,9 @@ a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; 
 
 /* The view count's 1×1 image: outside the layout, so it can't shift anything. */
 .view-count { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Store badges, every page. Google's artwork carries its clear space inside the file, so it is drawn taller to match Apple's.
+   Scaled, never altered: DESIGN.md `Store links`. The home page's short-screen sizes are in home.css. */
+.badge { display: inline-block; line-height: 0; }
+.badge img { width: auto; height: 48px; }
+.badge img[src*='google'] { height: 70px; margin-block: -11px; margin-inline: -9px; }

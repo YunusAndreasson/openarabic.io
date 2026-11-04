@@ -186,12 +186,27 @@ try {
   await sleep(150);
   check('Escape closes it and returns focus to that word, with no scroll', !(await d.ev(openSheet)) && (await d.ev(`document.activeElement.dataset.i`)) === wordIndex && (await d.ev('scrollY')) === scrolled);
 
-  await d.click(x, y);
+  // Opening may have scrolled the word clear of the card, so find it again.
+  const [x2, y2] = await d.ev(centerOf('.t .w', 8));
+  await d.click(x2, y2);
   await sleep(350);
   const close = await d.ev(`(() => { const r = document.getElementById('sc').getBoundingClientRect(); return [r.left + 40, r.top + r.height / 2]; })()`);
   await d.click(close[0], close[1]);
   await sleep(150);
   check('Close closes it, back on that word', !(await d.ev(openSheet)) && (await d.ev(`document.activeElement.dataset.i`)) === wordIndex);
+
+  // A word low on the screen: the card opens without covering it, so the reader still sees what they asked about.
+  await d.goto(url);
+  await sleep(300);
+  await d.ev(`(() => { const w = document.querySelectorAll('.t .w')[8]; scrollBy(0, w.getBoundingClientRect().bottom - innerHeight * 0.85); })()`);
+  await sleep(150);
+  const [lx, ly] = await d.ev(centerOf('.t .w', 8));
+  await d.click(lx, ly);
+  await sleep(350);
+  const low = await d.ev(`(() => { const w = document.querySelector('.w[data-on]').getBoundingClientRect(), s = document.getElementById('sheet').getBoundingClientRect(); return { word: [Math.round(w.top), Math.round(w.bottom)], sheet: [Math.round(s.top), Math.round(s.bottom)], view: innerHeight }; })()`);
+  const clear = low.word[1] <= low.sheet[0] || low.word[0] >= low.sheet[1];
+  check('The card leaves its word in view', (await d.ev(openSheet)) && clear && low.word[0] >= 0, low);
+  await d.key('Escape');
 
   // Keyboard: a sentence, then its words.
   await d.goto(url);
