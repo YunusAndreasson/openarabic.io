@@ -147,9 +147,9 @@ refuses('"i+1" in copy', () => claims('<p>Input at i+1.</p>'), /Banned phrases[\
 refuses('A banned phrase in a text file', () => claims('', '', { 'dist/client/note.txt': 'free forever\n' }), /"free forever"/);
 refuses('"side by side" in our own copy', () => claims('<p>side by side</p>'), /Banned phrases[\s\S]*"side by side"/);
 allows('"side by side" in a stored grammar note', () => claims('<p data-stored>Two nouns side by side.</p>'));
-allows('"side by side" on the book page', () => checkClaims(project({ 'dist/client/books/al-fawaid.html': page('<p>The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.</p>') })));
-allows('A template around stored text', () => claims('<p>Texts by Someone - OpenArabic</p>'));
-refuses('A template must match the whole string', () => claims('<p>Texts by Someone - OpenArabic, the best app</p>'), /traces to nothing/);
+allows('"side by side" on the book page', () => checkClaims(project({ 'dist/client/books/al-fawaid.html': page('<p>The Arabic and English sit side by side, and the English keeps to the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.</p>') })));
+allows('A template around stored text', () => claims('<p>Texts by Someone | OpenArabic</p>'));
+refuses('A template must match the whole string', () => claims('<p>Texts by Someone | OpenArabic, the best app</p>'), /traces to nothing/);
 
 // ---- Deploy records and targets
 const PREVIEW = 'https://openarabic-site.acc.workers.dev';

@@ -14,7 +14,7 @@ const { articles, authorOf } = Astro.props;
           {image && <img src={image.src(480)} width={480} height={Math.round((480 * image.height) / image.width)} alt="" loading="lazy" decoding="async" />}
           <span class="card-title" data-stored>{article.title}</span>
         </a>
-        <p class="quiet"><span data-stored>{authorOf ? authorOf(article) : article.book}</span>{'. '}{levelName(article.difficulty_level)}.</p>
+        <p class="quiet meta"><span data-stored>{authorOf ? authorOf(article) : article.book}</span> <span class="level">{levelName(article.difficulty_level)}</span></p>
       </li>
     );
   })}

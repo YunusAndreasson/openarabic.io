@@ -6,7 +6,7 @@
       "works": ["Madārij al-Sālikīn", "al-Tibyān fī Aqsām al-Qurʾān", "Ighāthat al-Lahfān", "Zād al-Maʿād", "ʿUddat al-Ṣābirīn wa-Dhakhīrat al-Shākirīn"]
     },
     {
-      "name": "an-Nawawi",
+      "name": "an-Nawawī",
       "works": ["Riyāḍ al-Ṣāliḥīn", "al-Tibyān fī Ādāb Ḥamalat al-Qurʾān", "al-Majmūʿ Sharḥ al-Muhadhdhab"]
     },
     {
@@ -14,15 +14,15 @@
       "works": ["Majmūʿ al-Fatāwā", "al-ʿUbūdiyya", "al-Kalim al-Ṭayyib"]
     },
     {
-      "name": "al-Bukhari",
+      "name": "al-Bukhārī",
       "works": ["Ṣaḥīḥ al-Bukhārī"]
     },
     {
-      "name": "adh-Dhahabi",
+      "name": "adh-Dhahabī",
       "works": ["Siyar Aʿlām al-Nubalāʾ", "al-Kabāʾir", "al-Ṭibb al-Nabawī"]
     },
     {
-      "name": "Ibn al-Jawzi",
+      "name": "Ibn al-Jawzī",
       "works": ["Ṣayd al-Khāṭir", "Bustān al-Wāʿiẓīn wa-Riyāḍ al-Sāmiʿīn", "Ṣifat al-Ṣafwa", "Talbīs Iblīs", "Akhbār al-Ḥamqā waʾl-Mughaffalīn", "Birr al-Wālidayn", "Minhāj al-Qāṣidīn"]
     }
   ]

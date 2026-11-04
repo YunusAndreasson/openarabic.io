@@ -1,6 +1,6 @@
 {
  "source": "Sentence 7106 as stored in Supabase, checked against snapshot 62effa92 on 2026-10-31: arabic and english byte for byte, glosses and notes per word. Word text splits the stored arabic on its spaces. Segments are the app classifier output (computeColoredSegments) with mark-only segments merged into their base letter. Word audio is each word row's stored track, copied unchanged.",
- "scholar": "Ibn al-Jawzi",
+ "scholar": "Ibn al-Jawzī",
  "work": "Ṣayd al-Khāṭir",
  "arabic": "وَإِذَا رَأَيْتُ كِتَابًا لَمْ أَرَهُ فَكَأَنِّي وَقَعْتُ عَلَى كَنْزٍ،",
  "english": "When I saw a book I had not seen before, it was as if I had stumbled upon a treasure.",

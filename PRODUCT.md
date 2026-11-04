@@ -43,7 +43,7 @@ Counts are as of 2026-10-31. Generate them from data at build time and show thei
 
 | Topic | Wording | Source |
 |---|---|---|
-| Authors | Name only those with published texts, from published articles: Ibn al-Jawzi, Ibn al-Qayyim, an-Nawawi, Ibn Taymiyyah, al-Bukhari, adh-Dhahabi | Audit §2 |
+| Authors | Name only those with published texts, from published articles: Ibn al-Jawzī, Ibn al-Qayyim, an-Nawawī, Ibn Taymiyyah, al-Bukhārī, adh-Dhahabī. Long vowels and emphatic letters are marked, as in the stored work titles | Audit §2 |
 | Library | "Excerpts from 22 classical works by six scholars"; 239 texts; 13,600+ dictionary entries | Audit §2, §4 |
 | Topics | Creed, fiqh, sīrah, ḥadīth, tafsīr | Audit §4 |
 | Difficulty | "Sorted by difficulty. Most texts are advanced; 48 are easier." | Audit §4 |

@@ -55,7 +55,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 /* Google's artwork carries its clear space inside the file, so it is drawn taller to match Apple's. */
 .badge img[src*='google'] { height: 70px; margin-block: -11px; margin-inline: -9px; }
 .lede, .offer-note { max-width: 42em; color: var(--quiet-over); font-size: 0.875rem; line-height: 1.4; animation: arrive var(--t-arrive) var(--home-ease) calc(4 * var(--stagger) + var(--follow)) both; }
-.lede { margin-top: clamp(12px, 2.4svh, 22px); }
+.lede { margin-top: clamp(12px, 2.4svh, 22px); color: var(--color-on-surface); font-size: clamp(1rem, 1.25vw, 1.125rem); }
 
 /* On a phone the man sits above the words, and the words get their own dark ground. */
 .hero-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, var(--color-surface) 8%, color-mix(in oklch, var(--color-surface) 72%, transparent) 42%, transparent 66%); }
@@ -64,10 +64,10 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 
 /* A played stage. This is the plain form: everything in order, every screen shown. */
 .stage { max-width: var(--home-wide); margin: clamp(72px, 14svh, 140px) auto 0; padding-inline: var(--home-gutter); }
-.chapter { margin: 0; font-size: clamp(3.25rem, 8.4vw, 8.5rem); line-height: 0.98; }
+.chapter { margin: 0; font-size: clamp(3.25rem, 6.6vw, 6.5rem); line-height: 0.98; }
 .stops { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 32px; }
 .stop h3 { max-width: 19em; margin: 0; font-size: clamp(1.3125rem, 2.3vw, 2.375rem); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
-.stop-note { max-width: 30em; margin-top: 10px; color: var(--color-on-surface-quiet); font-size: clamp(0.9375rem, 1.15vw, 1.0625rem); line-height: 1.4; }
+.stop-note { max-width: 30em; margin-top: 10px; color: var(--color-on-surface-quiet); font-size: 0.875rem; line-height: 1.4; }
 .stage-phone { margin-top: 40px; }
 .stage .phone { width: auto; padding: 0; background: none; box-shadow: none; }
 .stage .screen { display: flex; flex-wrap: wrap; gap: 20px; overflow: visible; aspect-ratio: auto; background: none; border-radius: 0; }
@@ -137,13 +137,13 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .play .speak { opacity: clamp(0, var(--t), 1); }
 .play .memory { opacity: clamp(0, calc(var(--t) - 1), 1); }
 .play .memory img { height: 100%; object-fit: cover; object-position: top; }
-.stage-caption { color: var(--color-on-surface-quiet); font-size: 0.75rem; line-height: 1.3; text-align: center; }
+.stage-caption { color: var(--color-on-surface-quiet); font-size: 0.8125rem; line-height: 1.3; text-align: center; }
 
 /* The scholars: what you get, named straight after the first screen. */
 .names { max-width: 26em; margin-top: clamp(12px, 2.6svh, 28px); color: var(--color-on-surface); font-size: clamp(1.125rem, 1.75vw, 1.625rem); font-weight: 400; line-height: 1.3; letter-spacing: -0.015em; animation: arrive var(--t-arrive) var(--home-ease) calc(var(--stagger) + var(--follow)) both; }
 .names span { white-space: nowrap; }
 .scholars { max-width: var(--home-wide); margin: clamp(96px, 18svh, 200px) auto; padding-inline: var(--home-gutter); }
-.scholars h2 { max-width: 13em; font-size: clamp(2.5rem, 7vw, 7.5rem); font-weight: 300; line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
+.scholars h2 { max-width: 13em; font-size: clamp(2.5rem, 6.2vw, 6.5rem); font-weight: 300; line-height: 1; letter-spacing: -0.035em; text-wrap: balance; }
 .scholar-list { display: grid; gap: 0; margin: clamp(40px, 8svh, 88px) 0 0; padding: 0; list-style: none; }
 .scholar { padding-block: 18px 20px; border-top: 1px solid var(--color-outline); }
 .scholar h3 { margin: 0; font-size: clamp(1.5rem, 2.3vw, 2.25rem); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; }
@@ -167,7 +167,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 /* The library: real texts. */
 .library { max-width: var(--home-wide); margin: clamp(96px, 18svh, 200px) auto; padding-inline: var(--home-gutter); }
 .library h2 { font-size: clamp(2.25rem, 6.2vw, 6.5rem); font-weight: 300; line-height: 1.02; letter-spacing: -0.035em; text-wrap: balance; }
-.library-lede { margin-top: 16px; color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.3vw, 1.1875rem); line-height: 1.45; }
+.library-lede { margin-top: 16px; color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.25vw, 1.125rem); line-height: 1.45; }
 .wall { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 12px; margin: clamp(32px, 7svh, 72px) 0 0; padding: 0; list-style: none; }
 .wall-card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
 .wall-card h3 { margin: 10px 0 0; font-size: 1rem; font-weight: 500; line-height: 1.25; letter-spacing: -0.01em; }
@@ -232,7 +232,8 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
   .names { font-size: 1rem; margin-top: 8px; }
   .badge img { height: 44px; }
   .badge img[src*='google'] { height: 64px; margin-block: -10px; margin-inline: -8px; }
-  .lede, .offer-note { font-size: 0.8125rem; }
+  .lede { font-size: 0.875rem; }
+  .offer-note { font-size: 0.8125rem; }
   .chapter { font-size: 2.5rem; }
   .stop h3 { font-size: 1.125rem; }
 }

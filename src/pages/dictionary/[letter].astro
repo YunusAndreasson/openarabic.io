@@ -14,18 +14,19 @@ export function getStaticPaths() {
 
 const { letter } = Astro.params;
 const label = bucketLabel(letter);
+const startsWith = letter === '0-9' ? 'a number' : letter === 'other' ? 'another character' : label;
 const entries = site().entriesIn(letter);
 const SITE = 'https://openarabic.io';
 const path = `/dictionary/${letter}`;
 const jsonLd = [
-  { '@type': 'CollectionPage', name: `Arabic words starting with ${label}`, url: `${SITE}${path}`, inLanguage: 'en', isPartOf: { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: `${SITE}/dictionary` } },
+  { '@type': 'CollectionPage', name: `Arabic words by meaning: ${label}`, url: `${SITE}${path}`, inLanguage: 'en', isPartOf: { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: `${SITE}/dictionary` } },
   { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Dictionary', item: `${SITE}/dictionary` }, { '@type': 'ListItem', position: 3, name: label, item: `${SITE}${path}` }] },
 ];
 ---
 
-<Content title={`Arabic words starting with ${label} | OpenArabic Dictionary`} description={`Arabic words whose English meaning starts with ${label}, each with audio and example sentences from classical texts.`} canonical={path} jsonLd={jsonLd} crumbs={[{ name: 'Dictionary', path: '/dictionary' }, { name: label }]}>
-  <h1>Arabic words starting with {label}</h1>
-  <p class="lead">{entries.length.toLocaleString('en')} words whose English meaning starts with {label}.</p>
+<Content title={`Arabic words by meaning: ${label} | OpenArabic Dictionary`} description={`Arabic words whose English meaning starts with ${startsWith}, each with audio and example sentences from classical texts.`} canonical={path} jsonLd={jsonLd} crumbs={[{ name: 'Dictionary', path: '/dictionary' }, { name: label }]}>
+  <h1>Arabic words by meaning: {label}</h1>
+  <p class="lead">{entries.length.toLocaleString('en')} Arabic {entries.length === 1 ? 'word' : 'words'} whose English meaning starts with {startsWith}.</p>
   <SearchForm />
   <LetterNav active={letter} />
   <section><Entries entries={entries} /></section>

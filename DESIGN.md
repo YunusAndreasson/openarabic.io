@@ -122,13 +122,15 @@ The page is dark at every size: no light theme and no toggle. Set `color-scheme:
 |---|---|---|
 | Ground | `surface` | Every page |
 | Raised | `surface-raised` | Word card, the one offer |
-| Ink | `on-surface` | Arabic, headings, body |
-| Quiet ink | `on-surface-quiet` | Attribution, captions, notes, disclosures, credits |
-| Action | `primary` | Links, controls, focus ring |
+| Ink | `on-surface` | Arabic, headings, body, footer browse links |
+| Quiet ink | `on-surface-quiet` | Attribution, captions, notes, disclosures, credits, leads, meta rows, breadcrumbs, the English under a reader line, the footer's legal row |
+| Action | `primary` | Links in running text, controls, focus ring. The one filled control in a content page's header is "Get the app" |
 | Action hover | `primary-hover` | Button hover and press |
 | Signifier | `primary-deep` | Word underline. Non-text only |
 | Hairline | `outline` | Edges, never the only sign of anything |
 
+- Green means "you can act here". Navigation lists (footer, meta rows, breadcrumbs) use ink or quiet ink with an underline on hover, so green isn't spent on every link.
+- A text's level is a quiet outlined tag, never a hue: hue belongs to grammar and to action.
 - Grammar hues appear only on Arabic word parts and the English they match. Parts come from the classifier in `vendor/classifier`, never by hand.
 - Text contrast at least 4.5:1, a signifier at least 3:1, composited on the real background.
 
@@ -147,6 +149,21 @@ The page is dark at every size: no light theme and no toggle. Set `color-scheme:
 
 Published English stays as stored, straight quotes included. Curly quotes are for our copy.
 
+**Scale.** One size per role, and no step smaller than the eye can tell. Content pages:
+
+| Role | Size and weight | Ink |
+|---|---|---|
+| Page title, h1 | `clamp(2rem, 6.4vw, 2.75rem)`, 500 | Ink |
+| Section, h2; the offer's heading | `beat`, 1.5rem, 500 | Ink |
+| Body, lead, the English under an Arabic line | `body`, 1.125rem, 400 | Ink; quiet for a lead or a translation |
+| Emphasis: price, a word's gloss in an example, h3 | `body`, 500 | Ink |
+| Small: meta, notes, disclosures, nav, footer, card titles (500), list chips | `small`, 1rem | Quiet, or ink for nav |
+| Caption: card meta, level tag | 0.8125rem | Quiet |
+
+Arabic beside English is always larger than it: `arabic-reading` under a title, `arabic-inline` in a line of English, `arabic-word` for a headword. Amiri has one weight, so Arabic is always 400, even inside a bold line.
+
+On the home page the first screen's h1 is the largest English, and section titles stop at its size. Small type there is 14px for notes and 13px for captions, and the sentence that says who the app is for is never smaller than body text on a phone, except on the shortest screens.
+
 **Files**
 
 - Stacks: `"Amiri Subset", "Noto Naskh Arabic", serif` and `"Inter Site", "Inter Fallback", system-ui, sans-serif`.
@@ -154,7 +171,9 @@ Published English stays as stored, straight quotes included. Curly quotes are fo
 
 ## Layout
 
-The home page has its own wide measure in `src/styles/home.css`. Content pages hold one column of about 46rem. Arabic and English keep their own edges: Arabic right, English left. Every page passes at 390×664, 375×553 and 1280×640, with no sideways scroll.
+The home page has its own wide measure in `src/styles/home.css`. Content pages hold one column of about 46rem, and their header and footer share its edges. Arabic and English keep their own edges: Arabic right, English left, also inside a list chip. Every Arabic block ends on the column's right edge.
+
+**Proximity.** A label sits closer to what it names than to anything else: a headword and its meaning are one unit, an English line sits 2px under its Arabic and 40px above the next, a grammar note sits under its word. Article cards run two to a row on a phone and three on a laptop. Every page passes at 390×664, 375×553 and 1280×640, with no sideways scroll.
 
 ## Components
 
@@ -178,9 +197,9 @@ The home page has its own wide measure in `src/styles/home.css`. Content pages h
 
 **Audio.** A native `<audio controls>`. On the site's own files use `preload="metadata"`, so the length shows. The Worker answers Range for them, because iPhone Safari needs it and static assets don't give it. On the app's Supabase bucket use `preload="none"`, so nothing moves until a press.
 
-**Attribution.** "Ibn al-Jawzi, Ṣayd al-Khāṭir", quiet, wherever the line appears.
+**Attribution.** "Ibn al-Jawzī, Ṣayd al-Khāṭir", quiet, wherever the line appears.
 
-**Footer.** On every page: the mark, browse links, then Privacy, Terms, Contact, Account deletion, Analytics choice. That last page is the only consent UI anywhere: GA4 is off until someone switches it on there. Then "Amiri and Inter are used under the SIL Open Font License. App Store is a trademark of Apple Inc. Google Play is a trademark of Google LLC."
+**Footer.** On every page, after a hairline: the mark with the name, browse links, then after a second hairline Privacy, Terms, Contact, Account deletion, Analytics choice. That last page is the only consent UI anywhere: GA4 is off until someone switches it on there. Then "Amiri and Inter are used under the SIL Open Font License. App Store is a trademark of Apple Inc. Google Play is a trademark of Google LLC."
 
 **Page frame.** `html lang="en"`, `<main>`, then `<footer>`. One `h1`, one canonical and one JSON-LD block in `<head>`.
 

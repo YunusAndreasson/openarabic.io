@@ -29,13 +29,13 @@ const jsonLd = [
 
 <Content
   title={`${root.meaning} in Arabic — ${root.letters} | OpenArabic`}
-  description={`${root.letters} means "${root.meaning}" in Arabic. Hear the pronunciation and see it used in real example sentences with grammar notes.`}
+  description={`${root.letters} means "${root.meaning}" in Arabic. Hear it read aloud and see it in sentences from classical texts, with grammar notes.`}
   canonical={path}
   ogType="article"
   jsonLd={jsonLd}
   crumbs={[{ name: 'Dictionary', path: '/dictionary' }, { name: root.meaning }]}
 >
-  <h1 class="word-head"><span class="big-word" lang="ar" dir="rtl">{root.letters}</span> <span class="word-en"><span data-stored>{root.meaning}</span> in Arabic</span></h1>
+  <h1 class="word-head"><span class="big-word" lang="ar" dir="rtl">{root.letters}</span> <span class="word-en"><span data-stored>{root.meaning}</span> <span class="word-en-tail">in Arabic</span></span></h1>
   <p class="word-intro"><bdi class="inline-ar" lang="ar">{root.letters}</bdi> is how you say “<span data-stored>{root.meaning}</span>” in Arabic.</p>
   {enrichment && <p class="quiet word-facts">Root <bdi class="inline-ar" lang="ar">{enrichment.triliteralRoot}</bdi> <span data-stored>{enrichment.rootTransliteration}. {enrichment.partOfSpeech}. {enrichment.headwordTransliteration}.</span></p>}
   {(ar || en) && (
@@ -58,17 +58,18 @@ const jsonLd = [
       <h2>Example sentence</h2>
       <div class="example">
         <p class="reading" lang="ar" dir="rtl">{first.sentenceArabic}</p>
-        <p data-stored>{first.sentenceEnglish}</p>
-        <p class="quiet"><bdi class="inline-ar" lang="ar">{first.wordForm}</bdi> <span data-stored>{first.english}. {first.grammarNote}</span></p>
-        <p><a href={first.articlePath}>From <span data-stored>{first.articleTitle}</span></a></p>
+        <p class="en" data-stored>{first.sentenceEnglish}</p>
+        <p class="example-word"><bdi class="inline-ar" lang="ar">{first.wordForm}</bdi> <span data-stored>{first.english}</span></p>
+        {first.grammarNote && <p class="quiet" data-stored>{first.grammarNote}</p>}
+        <p class="example-from"><a href={first.articlePath}>From <span data-stored>{first.articleTitle}</span></a></p>
       </div>
-      <p class="quiet">The English is machine-translated.</p>
+      <p class="quiet section-note">The English is machine-translated.</p>
     </section>
   )}
 
   <Offer from="word" heading="Practise this word in the app">
     <p>One tap gives you the meaning, a grammar note and audio.</p>
-    <p>Add the words you don’t know. Practice them with spaced repetition.</p>
+    <p>Add the words you don’t know. Practise them with spaced repetition.</p>
   </Offer>
 
   {enrichment?.usageNote && <section><h2>How it is used</h2><p class="prose" data-stored>{enrichment.usageNote}</p></section>}
@@ -89,9 +90,10 @@ const jsonLd = [
       {rest.map((example: any) => (
         <div class="example">
           <p class="reading" lang="ar" dir="rtl">{example.sentenceArabic}</p>
-          <p data-stored>{example.sentenceEnglish}</p>
-          <p class="quiet"><bdi class="inline-ar" lang="ar">{example.wordForm}</bdi> <span data-stored>{example.english}. {example.grammarNote}</span></p>
-          <p><a href={example.articlePath}>From <span data-stored>{example.articleTitle}</span></a></p>
+          <p class="en" data-stored>{example.sentenceEnglish}</p>
+          <p class="example-word"><bdi class="inline-ar" lang="ar">{example.wordForm}</bdi> <span data-stored>{example.english}</span></p>
+          {example.grammarNote && <p class="quiet" data-stored>{example.grammarNote}</p>}
+          <p class="example-from"><a href={example.articlePath}>From <span data-stored>{example.articleTitle}</span></a></p>
         </div>
       ))}
     </section>
@@ -103,5 +105,5 @@ const jsonLd = [
     </section>
   )}
   {related.length > 0 && <section><h2>Related words</h2><Entries entries={related} /></section>}
-  {enrichment && <p class="quiet source">Definitions synthesised from <a href={enrichment.sourceUrl} rel="noopener"><span data-stored>{enrichment.source}</span></a>.</p>}
+  {enrichment && <p class="quiet source">Definitions summarised from <a href={enrichment.sourceUrl} rel="noopener"><span data-stored>{enrichment.source}</span></a>.</p>}
 </Content>

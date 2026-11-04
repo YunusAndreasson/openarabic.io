@@ -6,7 +6,7 @@ import Offer from '../../components/Offer.astro';
 import { imageOf } from '../../lib/images.mjs';
 import { escapeHtml, wordHtml } from '../../lib/segments.mjs';
 import { site } from '../../lib/snapshot.mjs';
-import { articleSlug, audioUrl, authorSlug, levelName, wordSlug, CATEGORIES } from '../../lib/words.mjs';
+import { articleSlug, audioUrl, authorSlug, levelName, shownName, wordSlug, CATEGORIES } from '../../lib/words.mjs';
 
 export function getStaticPaths() {
   return site().published.map((article) => ({ params: { slug: articleSlug(article) }, props: { article } }));
@@ -35,12 +35,13 @@ const jsonLd = [
 ];
 ---
 
-<Content title={`${article.title} - OpenArabic`} description={article.summary} storedDescription canonical={path} ogType="article" ogImage={image?.og} jsonLd={jsonLd}>
+<Content title={`${article.title} | OpenArabic`} description={article.summary} storedDescription canonical={path} ogType="article" ogImage={image?.og} jsonLd={jsonLd}>
   <h1 class="article-title" data-stored>{article.title}</h1>
-  <p class="quiet"><a href={`/author/${authorSlug(author)}`}><span data-stored>{author.name}</span></a>, <span data-stored>{article.book}</span>. <a href={`/category/${category.name}`}>{CATEGORIES[category.name] ?? category.name}</a>. {levelName(article.difficulty_level)}.</p>
+  <p class="quiet meta article-meta"><span><a href={`/author/${authorSlug(author)}`}><span data-stored>{shownName(author.name)}</span></a>, <span data-stored>{article.book}</span></span> <span class="sep" aria-hidden="true">·</span> <a href={`/category/${category.name}`}>{CATEGORIES[category.name] ?? category.name}</a> <span class="level">{levelName(article.difficulty_level)}</span></p>
   {image && <img class="article-image" src={image.src(960)} srcset={image.srcset} sizes="(min-width: 44rem) 42rem, 100vw" width={image.width} height={image.height} alt="" decoding="async" fetchpriority="high" />}
   {audio && <audio class="article-audio" controls preload="none" src={audio} aria-label="This text read aloud in Arabic"></audio>}
   <p class="quiet disclosures">The English is machine-translated. The audio uses AI voices.</p>
+  {html.includes('class=w') && <p class="tap-hint" aria-hidden="true">Tap a word you don’t know.</p>}
   <a class="skip" href="#after-h">Skip past the text</a>
   <div id="reader" data-gl={`/gl/${article.id}.json`}>
     <p id="hint" class="vh" hidden>Each Arabic line is a button. Press it to go through its words, then press a word for its meaning.</p>
@@ -54,6 +55,6 @@ const jsonLd = [
     <button id="sc" type="button" popovertarget="sheet" popovertargetaction="hide">Close</button>
   </div>
   <Offer from="read" id="after" />
-  {more.length > 0 && <section><h2>More from <span data-stored>{author.name}</span></h2><ArticleList articles={more} /></section>}
+  {more.length > 0 && <section><h2>More from <span data-stored>{shownName(author.name)}</span></h2><ArticleList articles={more} /></section>}
   <script is:inline src="/reader.js" defer></script>
 </Content>

@@ -11,8 +11,8 @@ Terms
 Contact
 Account deletion
 Analytics choice
-A line from Ibn al-Jawzi. Each word opens its meaning.
-The line from Ibn al-Jawzi, read aloud in Arabic
+A line from Ibn al-Jawzī. Each word opens its meaning.
+The line from Ibn al-Jawzī, read aloud in Arabic
 The app’s word card for الْمِسْكُ, showing its meaning, audio button and root.
 The app’s reader, with an English line above each classical Arabic line.
 The app’s voice review, showing one Arabic word while it listens for your answer.
@@ -52,12 +52,12 @@ The app's reader, with English above each classical Arabic line.
 The app playing a text aloud.
 The app's voice review, listening for your answer to one Arabic word.
 The app's memory horizon, showing how long practised words hold.
-Ibn al-Jawzi
+Ibn al-Jawzī
 Ibn al-Qayyim
-an-Nawawi
+an-Nawawī
 Ibn Taymiyyah
-al-Bukhari
-adh-Dhahabi
+al-Bukhārī
+adh-Dhahabī
 Read
 Tap
 Listen
@@ -71,7 +71,7 @@ The app’s reader: an English line above each classical Arabic line, with parts
 The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from.
 The app’s playlist of texts, each with its scholar and length, and a Play all button.
 A man seen from behind, small in a dark room, reading a book at a table by a window at dusk.
-Add the words you don’t know. Practice them with spaced repetition.
+Add the words you don’t know. Practise them with spaced repetition.
 The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.
 The app’s memory horizon: how many practised words hold for days, weeks and months.
 The app’s list of your words, each with its meaning and a bar for how strong it is.
@@ -116,19 +116,19 @@ Take the English away
 Bring the English back
 You choose 10, 20 or 30 new words a day. New words pause by themselves when your recall drops.
 In the app, the English stays above the line.
-Free as sadaqah jariyah.
+Free as ṣadaqah jāriyah.
 
 # Content pages. {} is text from the database or the enrichment file, shown as stored. Templates must match a whole string.
 {} in Arabic — {} | OpenArabic
-{} means "{}" in Arabic. Hear the pronunciation and see it used in real example sentences with grammar notes.
-{} - OpenArabic
-Texts by {} - OpenArabic
+{} means "{}" in Arabic. Hear it read aloud and see it in sentences from classical texts, with grammar notes.
+{} | OpenArabic
+Texts by {} | OpenArabic
 Excerpts from classical works by {}, in Arabic with English under every line.
 Excerpts from classical works on {}, in Arabic with English under every line.
 {}: classical Arabic texts | OpenArabic
-Arabic words starting with {} | OpenArabic Dictionary
-Arabic words starting with {}
-{} words whose English meaning starts with {}.
+Arabic words by meaning: {} | OpenArabic Dictionary
+Arabic words by meaning: {}
+{} Arabic words whose English meaning starts with {}.
 Arabic words whose English meaning starts with {}, each with audio and example sentences from classical texts.
 Dictionary / {}
 From {}
@@ -141,7 +141,7 @@ This page does not exist.
 Search the dictionary or go to the home page.
 Browse
 Dictionary Al-Fawaid Creed Fiqh Ḥadīth Qurʾān Sīrah Iḥsān Tafsīr
-Ibn al-Jawzi Ibn al-Qayyim an-Nawawi Ibn Taymiyyah al-Bukhari adh-Dhahabi
+Ibn al-Jawzī Ibn al-Qayyim an-Nawawī Ibn Taymiyyah al-Bukhārī adh-Dhahabī
 Privacy Terms Contact Account deletion Analytics choice
 Account Deletion | OpenArabic
 How to delete your OpenArabic account and its data.
@@ -161,27 +161,24 @@ Account deletion is permanent and cannot be undone.
 Al-Fawaid by Ibn al-Qayyim al-Jawziyya: Arabic and English (PDF) | OpenArabic
 Download Al-Fawaid (الفوائد) by Ibn al-Qayyim al-Jawziyya as a PDF, with the Arabic and English side by side.
 Al-Fawaid
-By Ibn al-Qayyim al-Jawziyya, .
 Download the PDF 411 pages · 18 MB
-The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase.
+The Arabic and English sit side by side, and the English keeps to the Arabic word order, so you can follow the original phrase by phrase.
 Read classical texts in the app
 About the book
-Al-Fawaid, "the benefits" or points of benefit, is one of Ibn al-Qayyim's best-loved shorter works. Rather than a systematic treatise, it gathers reflections that came to him over the years: a short meditation on a verse of the Qur'an, an insight drawn from a hadith, a note on the ailments and cures of the heart.
-He is said to have recorded each "benefit" as it occurred to him, which gives the book its character: a string of self-contained pearls rather than chapters building a single argument. This edition presents its 209 sections.
+Al-Fawaid, "the benefits", is one of Ibn al-Qayyim's best-loved shorter works. It collects reflections that came to him over the years: a few lines on a verse of the Qur'an, a point drawn from a hadith, a note on the ailments of the heart and their cures.
+He is said to have written each benefit down as it occurred to him, so the book makes no single argument. Each section stands on its own, and you can open it anywhere. This edition has 209 sections.
 A sample from the book
 What's inside
 About the author
-Ibn al-Qayyim al-Jawziyya, in full Shams al-Din Muhammad ibn Abi Bakr ibn Ayyub al-Zurʿi al-Dimashqi al-Hanbali, was a scholar of the Hanbali school in Damascus, born in 1292 (691 AH) and died in 1350 (751 AH). His name, "son of the qayyim of al-Jawziyya", comes from his father, who directed the al-Jawziyya madrasa in the city.
-He was the foremost student of Ibn Taymiyya, studying with him for some sixteen years and sharing his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zad al-Maʿad, Madarij al-Salikin and Iʿlam al-Muwaqqiʿin. He is buried at the Bab al-Saghir cemetery in Damascus.
+Ibn al-Qayyim al-Jawziyya, in full Shams al-Din Muhammad ibn Abi Bakr ibn Ayyub al-Zurʿi al-Dimashqi al-Hanbali, was a scholar of the Hanbali school in Damascus. He was born in 1292 (691 AH) and died in 1350 (751 AH). His name, "son of the qayyim of al-Jawziyya", comes from his father, who directed the al-Jawziyya madrasa in the city.
+He was the foremost student of Ibn Taymiyyah. He studied with him for some sixteen years and shared his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zad al-Maʿad, Madarij al-Salikin and Iʿlam al-Muwaqqiʿin. He is buried at the Bab al-Saghir cemetery in Damascus.
 Biographical details from Wikipedia.
 Contact | OpenArabic
 How to reach OpenArabic.
 Write to yunus@edenmind.com.
 Also on X, Instagram and Facebook.
 Arabic Dictionary: Words with Audio and Example Sentences | OpenArabic
-Arabic words with their English meanings, audio, and example sentences from classical texts.
 Arabic dictionary
-Arabic words with their meanings, audio, and example sentences from classical texts.
 Search the dictionary
 A meaning or an Arabic word
 Search
@@ -304,12 +301,12 @@ Meaning
 In a classical text
 From
 Practise this word in the app
-Add the words you don't know. Practice them with spaced repetition.
+Add the words you don't know. Practise them with spaced repetition.
 How it is used
 Words from the same root
 Common questions
 Related words
-Definitions synthesised from .
+Definitions summarised from .
 Easier
 Advanced
 Expert
@@ -332,7 +329,7 @@ Words from the same root
 Related words
 Common questions
 Meaning
-Definitions synthesised from {}.
+Definitions summarised from {}.
 Practise this word in the app
 Arabic
 English
@@ -352,7 +349,7 @@ More example sentences
 Meaning of
 The PDF is free to share.
 Download the free PDF
-The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.
+The Arabic and English sit side by side, and the English keeps to the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.
 Al-Fawaid by Ibn al-Qayyim al-Jawziyya — Arabic & English (Free PDF) | OpenArabic
 Download Al-Fawaid (الفوائد) by Ibn al-Qayyim al-Jawziyya as a free PDF, with the Arabic and English side by side.
 All content on OpenArabic, including articles, translations, audio and educational materials, is owned by OpenArabic or licensed to us. You may use it for personal learning but may not redistribute, republish or use it commercially. The exception is the Al-Fawaid PDF, which is free to share.
@@ -391,7 +388,7 @@ English above every Arabic line.
 Every text plays English first, then Arabic, or Arabic only.
 Excerpts from 22 classical works by six scholars
 Free. No ads. No subscription.
-Ibn al-Jawzi, Ibn al-Qayyim, an-Nawawi, Ibn Taymiyyah, al-Bukhari, adh-Dhahabi.
+Ibn al-Jawzī, Ibn al-Qayyim, an-Nawawī, Ibn Taymiyyah, al-Bukhārī, adh-Dhahabī.
 Ibn al-Qayyim, Ighāthat al-Lahfān.
 If you can sound out Arabic script, you can start reading classical texts.
 Nothing explains it
@@ -405,3 +402,26 @@ The audio uses AI voices.
 Words return when your predicted recall falls to 90%.
 You answer out loud before the app shows the meaning.
 rtl
+
+# Reader, 2026-11-03: the visible hint above a text that can be tapped.
+Tap a word you don’t know.
+
+# Copy review, 2026-11-03. Each page's difficulty line is counted from its own list; the old one was false on an-Nawawī and Tafsīr.
+Sorted by difficulty. {} of {} are easier.
+Sorted by difficulty. {} of {} is easier.
+Sorted by difficulty. All {} are advanced.
+Sorted by difficulty. All {} are easier.
+Arabic words whose English meaning starts with {}, each with audio and example sentences from classical texts.
+Arabic words with their meanings, audio and example sentences from classical texts.
+Arabic words with their English meanings, audio and example sentences from classical texts.
+Inside the app
+This page is for the OpenArabic app by Yunus Andréasson.
+{} Arabic word whose English meaning starts with {}.
+
+# Transliteration, 2026-11-03: long vowels and emphatic letters marked, as in the stored work titles. docs/decisions/2026-11-03-transliteration.md.
+Al-Fawāʾid
+al-Imām al-Bukhārī
+By Ibn Qayyim al-Jawziyyah, .
+Al-Fawāʾid, "the benefits", is one of Ibn al-Qayyim's best-loved shorter works. It collects reflections that came to him over the years: a few lines on a verse of the Qurʾān, a point drawn from a ḥadīth, a note on the ailments of the heart and their cures.
+Ibn Qayyim al-Jawziyyah, in full Shams al-Dīn Muḥammad ibn Abī Bakr ibn Ayyūb al-Zurʿī al-Dimashqī al-Ḥanbalī, was a scholar of the Ḥanbalī school in Damascus. He was born in 1292 (691 AH) and died in 1350 (751 AH). His name, "son of the qayyim of al-Jawziyyah", comes from his father, who directed the al-Jawziyyah madrasa in the city.
+He was the foremost student of Ibn Taymiyyah. He studied with him for some sixteen years and shared his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zād al-Maʿād, Madārij al-Sālikīn and Iʿlām al-Muwaqqiʿīn. He is buried at the Bāb al-Ṣaghīr cemetery in Damascus.

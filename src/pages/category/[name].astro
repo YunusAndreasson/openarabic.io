@@ -3,7 +3,7 @@ import Content from '../../layouts/Content.astro';
 import ArticleList from '../../components/ArticleList.astro';
 import Offer from '../../components/Offer.astro';
 import { site } from '../../lib/snapshot.mjs';
-import { articleSlug, CATEGORIES } from '../../lib/words.mjs';
+import { articleSlug, difficultyLine, shownName, CATEGORIES } from '../../lib/words.mjs';
 
 export function getStaticPaths() {
   return site().categories.filter((category) => site().articlesIn(category.id).length > 0).map((category) => ({ params: { name: category.name }, props: { category } }));
@@ -22,7 +22,7 @@ const jsonLd = [
 
 <Content title={`${label}: classical Arabic texts | OpenArabic`} description={`Excerpts from classical works on ${label}, in Arabic with English under every line.`} canonical={path} jsonLd={jsonLd}>
   <h1>{label}</h1>
-  <p class="lead">Sorted by difficulty. Most texts are advanced; some are easier.</p>
-  <ArticleList articles={articles} authorOf={(article: any) => site().author(article.author_id).name} />
+  <p class="lead">{difficultyLine(articles)}</p>
+  <ArticleList articles={articles} authorOf={(article: any) => shownName(site().author(article.author_id).name)} />
   <Offer from="read" />
 </Content>

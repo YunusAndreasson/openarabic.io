@@ -2,6 +2,28 @@
 export const slugifyText = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 export const wordSlug = (root) => `${slugifyText(root.meaning) || 'word'}-${root.id}`;
 export const articleSlug = (article) => `${slugifyText(article.title)}-${article.id}`;
+/**
+ * Author names as shown: the stored name with its long vowels and emphatic letters marked, in the same
+ * system as the stored work titles (Ṣayd al-Khāṭir). Slugs, page titles and JSON-LD keep the stored name.
+ * Still text from the database, so wherever it shows it keeps `data-stored`.
+ * docs/decisions/2026-11-03-transliteration.md.
+ */
+const SHOWN = {
+  'Ibn al-Jawzi': 'Ibn al-Jawzī',
+  'an-Nawawi': 'an-Nawawī',
+  'al-Imam al-Bukhari': 'al-Imām al-Bukhārī',
+  'al-Bukhari': 'al-Bukhārī',
+  'adh-Dhahabi': 'adh-Dhahabī',
+  'Ibn Kathir': 'Ibn Kathīr',
+  'Ibn Hajar': 'Ibn Ḥajar',
+  Malik: 'Mālik',
+  'ash-Shafii': 'ash-Shāfiʿī',
+  'Ahmad ibn Hanbal': 'Aḥmad ibn Ḥanbal',
+  'at-Tirmidhi': 'at-Tirmidhī',
+  'as-Suyuti': 'as-Suyūṭī',
+  'at-Tabari': 'aṭ-Ṭabarī',
+};
+export const shownName = (name) => SHOWN[name] ?? name;
 export const authorSlug = (author) => `${slugifyText(author.name) || 'author'}-${author.id}`;
 export const AUDIO = 'https://kkmnzbeugdoajtzfjkxg.supabase.co/storage/v1/object/public/audio/';
 export const audioUrl = (file) => (!file ? null : file.startsWith('http') ? file : AUDIO + file);
@@ -31,4 +53,12 @@ export function bucketOf(meaning) {
 export const bucketLabel = (bucket) => (bucket === '0-9' ? '0–9' : bucket === 'other' ? 'Other' : bucket.toUpperCase());
 
 /** Levels 1 to 3 are the ledger's "easier", 4 and 5 are Advanced and Expert. */
+/** The sentence above a list of texts, true for that list. Levels 1 to 3 are "easier". */
+export function difficultyLine(articles) {
+  const easier = articles.filter((article) => article.difficulty_level <= 3).length;
+  const total = articles.length;
+  if (easier === 0) return `Sorted by difficulty. All ${total} are advanced.`;
+  if (easier === total) return `Sorted by difficulty. All ${total} are easier.`;
+  return `Sorted by difficulty. ${easier} of ${total} ${easier === 1 ? 'is' : 'are'} easier.`;
+}
 export const levelName = (level) => (level <= 3 ? 'Easier' : level === 4 ? 'Advanced' : 'Expert');

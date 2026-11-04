@@ -1,38 +1,62 @@
 /* DESIGN.md `Content surfaces`: every page but the home page. Tokens only. */
 :root { --content-max: 46rem; }
 
-.top { display: flex; justify-content: space-between; align-items: center; max-width: var(--space-page-max); margin-inline: auto; padding: var(--space-word) var(--space-gutter); font-size: var(--type-small-size); }
+.top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-thought); max-width: var(--content-max); margin-inline: auto; padding: var(--space-thought) var(--space-gutter); font-size: var(--type-small-size); }
 .top a { display: inline-flex; align-items: center; min-height: 44px; }
-.top-name { color: var(--color-on-surface); font-weight: 500; text-decoration: none; }
+.top-name { gap: 10px; color: var(--color-on-surface); font-size: 1.0625rem; font-weight: 500; letter-spacing: -0.01em; text-decoration: none; }
+.top-name svg { color: var(--color-primary); }
+/* The app is the one action a content page offers, so it is the one filled control in the header. */
+.top-app { min-height: 40px; padding-inline: var(--space-thought); color: var(--color-on-primary); background: var(--color-primary); border-radius: var(--radius-control); font-weight: 500; text-decoration: none; transition: background-color var(--duration-state) var(--ease); }
+.top .top-app { min-height: 44px; }
+.top-app:hover, .top-app:active { background: var(--color-primary-hover); }
+.top-app:focus-visible, .top-name:focus-visible { outline-offset: 3px; }
 
 .content { max-width: var(--content-max); margin-inline: auto; padding: 0 var(--space-gutter); }
 .content section { margin-top: var(--fluid-beat-gap); }
-.content h1 { font-size: clamp(1.75rem, 6vw, 2.5rem); font-weight: 500; line-height: 1.15; letter-spacing: -0.01em; }
-.content h2 { font-size: var(--type-beat-size); font-weight: var(--type-beat-weight); line-height: var(--type-beat-line-height); margin: 0 0 var(--space-thought); }
+.content h1 { font-size: clamp(2rem, 6.4vw, 2.75rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; }
+.content :is(h1, h2):not(:has([lang="ar"])) { text-wrap: balance; }
+.content h2 { font-size: var(--type-beat-size); font-weight: 500; line-height: var(--type-beat-line-height); letter-spacing: -0.01em; margin: 0 0 var(--space-thought); }
 .content h3 { font-size: var(--type-body-size); font-weight: 500; margin: var(--space-thought) 0 var(--space-word); }
 .content h2:focus { outline: 0; }
 .content p + p { margin-top: var(--space-word); }
-.lead { margin-top: var(--space-word); color: var(--color-on-surface); }
+.lead { max-width: var(--space-measure); margin-top: var(--space-word); color: var(--color-on-surface-quiet); }
 .prose { max-width: var(--space-measure); }
-.crumbs { margin-bottom: var(--space-thought); }
+.crumbs { margin-bottom: var(--space-word); }
+.crumbs a { color: var(--color-on-surface-quiet); }
+.crumbs a:hover { color: var(--color-on-surface); }
 a:hover { text-decoration-thickness: 2px; }
 
+/* English running text wraps without a lone last word. Never where Arabic is in the box: DESIGN.md `Typography`. */
+.content :is(p, li, dd):not([lang="ar"], :has([lang="ar"])) { text-wrap: pretty; }
 /* Arabic: DESIGN.md `Typography`. No letter-spacing, no justification, no text-wrap. */
-[lang="ar"] { font-family: var(--type-arabic-reading-family); letter-spacing: 0; }
-.reading { font-size: var(--type-arabic-reading-size); line-height: var(--type-arabic-reading-line-height); text-align: right; max-width: var(--space-measure-arabic); }
+[lang="ar"] { font-family: var(--type-arabic-reading-family); font-weight: 400; letter-spacing: 0; }
+.reading { font-size: var(--type-arabic-reading-size); line-height: var(--type-arabic-reading-line-height); text-align: right; max-width: var(--space-measure-arabic); margin-left: auto; }
 .inline-ar { font-size: var(--type-arabic-inline-size); line-height: var(--type-arabic-inline-line-height); }
 .big-word { display: block; font-size: var(--fluid-arabic-word); font-weight: 400; line-height: var(--type-arabic-word-line-height); text-align: right; overflow-wrap: anywhere; }
-.word-head { display: block; }
-.word-en { display: block; font-size: 1.5rem; font-weight: 400; margin-top: var(--space-word); }
+.word-head { display: grid; justify-items: end; }
+.word-en { justify-self: start; margin-top: calc(-1 * var(--space-word)); font-size: clamp(1.75rem, 5.6vw, 2.5rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; }
+.word-en-tail { color: var(--color-on-surface-quiet); font-weight: 400; }
+.word-intro { margin-top: var(--space-thought); }
 .word-facts { margin-top: var(--space-word); }
+.book-ar + h1 { margin-top: calc(-1 * var(--space-thought)); }
 .book-ar { font-size: var(--fluid-arabic-word); line-height: var(--type-arabic-word-line-height); text-align: right; }
-.sounds { display: grid; gap: var(--space-word); margin-top: var(--space-thought); }
+@media (min-width: 56.25rem) {
+  /* On a laptop the two share one row, meaning left and Arabic right, on a common baseline. */
+  .word-head { grid-template-columns: minmax(0, 1fr) auto; align-items: last baseline; column-gap: var(--space-block); }
+  .word-head .big-word { grid-column: 2; grid-row: 1; }
+  .word-en { grid-column: 1; grid-row: 1; margin-top: 0; }
+}
+.sounds { display: grid; gap: var(--space-word); margin-top: var(--space-block); }
 .sound { display: grid; grid-template-columns: 4.5rem 1fr; align-items: center; max-width: var(--space-measure); }
 .content .sound + .sound { margin-top: 0; }
 audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-measure); }
 
 .senses, .topics, .legal ul, .legal ol { margin: 0; padding-left: 1.25em; display: grid; gap: var(--space-word); }
 .example + .example { margin-top: var(--space-block); padding-top: var(--space-block); border-top: 1px solid var(--color-outline); }
+.content .example-word { margin-top: var(--space-thought); font-weight: 500; }
+.content .example-word + .quiet { margin-top: 2px; max-width: var(--space-measure); }
+.content .example-from { margin-top: var(--space-word); font-size: var(--type-small-size); line-height: var(--type-small-line-height); }
+.content .section-note { margin-top: var(--space-thought); }
 .source { margin-top: var(--space-block); }
 .faq dt { font-weight: 500; margin-top: var(--space-thought); }
 .faq dd { margin: var(--space-word) 0 0; color: var(--color-on-surface-quiet); }
@@ -40,46 +64,85 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 /* The one offer */
 .offer { margin-top: var(--fluid-beat-gap); padding: var(--space-block) var(--space-thought); background: var(--color-surface-raised); border: 1px solid var(--color-outline); border-radius: var(--radius-card); }
 .offer .stores { margin-top: var(--space-thought); }
+.offer .price { margin-top: var(--space-thought); font-weight: 500; }
+.content .offer .price + .quiet { margin-top: 2px; }
+.price { font-weight: 500; }
 .stores { display: flex; flex-wrap: wrap; gap: var(--space-store-gap); }
 .badge { display: inline-block; line-height: 0; }
 .rating { margin-top: var(--space-word); }
 .button { display: inline-flex; align-items: center; min-height: 48px; padding-inline: var(--space-store-inset); background: var(--color-primary); color: var(--color-on-primary); border-radius: var(--radius-control); text-decoration: none; }
 .button:hover { background: var(--color-primary-hover); }
+.button { font-weight: 500; }
+.button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .download { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-thought); margin-block: var(--space-thought); }
 
 /* Lists */
-.entries { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(14rem, 100%), 1fr)); gap: var(--space-word); }
-.entries a, .entry-plain { display: flex; justify-content: space-between; align-items: center; gap: var(--space-thought); min-height: 56px; padding: 0 var(--space-thought); border: 1px solid var(--color-outline); border-radius: var(--radius-control); color: var(--color-on-surface); text-decoration: none; font-size: var(--type-small-size); }
-.entries a:hover { border-color: var(--color-primary); }
-.entry-ar { font-size: var(--type-arabic-inline-size); line-height: 1.4; }
+.entries { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(10rem, 100%), 1fr)); gap: var(--space-word); }
+.entries a, .entry-plain { display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: center; gap: var(--space-word); height: 100%; min-height: 56px; padding: var(--space-word) 12px; border: 1px solid var(--color-outline); border-radius: var(--radius-control); color: var(--color-on-surface); text-decoration: none; font-size: var(--type-small-size); line-height: 1.25; transition: border-color var(--duration-state) var(--ease), background-color var(--duration-state) var(--ease); }
+.entries a:hover { border-color: var(--color-primary); background: var(--color-surface-raised); }
+.entries a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.entry-plain { color: var(--color-on-surface-quiet); border-style: dashed; }
+.entry-ar { flex: none; font-size: var(--type-arabic-inline-size); line-height: 1.4; }
 .letters { list-style: none; margin: var(--space-thought) 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-word); }
-.letters a { display: inline-flex; justify-content: center; align-items: center; min-width: 44px; min-height: 44px; padding-inline: var(--space-word); border: 1px solid var(--color-outline); border-radius: var(--radius-control); text-decoration: none; }
+.letters a { display: inline-flex; justify-content: center; align-items: center; min-width: 44px; min-height: 44px; padding-inline: var(--space-word); border: 1px solid var(--color-outline); border-radius: var(--radius-control); text-decoration: none; transition: border-color var(--duration-state) var(--ease); }
+.letters a:hover { border-color: var(--color-primary); }
 .letters [aria-current] { background: var(--color-primary); color: var(--color-on-primary); }
 .search { display: flex; gap: var(--space-word); margin-block: var(--space-thought); }
-.search input { flex: 1; min-width: 0; min-height: 48px; padding-inline: var(--space-thought); font: inherit; color: var(--color-on-surface); background: var(--color-surface-raised); border: 1px solid var(--color-outline); border-radius: var(--radius-control); }
-.search button { min-height: 48px; padding-inline: var(--space-thought); font: inherit; color: var(--color-on-primary); background: var(--color-primary); border: 0; border-radius: var(--radius-control); cursor: pointer; }
+.search input:focus-visible, .search button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.search input::placeholder { color: var(--color-on-surface-quiet); opacity: 1; }
+.search button:hover { background: var(--color-primary-hover); }
+.search input { flex: 1; min-width: 0; min-height: 48px; padding-inline: var(--space-thought); font: inherit; color: var(--color-on-surface); background: var(--color-surface-raised); border: 1px solid color-mix(in oklch, var(--color-on-surface-quiet) 60%, var(--color-surface)); border-radius: var(--radius-control); }
+/* A field's edge is how it is found, so it meets 3:1 against the page (3.4:1); a hairline would be 1.5:1. */
+.search button { min-height: 48px; padding-inline: var(--space-store-inset); font: inherit; font-weight: 500; color: var(--color-on-primary); background: var(--color-primary); border: 0; border-radius: var(--radius-control); cursor: pointer; }
 #results { margin-block: var(--space-block); }
 
-.cards { list-style: none; margin: var(--space-block) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(16rem, 100%), 1fr)); gap: var(--space-block) var(--space-thought); }
+.cards { list-style: none; margin: var(--space-block) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-block) 12px; }
 .card a { display: block; color: var(--color-on-surface); text-decoration: none; }
 .card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--radius-control); background: var(--color-surface-raised); }
-.card-title { display: block; margin-top: var(--space-word); font-weight: 500; }
+.card-title { display: block; margin-top: var(--space-word); font-size: 1rem; font-weight: 500; line-height: 1.25; }
+.card .quiet { margin-top: 2px; font-size: 0.8125rem; line-height: 1.35; }
 .card a:hover .card-title { text-decoration: underline; }
-.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr)); gap: var(--space-thought); }
-.shots img { width: 100%; height: auto; aspect-ratio: 760 / 1652; border-radius: var(--radius-capture); border: 1px solid var(--color-outline); }
+.card img { transition: filter var(--duration-state) var(--ease); }
+@media (hover: hover) { .card a:hover img { filter: brightness(1.12); } }
+.card a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; border-radius: var(--radius-control); }
+@media (min-width: 56.25rem) { .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-block) var(--space-thought); } }
+
+/* Level: a quiet tag, the same in a card and under a title. Not a colour, so it never competes with grammar or links. */
+.level { display: inline-block; padding: 0 6px; border: 1px solid var(--color-outline); border-radius: 4px; font-size: 0.8125rem; line-height: 1.4; white-space: nowrap; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--space-word); }
+.meta a { color: var(--color-on-surface-quiet); }
+.meta a:hover { color: var(--color-on-surface); }
+.sep { color: var(--color-outline); }
+/* Phones are sent to the store, so this page is read on a laptop: three screens side by side, at any width. */
+.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.shots picture { display: block; }
+.shots img { display: block; width: 100%; height: auto; aspect-ratio: 1206 / 2622; border-radius: var(--radius-capture); border: 1px solid var(--color-outline); }
 .qr-laptop { display: none; margin-top: var(--space-thought); }
+/* The QR: dark modules on a light plate, as on the home page. Without these the SVG fills the column and draws nothing. */
+.qr-laptop { width: fit-content; padding: 6px; background: var(--color-on-surface); border-radius: 10px; line-height: 0; }
+.qr { display: block; width: 104px; height: 104px; shape-rendering: crispEdges; }
+.qr path { fill: none; stroke: var(--color-surface); stroke-width: 1; }
 @media (min-width: 56.25rem) { .qr-laptop { display: block; } }
 
 .legal { max-width: var(--space-measure); }
-.legal h2 { margin-top: var(--space-block); }
+.legal h2 { margin-top: var(--fluid-beat-gap); }
+.legal h1 + .quiet { margin-top: var(--space-word); }
+.content .legal p + p, .content .prose + .prose { margin-top: var(--space-thought); }
+.legal h3 + p { margin-top: 0; }
+.legal h1 + .quiet + p, .legal h1 + p { margin-top: var(--space-block); }
 
 /* Reader */
 .article-title { margin-bottom: var(--space-word); }
+.content .article-meta { color: var(--color-on-surface-quiet); }
 .article-image { display: block; width: 100%; height: auto; max-height: 32svh; object-fit: cover; margin-top: var(--space-thought); border-radius: var(--radius-capture); background: var(--color-surface-raised); }
 .article-audio { display: block; margin-top: var(--space-thought); }
 .disclosures { margin-top: var(--space-word); }
+.content .tap-hint { margin-top: var(--space-block); color: var(--color-on-surface); font-weight: 500; }
+.tap-hint + #reader { margin-top: var(--space-thought); }
 #reader { margin-top: var(--space-block); }
-#reader .en { margin: var(--space-word) 0 var(--space-block); max-width: var(--space-measure); }
+#reader .en { margin: 2px 0 40px; max-width: var(--space-measure); }
+.content .en { max-width: var(--space-measure); color: var(--color-on-surface-quiet); }
+.content .reading + .en { margin-top: 2px; }
 .w { display: inline-block; min-height: 44px; padding: 0 0.1em; color: inherit; text-decoration: none; border-bottom: 1px solid var(--color-primary-deep); cursor: pointer; }
 .w:hover { border-bottom-color: var(--color-on-surface-quiet); }
 .w[data-on] { background: color-mix(in oklch, var(--color-on-surface) 10%, var(--color-surface)); border-bottom-color: var(--color-primary); }
@@ -89,11 +152,35 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 .skip:focus { position: fixed; left: var(--space-gutter); top: var(--space-gutter); z-index: 2; outline: 2px solid var(--color-primary); }
 #sheet { position: fixed; inset: auto 0 0; width: 100%; max-width: var(--space-card-laptop); max-height: 70svh; margin: 0 0 0 auto; overflow: auto; padding: var(--space-thought) var(--space-thought) 0; color: var(--color-on-surface); background: var(--color-surface-raised); border: 1px solid var(--color-outline); border-radius: var(--radius-card) var(--radius-card) 0 0; }
 #sheet:focus, #se:focus { outline: 0; }
+/* On a laptop the card opens under the word it explains, not in the corner: the word marked data-on is the anchor.
+   It hangs from the word's right edge, as Arabic reads, and moves to the other side or above when it would not fit. */
+@media (min-width: 56.25rem) {
+  @supports (anchor-name: --a) {
+    #reader .w[data-on] { anchor-name: --word; }
+    #sheet {
+      position-anchor: --word; inset: auto; margin: 6px 0;
+      position-area: bottom span-left; position-try-fallbacks: bottom span-right, top span-left, top span-right;
+      width: var(--space-card-laptop); max-height: min(24rem, calc(50svh - 2rem));
+      border-radius: var(--radius-card);
+      box-shadow: 0 18px 48px color-mix(in oklch, var(--color-on-primary) 70%, transparent);
+    }
+  }
+}
 .card-gloss { font-size: var(--type-gloss-size); font-weight: var(--type-gloss-weight); line-height: var(--type-gloss-line-height); }
-#sn { margin-top: var(--space-word); }
+/* The card: meaning, its note, then the two things you can do with the word on one row, and Close apart from them. */
+#sheet:popover-open { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-word) var(--space-thought); }
+#se, #sn, #sc { flex: 0 0 100%; }
+#sn { margin-top: calc(-1 * var(--space-word) + 2px); max-width: var(--space-measure); }
 #sl { display: inline-flex; align-items: center; min-height: 44px; }
-#sa, #sc { display: block; width: 100%; min-height: 44px; padding: 0; font: inherit; color: var(--color-primary); text-align: left; background: none; border: 0; cursor: pointer; }
-#sc { position: sticky; bottom: 0; background: var(--color-surface-raised); }
+#sa, #sc { display: block; min-height: 44px; padding: 0; font: inherit; color: var(--color-primary); text-align: left; background: none; border: 0; cursor: pointer; }
+/* Play is the card's one control, so it looks like one. The script hides it for the 4% of words with no audio. */
+#sa { display: inline-flex; align-items: center; gap: var(--space-word); padding-inline: 14px 18px; margin-top: var(--space-word); border: 1px solid var(--color-primary); border-radius: 999px; font-weight: 500; transition: background-color var(--duration-state) var(--ease); }
+#sa::before { content: ''; width: 0.75em; height: 0.85em; background: currentColor; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+#sa:hover { background: color-mix(in oklch, var(--color-primary) 14%, var(--color-surface-raised)); }
+#sa[hidden] { display: none; }
+#sa + #sl { margin-top: var(--space-word); }
+#sc { position: sticky; bottom: 0; margin-top: var(--space-word); border-top: 1px solid var(--color-outline); background: var(--color-surface-raised); }
+#sa:focus-visible, #sc:focus-visible, #sl:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
 /* Word parts. One letter each, because the longest article must fit 12 KB brotli. The gate gives iOS below 26.2 one colour, by the reader script. */
 .a { color: var(--color-grammar-article); }
@@ -119,3 +206,24 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 .choice-buttons button { min-height: 48px; padding-inline: var(--space-store-inset); font: inherit; color: var(--color-primary); background: transparent; border: 1px solid var(--color-primary); border-radius: var(--radius-control); cursor: pointer; }
 .choice-buttons [aria-pressed="true"] { color: var(--color-on-primary); background: var(--color-primary); }
 .word-intro { margin-top: var(--space-word); }
+
+/* Content pages: the header and footer share the reading column's edges, so the page has one left line. */
+footer .footer-inner { max-width: var(--content-max); }
+@media (min-width: 56.25rem) { footer .footer-inner, header.top { padding-inline: var(--space-gutter); } }
+
+/* 404: the way on, said once and offered as a form. */
+.lost .search { margin-top: var(--space-block); }
+
+/* Print: a text or a word page on paper is the Arabic and its English, black on white. */
+@media print {
+  :root { color-scheme: light; }
+  html, body { background: none; color: CanvasText; }
+  .top, footer, .offer, audio, .article-audio, .sounds, .skip, .tap-hint, #sheet, .search, .letters, .view-count, .article-image { display: none !important; }
+  .content { max-width: none; padding: 0; }
+  .content section { margin-top: 1.5rem; break-inside: avoid-page; }
+  a { color: inherit; text-decoration: none; }
+  .w { border-bottom: 0; min-height: 0; }
+  #reader .en, .quiet, .lead, .word-en-tail, .meta, .meta * { color: CanvasText; }
+  .reading, #reader .en, .example { break-inside: avoid; }
+  [class*="part-"], .a, .b, .c, .d, .e, .f, .g, .h, .i, .j, .k, .l, .x { color: inherit; }
+}

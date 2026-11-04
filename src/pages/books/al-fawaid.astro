@@ -11,22 +11,22 @@ const jsonLd = [
 ---
 
 <Content title="Al-Fawaid by Ibn al-Qayyim al-Jawziyya — Arabic & English (Free PDF) | OpenArabic" description="Download Al-Fawaid (الفوائد) by Ibn al-Qayyim al-Jawziyya as a free PDF, with the Arabic and English side by side." canonical="/books/al-fawaid" jsonLd={jsonLd}>
-  <h1>Al-Fawaid</h1>
   <p class="book-ar" lang="ar" dir="rtl">الفوائد</p>
-  <p class="lead">By Ibn al-Qayyim al-Jawziyya, <bdi class="inline-ar" lang="ar">ابن قيّم الجوزيّة</bdi>.</p>
+  <h1>Al-Fawāʾid</h1>
+  <p class="lead">By Ibn Qayyim al-Jawziyyah, <bdi class="inline-ar" lang="ar">ابن قيّم الجوزيّة</bdi>.</p>
   <p class="download"><a class="button" href="/books/al-fawaid.pdf" download>Download the free PDF</a> <span class="quiet">411 pages · 18 MB</span></p>
-  <p class="prose">The Arabic and English sit side by side, with the English following the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.</p>
+  <p class="prose">The Arabic and English sit side by side, and the English keeps to the Arabic word order, so you can follow the original phrase by phrase. The PDF is free to share.</p>
   <Offer from="book" heading="Read classical texts in the app">
     <p>If you can sound out Arabic script, you can start reading classical texts.</p>
   </Offer>
   <section>
     <h2>About the book</h2>
-    <p class="prose">Al-Fawaid, “the benefits” or points of benefit, is one of Ibn al-Qayyim’s best-loved shorter works. Rather than a systematic treatise, it gathers reflections that came to him over the years: a short meditation on a verse of the Qur’an, an insight drawn from a hadith, a note on the ailments and cures of the heart.</p>
-    <p class="prose">He is said to have recorded each “benefit” as it occurred to him, which gives the book its character: a string of self-contained pearls rather than chapters building a single argument. This edition presents its {book.sections} sections.</p>
+    <p class="prose">Al-Fawāʾid, “the benefits”, is one of Ibn al-Qayyim’s best-loved shorter works. It collects reflections that came to him over the years: a few lines on a verse of the Qurʾān, a point drawn from a ḥadīth, a note on the ailments of the heart and their cures.</p>
+    <p class="prose">He is said to have written each benefit down as it occurred to him, so the book makes no single argument. Each section stands on its own, and you can open it anywhere. This edition has {book.sections} sections.</p>
   </section>
   <section>
     <h2>A sample from the book</h2>
-    {book.sample.map((line) => <div class="example"><p class="reading" lang="ar" dir="rtl">{line.arabic}</p><p data-stored>{line.english}</p></div>)}
+    {book.sample.map((line) => <div class="example"><p class="reading" lang="ar" dir="rtl">{line.arabic}</p><p class="en" data-stored>{line.english}</p></div>)}
   </section>
   <section>
     <h2>What’s inside</h2>
@@ -34,8 +34,8 @@ const jsonLd = [
   </section>
   <section>
     <h2>About the author</h2>
-    <p class="prose">Ibn al-Qayyim al-Jawziyya, in full Shams al-Din Muhammad ibn Abi Bakr ibn Ayyub al-Zurʿi al-Dimashqi al-Hanbali, was a scholar of the Hanbali school in Damascus, born in 1292 (691 AH) and died in 1350 (751 AH). His name, “son of the qayyim of al-Jawziyya”, comes from his father, who directed the al-Jawziyya madrasa in the city.</p>
-    <p class="prose">He was the foremost student of Ibn Taymiyya, studying with him for some sixteen years and sharing his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zad al-Maʿad, Madarij al-Salikin and Iʿlam al-Muwaqqiʿin. He is buried at the Bab al-Saghir cemetery in Damascus.</p>
+    <p class="prose">Ibn Qayyim al-Jawziyyah, in full Shams al-Dīn Muḥammad ibn Abī Bakr ibn Ayyūb al-Zurʿī al-Dimashqī al-Ḥanbalī, was a scholar of the Ḥanbalī school in Damascus. He was born in 1292 (691 AH) and died in 1350 (751 AH). His name, “son of the qayyim of al-Jawziyyah”, comes from his father, who directed the al-Jawziyyah madrasa in the city.</p>
+    <p class="prose">He was the foremost student of Ibn Taymiyyah. He studied with him for some sixteen years and shared his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zād al-Maʿād, Madārij al-Sālikīn and Iʿlām al-Muwaqqiʿīn. He is buried at the Bāb al-Ṣaghīr cemetery in Damascus.</p>
     <p class="quiet">Biographical details from <a href="https://en.wikipedia.org/wiki/Ibn_Qayyim_al-Jawziyya" rel="noopener">Wikipedia</a>.</p>
   </section>
 </Content>

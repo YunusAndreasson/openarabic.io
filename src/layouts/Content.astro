@@ -8,8 +8,8 @@ const { crumbs = [], ...base } = Astro.props;
 
 <Base {...base}>
   <header class="top">
-    <a class="top-name" href="/">OpenArabic</a>{' '}
-    <a class="top-app" href="/download-app">Get the app</a>
+    <a class="top-name" href="/"><svg viewBox="0 0 1000 1000" width="22" height="22" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M0 500a500 500 0 1 1 1000 0a500 500 0 1 1-1000 0ZM106.9 500a393.1 393.1 0 1 0 786.2 0a393.1 393.1 0 1 0-786.2 0Z" /></svg><span>OpenArabic</span></a>{' '}
+    {base.canonical !== '/download-app' && <a class="top-app" href="/download-app">Get the app</a>}
   </header>
   <main class="content">
     {crumbs.length > 0 && (

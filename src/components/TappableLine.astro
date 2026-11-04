@@ -11,7 +11,7 @@ const tracks = import.meta.glob<string>('../assets/story/words/*.mp3', { query: 
 if (line.words.map((word) => word.arabic).join(' ') !== line.arabic) throw new Error('story-line.json: the words do not rebuild the stored sentence.');
 ---
 
-<div class="line" lang="ar" dir="rtl" role="group" aria-label="A line from Ibn al-Jawzi. Each word opens its meaning.">
+<div class="line" lang="ar" dir="rtl" role="group" aria-label="A line from Ibn al-Jawzī. Each word opens its meaning.">
   {
     line.words.map((word, index) => {
       const id = `${prefix}${index}`;

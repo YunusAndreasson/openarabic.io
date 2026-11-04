@@ -4,8 +4,12 @@ import Content from '../layouts/Content.astro';
 import StoreLinks from '../components/StoreLinks.astro';
 import StoreQr from '../components/StoreQr.astro';
 import { loadSnapshot, snapshotFile } from '../lib/snapshot.mjs';
+import Screen from '../components/Screen.astro';
+import readAvif from '../assets/story/ios-01-read.avif?url';
 import readWebp from '../assets/story/ios-01-read.webp?url';
+import tapAvif from '../assets/story/ios-02-tap-word.avif?url';
 import tapWebp from '../assets/story/ios-02-tap-word.webp?url';
+import speakAvif from '../assets/story/ios-05-speak.avif?url';
 import speakWebp from '../assets/story/ios-05-speak.webp?url';
 
 const rating = snapshotFile() ? loadSnapshot().rating : null;
@@ -14,17 +18,17 @@ const rating = snapshotFile() ? loadSnapshot().rating : null;
 <Content title="Download OpenArabic: Read the Classics" description="If you can sound out Arabic script, you can start reading classical texts. Free. No ads. No subscription." canonical="/download-app">
   <h1>OpenArabic: Read the Classics</h1>
   <p class="lead">If you can sound out Arabic script, you can start reading classical texts.</p>
-  <p>Free. No ads. No subscription.</p>
+  <p class="price">Free. No ads. No subscription.</p>
   <p class="quiet">An account is needed in the app.</p>
   <StoreLinks from="download" />
   {rating?.average && <p class="quiet rating">{rating.average.toFixed(1)} on the US App Store</p>}
   <div class="qr-laptop"><StoreQr /></div>
   <section>
-    <h2>One tap gives you the meaning, a grammar note and audio.</h2>
+    <h2>Inside the app</h2>
     <div class="shots">
-      <img src={readWebp} alt="The app’s reader: an English line above each classical Arabic line, with parts of the words in colour." loading="lazy" decoding="async" />
-      <img src={tapWebp} alt="The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from." loading="lazy" decoding="async" />
-      <img src={speakWebp} alt="The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer." loading="lazy" decoding="async" />
+      <Screen avif={readAvif} webp={readWebp} alt="The app’s reader: an English line above each classical Arabic line, with parts of the words in colour." />
+      <Screen avif={tapAvif} webp={tapWebp} alt="The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from." />
+      <Screen avif={speakAvif} webp={speakWebp} alt="The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer." />
     </div>
   </section>
 </Content>
