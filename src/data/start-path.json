@@ -1,0 +1,25 @@
+{
+ "source": "The starting path: four easier texts, title as stored, chosen by the owner's call to curate a start from the easier texts (docs/decisions/2026-10-31-owner-review.md, Round 2). Shown as text cards: 347's stored image carries a watermark and a close face. The list is protected content (docs/site-plan.md).",
+ "articles": [
+  {
+   "id": 374,
+   "title": "Praises That Elevate the Poor",
+   "scholar": "an-Nawawī"
+  },
+  {
+   "id": 347,
+   "title": "The Vastness of God's Mercy",
+   "scholar": "an-Nawawī"
+  },
+  {
+   "id": 378,
+   "title": "Avoid Envy and Suspicion",
+   "scholar": "an-Nawawī"
+  },
+  {
+   "id": 383,
+   "title": "A Handful of Dates and Paradise",
+   "scholar": "an-Nawawī"
+  }
+ ]
+}

@@ -1,13 +1,15 @@
 ---
-// One real app capture, AVIF with a WebP fallback. All captures are 1206x2622.
+// One real app capture, AVIF with a WebP fallback, at its true size. src/lib/screens.ts gives the files and the size.
 interface Props {
   avif: string;
   webp: string;
   alt: string;
+  width: number;
+  height: number;
   class?: string;
   eager?: boolean;
 }
-const { avif, webp, alt, class: className, eager = false } = Astro.props;
+const { avif, webp, alt, width, height, class: className, eager = false } = Astro.props;
 ---
 
-<picture class={className}><source type="image/avif" srcset={avif} /><img src={webp} width="1206" height="2622" alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" /></picture>
+<picture class={className}><source type="image/avif" srcset={avif} /><img src={webp} width={width} height={height} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" /></picture>

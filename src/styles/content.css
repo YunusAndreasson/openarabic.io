@@ -66,6 +66,10 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 /* The one offer */
 .offer { margin-top: var(--fluid-beat-gap); padding: var(--space-block) var(--space-thought); background: var(--color-surface-raised); border: 1px solid var(--color-outline); border-radius: var(--radius-card); }
 .offer .stores { margin-top: var(--space-thought); }
+/* One real capture beside the offer's words: the screen the offer is about. */
+.offer-screen { float: right; width: clamp(5.75rem, 26vw, 9.5rem); margin: 0 0 var(--space-thought) var(--space-thought); }
+.offer-screen img { display: block; width: 100%; height: auto; border: 1px solid var(--color-outline); border-radius: var(--radius-card); }
+.offer.has-screen .stores { clear: both; }
 /* The download page's badges follow the account note: the same gap as in the offer, not touching it. */
 .content > .stores { margin-top: var(--space-thought); }
 .offer .price { margin-top: var(--space-thought); font-weight: 500; }
@@ -128,7 +132,7 @@ audio { width: 100%; height: 48px; color-scheme: dark; max-width: var(--space-me
 /* Phones are sent to the store, so this page is read on a laptop: three screens side by side, at any width. */
 .shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .shots picture { display: block; }
-.shots img { display: block; width: 100%; height: auto; aspect-ratio: 1206 / 2622; border-radius: var(--radius-capture); border: 1px solid var(--color-outline); }
+.shots img { display: block; width: 100%; height: auto; border-radius: var(--radius-capture); border: 1px solid var(--color-outline); }
 .qr-laptop { display: none; margin-top: var(--space-thought); }
 /* The QR: dark modules on a light plate, as on the home page. Without these the SVG fills the column and draws nothing. */
 .qr-laptop { width: fit-content; padding: 6px; background: var(--color-on-surface); border-radius: 10px; line-height: 0; }

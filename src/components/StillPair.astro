@@ -1,0 +1,33 @@
+---
+// Two photographs of one frame, a moment apart. Played, the frame holds while the scroll dissolves the first into the
+// second and their words take turns, on the same `--t` as a stage (src/scripts/home.ts). The two must line up: see
+// docs/imagery/turn/brief.md. Without script or with reduced motion, they are two stills in a row, each with its words.
+interface Photo {
+  name: string;
+  alt: string;
+}
+interface Props {
+  first: Photo;
+  then: Photo;
+  class?: string;
+}
+const { first, then, class: className } = Astro.props;
+---
+
+<section class:list={['still-pair', className]} data-stage data-stops="2" style="--n:2;--t:0">
+  <div class="pair-pin">
+    {
+      [first, then].map((photo, index) => (
+        <div class="still pair-frame" style={`--i:${index}`}>
+          <picture class:list={['still-photo', { develop: index === 0 }]}>
+            <source media="(max-width: 56.24rem)" type="image/avif" srcset={`/${photo.name}-tall.avif`} />
+            <source media="(max-width: 56.24rem)" type="image/webp" srcset={`/${photo.name}-tall.webp`} />
+            <source type="image/avif" srcset={`/${photo.name}-wide.avif`} />
+            <img src={`/${photo.name}-wide.webp`} width="1672" height="941" alt={photo.alt} loading="lazy" decoding="async" />
+          </picture>
+          <div class="still-words">{index === 0 ? <slot name="first" /> : <slot name="then" />}</div>
+        </div>
+      ))
+    }
+  </div>
+</section>

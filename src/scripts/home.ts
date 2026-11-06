@@ -52,4 +52,18 @@ if (document.documentElement.classList.contains('play')) {
     { rootMargin: '0px 0px -12% 0px' },
   );
   for (const element of document.querySelectorAll('.reveal, .develop')) arrive.observe(element);
+
+  // A stage's screens wait in a clipped frame, where lazy loading never counts them as near, so they would appear
+  // mid-slide. Load a stage's images once it comes within a screen and a half.
+  const near = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        for (const image of entry.target.querySelectorAll('img')) image.loading = 'eager';
+        near.unobserve(entry.target);
+      }
+    },
+    { rootMargin: '150% 0px' },
+  );
+  for (const stage of stages) near.observe(stage);
 }

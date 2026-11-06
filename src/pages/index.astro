@@ -1,38 +1,54 @@
 ---
 import Base from '../layouts/Base.astro';
 import Logo from '../components/Logo.astro';
-import Screen from '../components/Screen.astro';
 import Stage from '../components/Stage.astro';
 import Still from '../components/Still.astro';
+import StillPair from '../components/StillPair.astro';
 import ArticleWall from '../components/ArticleWall.astro';
 import TappableLine from '../components/TappableLine.astro';
 import StoreQr from '../components/StoreQr.astro';
-import line from '../data/story-line.json';
-// A whole text as the app plays it, English first, then Arabic: article 412, its stored audio_url_bilingual, copied so the player's length costs no third-party request.
-import textAudio from '../assets/story/text-412-bilingual.mp3?url';
 import StoreLinks from '../components/StoreLinks.astro';
+import line from '../data/story-line.json';
+// A whole text as the app plays it in Arabic: article 412's stored audio_url, copied so the player's length costs no third-party request.
+import textAudio from '../assets/story/text-412-arabic.mp3?url';
 import scholarData from '../data/scholars.json';
+import footerScholars from '../data/footer-scholars.json';
+import startPath from '../data/start-path.json';
+import { articlePath } from '../lib/words.mjs';
 import '../styles/story.css';
 import '../styles/home.css';
-import { screens } from '../lib/screens';
 
-const readStops = [
-  { title: 'English above every Arabic line.', note: 'The English is machine-translated.' },
-  { title: 'Colour shows how multi-part words are built.' },
-  { title: 'One tap gives you the meaning, a grammar note and audio.' },
-  { title: 'For most words, see the root and other words built on it.' },
-];
+// Each scholar links to their page. The footer's list holds the paths; a name missing there is a mistake, not a quiet gap.
+const pathOf = new Map(footerScholars.map((scholar) => [scholar.name, scholar.path]));
+const scholars = scholarData.scholars.map((scholar) => {
+  const path = pathOf.get(scholar.name);
+  if (!path) throw new Error(`index: ${scholar.name} has no author page in footer-scholars.json.`);
+  return { ...scholar, path };
+});
 
-const listenStops = [
-  { title: 'Arabic audio on every word and every line.', note: 'The audio uses AI voices.' },
-  { title: 'Every text plays English first, then Arabic, or Arabic only.' },
-];
+// The line, split where its two clauses meet, so each can hold one row. Rebuilt and compared, so the text can't change.
+const CLAUSE_END = 4;
+if (line.words[CLAUSE_END].arabic !== 'أَرَهُ') throw new Error('index: the first clause no longer ends on أَرَهُ.');
+const clauses = [line.words.slice(0, CLAUSE_END + 1), line.words.slice(CLAUSE_END + 1)].map((words) => words.map((word) => word.arabic).join(' '));
+if (clauses.join(' ') !== line.arabic) throw new Error('index: the clauses do not rebuild the stored sentence.');
 
-const rememberStops = [
-  { title: 'Add the words you don’t know. Practise them with spaced repetition.' },
-  { title: 'You answer out loud before the app shows the meaning.' },
-  { title: 'Words return when your predicted recall falls to 90%.' },
-];
+// The three chapters. Every title and note is ledger wording (PRODUCT.md), each over the screen that shows it.
+const read = [
+  { title: 'English above every Arabic line.', note: 'The English is machine-translated.', screen: 'read', focus: 'pair' },
+  { title: 'Colour shows how multi-part words are built.', screen: 'read', focus: 'colour', zoom: true },
+  { title: 'One tap gives you the meaning, a grammar note and audio.', screen: 'tap', arrive: 'sheet', ring: { on: 'word', before: true }, focus: 'card' },
+  { title: 'Add the words you don’t know. Practise them with spaced repetition.', screen: 'tap', ring: { on: 'add' }, focus: 'add' },
+] as const;
+
+const remember = [
+  { title: 'Hear the Arabic, then say what it means in English.', note: 'The app grades your answer.', screen: 'speak', focus: 'review', ring: { on: 'speak' } },
+  { title: 'Words return when your predicted recall falls to 90%.', note: 'The numbers shown are from an example account.', screen: 'horizon', arrive: 'push', focus: 'horizon' },
+] as const;
+
+const listen = [
+  { title: 'Arabic audio on every word and every line.', screen: 'player', focus: 'playing' },
+  { title: 'Every text plays English first, then Arabic, or Arabic only.', screen: 'player', focus: 'player' },
+] as const;
 ---
 
 <Base>
@@ -66,9 +82,9 @@ const rememberStops = [
       <h2 class="reveal">Excerpts from the works of classical scholars</h2>
       <ul class="scholar-list">
         {
-          scholarData.scholars.map((scholar) => (
+          scholars.map((scholar) => (
             <li class="scholar reveal">
-              <h3>{scholar.name}</h3>
+              <h3><a href={scholar.path}>{scholar.name}</a></h3>
               <div class="scholar-works">
                 <p data-stored>{scholar.works.slice(0, 2).join(', ')}</p>
               </div>
@@ -80,75 +96,78 @@ const rememberStops = [
 
     <section class="turn" id="turn">
       <h2 class="turn-words reveal">You finished the course. Then you opened a real book.</h2>
-      <p class="turn-line reveal" lang="ar" dir="rtl">{line.arabic}</p>
+      <p class="turn-line reveal" lang="ar" dir="rtl">{clauses.map((clause, index) => <>{index > 0 && ' '}<span class="clause">{clause}</span></>)}</p>
       <p class="turn-source reveal">{line.scholar}, {line.work}</p>
     </section>
 
-    <Still name="stuck" alt="A man seen from behind at a small table at night, his head in his hand, with books left open in front of him." class="problem">
-      <h2 class="problem-big reveal">You can sound it out.<br />You can’t read it.</h2>
-      <p class="problem-small reveal">Every word is a trip to the dictionary.</p>
+    <StillPair
+      class="problem"
+      first={{ name: 'stuck', alt: 'A man seen from behind at a small table at night, his head in his hand, with books left open in front of him.' }}
+      then={{ name: 'turn', alt: 'The same man at the same table, sitting up now, his phone in his hands and the dictionary shut beside the open book.' }}
+    >
+      <Fragment slot="first">
+        <h2 class="problem-big">You can sound it out.<br />You can’t read it.</h2>
+        <p class="problem-small">Every word is a trip to the dictionary.</p>
+      </Fragment>
+      <Fragment slot="then">
+        <p class="bridge">In the app, the meaning is one tap away.</p>
+      </Fragment>
+    </StillPair>
+
+    <Stage id="read" chapter="Read" stops={read} />
+
+    <Still name="remember" alt="The same man the next morning, standing by the window in grey daylight with his phone in his hand.">
+      <p class="still-line reveal">You choose 10, 20 or 30 new words a day.</p>
     </Still>
 
-    <p class="bridge reveal">In the app, the meaning is one tap away.</p>
-
-    <Stage id="read" marker="Read" stops={readStops}>
-      <div class="zoomer">
-        <Screen {...screens.read} />
-        <span class="tap only-played" aria-hidden="true"></span>
-      </div>
-      <Screen {...screens.tap} alt="" class="sheet-dim only-played" />
-      <Screen {...screens.tap} class="sheet" />
-    </Stage>
+    <Stage id="remember" chapter="Remember" stops={remember} />
 
     <Still name="listen" alt="A man seen from behind, small on a wet street at dusk, wearing earphones.">
       <p class="still-line reveal">Play a text on the way home.</p>
       <div class="still-audio reveal">
-        <audio controls preload="metadata" src={textAudio} aria-label="A Path to Mercy, read aloud, English first, then Arabic"></audio>
+        <audio controls preload="metadata" src={textAudio} aria-label="This text read aloud in Arabic"></audio>
         <p class="turn-source"><a href="/read/a-path-to-mercy-412">A Path to Mercy</a>. Ibn al-Jawzī, Ṣayd al-Khāṭir</p>
+        <p class="still-note">The audio uses AI voices.</p>
       </div>
     </Still>
 
-    <Stage id="listen" marker="Listen" stops={listenStops}>
-      <Screen {...screens.listen} />
-      <Screen {...screens.audio} class="audio" />
-    </Stage>
-
-    <Stage id="remember" marker="Remember" stops={rememberStops} caption="The numbers shown are from an example account.">
-      <Screen {...screens.tap} alt="" class="only-played" />
-      <span class="add only-played" aria-hidden="true"></span>
-      <Screen {...screens.speak} class="speak" />
-      <span class="spoken only-played" aria-hidden="true"></span>
-      <Screen {...screens.horizon} class="memory" />
-    </Stage>
+    <Stage id="listen" chapter="Listen" stops={listen} />
 
     <section class="payoff lift" id="payoff">
       <input class="lift-input vh" id="lift" type="checkbox" aria-label="Hide the English and read it" />
       <h2 class="payoff-title"><span class="ask">Try it. Tap a word you don’t know.</span> <span class="read">Now read it.</span></h2>
       <p class="payoff-english" lang="en">{line.english}</p>
-      <TappableLine prefix="w" />
       <label class="lift-control" for="lift" aria-hidden="true"><span class="take">Hide the English and read it</span> <span class="bring">Show the English</span></label>
+      <TappableLine prefix="w" clauseEnd={CLAUSE_END} />
       <p class="turn-source">{line.scholar}, {line.work}</p>
       <p class="payoff-note">In the app, the English stays above the line.</p>
-      <StoreLinks />
+      <StoreLinks from="try" />
     </section>
 
     <section class="library" id="library">
       <h2 class="reveal">Pick a text. Read it now.</h2>
-      <p class="library-lede reveal">Creed, fiqh, sīrah, ḥadīth, tafsīr. Sorted by difficulty. Most texts are advanced; some are easier.</p>
-      <ArticleWall />
+      <p class="library-quote reveal" data-stored>{line.english}</p>
       <h3 class="start-title reveal">Start with an easier text</h3>
       <ul class="start-list reveal">
-        <li><a href="/read/praises-that-elevate-the-poor-374">Praises That Elevate the Poor</a></li>
-        <li><a href="/read/the-vastness-of-god-s-mercy-347">The Vastness of God's Mercy</a></li>
-        <li><a href="/read/avoid-envy-and-suspicion-378">Avoid Envy and Suspicion</a></li>
-        <li><a href="/read/a-handful-of-dates-and-paradise-383">A Handful of Dates and Paradise</a></li>
+        {
+          startPath.articles.map((article) => (
+            <li class="start-card">
+              <a href={articlePath(article)}>
+                <span class="start-card-title" data-stored>{article.title}</span>
+                <span class="start-card-meta"><span>{article.scholar}</span> <span class="level">Easier</span></span>
+              </a>
+            </li>
+          ))
+        }
       </ul>
+      <p class="library-lede reveal">Creed, fiqh, sīrah, ḥadīth, tafsīr. Sorted by difficulty. Most texts are advanced; some are easier.</p>
+      <ArticleWall />
     </section>
 
     <Still name="close" alt="A closed book and a phone on a small table under a window, in the first light before dawn." class="closing">
       <h2 class="reveal">Free. No ads. No subscription.</h2>
       <div class="closing-offer reveal">
-        <StoreLinks />
+        <StoreLinks from="close" />
         <div class="qr-plate"><StoreQr /></div>
       </div>
       <p class="offer-note reveal">An account is needed in the app. Free as ṣadaqah jāriyah.</p>

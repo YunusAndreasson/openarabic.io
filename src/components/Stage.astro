@@ -1,20 +1,109 @@
 ---
-// A played section: the phone stays pinned while the scroll runs through its stops, and `--t` on the
-// section says where it stands. src/scripts/home.ts sets it. CSS draws every stop from `--t`.
-// Without script or with reduced motion, the stops and every screen are simply shown in order.
+// A played chapter: the app stays pinned while the scroll runs through its stops. src/scripts/home.ts sets `--t` (0 to
+// stops − 1, holding still on each) and `data-stop` on the section, and home.css draws every layer, camera and ring from
+// them. A stop names its screen, how a new screen arrives, the region the camera frames, and an optional ring.
+// Without script or with reduced motion: the chapter's heading, its claims, then each screen once, in order.
+import Screen from './Screen.astro';
+import { RATIO, screens, type Box, type ScreenKey } from '../lib/screens';
+
+type Chapter = 'Read' | 'Remember' | 'Listen';
+interface Stop {
+  title: string;
+  note?: string;
+  screen: ScreenKey;
+  /** How a new screen comes in: a sheet rises over the last, a push slides it in from the right, a cut switches halfway. */
+  arrive?: 'sheet' | 'push' | 'cut';
+  /** The region the camera frames. A phone always frames it; a laptop shows the whole screen unless `zoom` is set. */
+  focus?: string;
+  zoom?: boolean;
+  /** A ring on a region. With `before`, it is the press on the previous screen that brings this stop's screen. */
+  ring?: { on: string; before?: boolean };
+  /** Shown in an earlier chapter, so it is described there; here it appears only in the played form. */
+  seen?: boolean;
+}
 interface Props {
   id: string;
-  marker: string;
-  stops: { title: string; note?: string }[];
-  caption?: string;
+  chapter: Chapter;
+  stops: Stop[];
 }
-const { id, marker, stops, caption } = Astro.props;
+const { id, chapter, stops } = Astro.props;
+const CHAPTERS: Chapter[] = ['Read', 'Remember', 'Listen'];
+
+if (stops.length < 1 || stops.length > 4) throw new Error(`Stage ${id}: 1 to 4 stops, not ${stops.length}.`);
+
+function region(screen: ScreenKey, name: string): Box {
+  const box = screens[screen]?.regions[name];
+  if (!box) throw new Error(`Stage ${id}: ${screen} has no region "${name}".`);
+  const [x, y, w, h] = box;
+  if (x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > 1.0001 || y + h > 1.0001) throw new Error(`Stage ${id}: ${screen}.${name} falls outside the capture.`);
+  return box;
+}
+
+type Frame = { s: number; x: number; y: number };
+const WHOLE: Frame = { s: 1, x: 0.5, y: 0.5 };
+/** Fill the frame's width with the box, with a little room, never below the whole width and never past 2.4×. */
+const fit = ([x, y, w, h]: Box): Frame => ({ s: Math.min(2.4, Math.max(1, 0.92 / w)), x: x + w / 2, y: y + h / 2 });
+const phoneFrame = (stop: Stop): Frame => (stop.focus ? fit(region(stop.screen, stop.focus)) : WHOLE);
+const laptopFrame = (stop: Stop): Frame => (stop.focus && stop.zoom ? fit(region(stop.screen, stop.focus)) : WHOLE);
+
+interface Layer {
+  screen: ScreenKey;
+  a: number;
+  stops: Stop[];
+  arrive?: Stop['arrive'];
+  lag: number;
+  seen: boolean;
+}
+const layers: Layer[] = [];
+stops.forEach((stop, index) => {
+  if (!screens[stop.screen]) throw new Error(`Stage ${id}: unknown screen "${stop.screen}".`);
+  const last = layers.at(-1);
+  if (!last || last.screen !== stop.screen) {
+    if (index === 0 && stop.arrive) throw new Error(`Stage ${id}: the first stop can't arrive.`);
+    if (index > 0 && !stop.arrive) throw new Error(`Stage ${id}: stop ${index} changes the screen, so it needs an arrive.`);
+    layers.push({ screen: stop.screen, a: index, stops: [stop], arrive: stop.arrive, lag: stop.ring?.before ? 0.4 : 0, seen: !!stop.seen });
+  } else {
+    if (stop.arrive) throw new Error(`Stage ${id}: stop ${index} keeps its screen, so it has nothing to arrive.`);
+    if (last.stops.length >= 2) throw new Error(`Stage ${id}: a screen holds at most two stops.`);
+    if (stop.ring?.before) throw new Error(`Stage ${id}: stop ${index} has a "before" ring but no new screen.`);
+    last.stops.push(stop);
+  }
+});
+
+const n = (value: number) => Number(value.toFixed(4));
+const layerViews = layers.map((layer, index) => {
+  const next = layers[index + 1];
+  const first = layer.stops[0];
+  const lastStop = layer.stops.at(-1)!;
+  // Framing A at the layer's first stop, B at its last, C while the next layer covers it. Under a sheet, C is the
+  // sheet's own A, so the backdrop in the sheet's capture lands where this screen already is.
+  const frames = {
+    p: [phoneFrame(first), phoneFrame(lastStop), next?.arrive === 'sheet' ? phoneFrame(next.stops[0]) : phoneFrame(lastStop)],
+    l: [laptopFrame(first), laptopFrame(lastStop), next?.arrive === 'sheet' ? laptopFrame(next.stops[0]) : laptopFrame(lastStop)],
+  };
+  const vars: string[] = [`--a:${layer.a}`, `--lag:${layer.lag}`, `--out:${next ? next.a : 99}`, `--out-lag:${next ? next.lag : 0}`];
+  for (const [device, list] of Object.entries(frames)) {
+    list.forEach((frame, step) => vars.push(`--${device}s${step}:${n(frame.s)}`, `--${device}x${step}:${n(frame.x)}`, `--${device}y${step}:${n(frame.y)}`));
+  }
+  if (layer.arrive === 'sheet') {
+    if (!screens[layer.screen].sheetTop) throw new Error(`Stage ${id}: ${layer.screen} arrives as a sheet but has no sheetTop.`);
+    vars.push(`--sheet-top:${screens[layer.screen].sheetTop}`);
+  }
+  const rings: { box: Box; at: number; before?: { lag: number } }[] = [];
+  layer.stops.forEach((stop, offset) => {
+    if (stop.ring && !stop.ring.before) rings.push({ box: region(layer.screen, stop.ring.on), at: layer.a + offset });
+  });
+  const press = next?.stops[0].ring;
+  if (press?.before) rings.push({ box: region(layer.screen, press.on), at: next.a, before: { lag: next.lag } });
+  return { layer, next, style: vars.join(';'), rings };
+});
 ---
 
-<section class="stage" id={id} data-stage data-stops={stops.length} style={`--n:${stops.length};--t:0`}>
+<section class="stage" id={id} data-stage data-stops={stops.length} style={`--n:${stops.length};--t:0;--ratio:${n(RATIO)};--tall:${n(1 / RATIO)}`}>
   <div class="stage-pin">
     <div class="stage-words">
-      <h2 class="chapter">{marker}</h2>
+      <p class="chapters only-played" aria-hidden="true">{CHAPTERS.map((name, index) => <><span class:list={[{ on: name === chapter }]}>{name}</span>{index < CHAPTERS.length - 1 && ' · '}</>)}</p>
+      <h2 class="chapter">{chapter}</h2>
       <ol class="stops">
         {
           stops.map((stop, index) => (
@@ -27,10 +116,28 @@ const { id, marker, stops, caption } = Astro.props;
       </ol>
     </div>
     <div class="stage-phone">
-      <figure class="phone">
-        <div class="screen"><slot /></div>
-      </figure>
+      <div class="phone">
+        <div class="screen">
+          {
+            layerViews.map(({ layer, next, style, rings }) => (
+              <div class:list={['layer', { 'only-played': layer.seen }]} data-arrive={layer.arrive} data-out={next?.arrive} style={style}>
+                <div class="shot">
+                  <Screen {...screens[layer.screen]} alt={layer.seen ? '' : screens[layer.screen].alt} />
+                  {rings.map((ring) => (
+                    <span
+                      class="ring only-played"
+                      aria-hidden="true"
+                      data-at={ring.at}
+                      data-before={ring.before ? '' : undefined}
+                      style={`--rx:${ring.box[0]};--ry:${ring.box[1]};--rw:${ring.box[2]};--rh:${ring.box[3]};--at:${ring.at}${ring.before ? `;--rlag:${ring.before.lag}` : ''}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </div>
-    {caption && <p class="stage-caption">{caption}</p>}
   </div>
 </section>

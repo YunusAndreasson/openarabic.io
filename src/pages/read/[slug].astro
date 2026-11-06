@@ -55,7 +55,7 @@ const jsonLd = [
     <a id="sl">Full entry</a>
     <button id="sc" type="button" popovertarget="sheet" popovertargetaction="hide">Close</button>
   </div>
-  <Offer from="read" id="after" />
+  <Offer from="read" id="after" screen="read" />
   {more.length > 0 && <section><h2>More from <span data-stored>{shownName(author.name)}</span></h2><ArticleList articles={more} /></section>}
   <script is:inline src="/reader.js" defer></script>
 </Content>

@@ -111,7 +111,7 @@ Rules for what exists: the home page approved by the owner on 2026-11-01 and the
 
 - **The bar:** the live home page, with qamar360.com for cinematic quality. It must read as a promo for the app at first sight.
 - **The reader is in a rush.** Say the important thing big, show a real picture or screen, and cut the rest. One short claim per stop.
-- **The argument, in order:** read the classics; who the scholars are; you finished the course and opened a real book; you can sound it out but can't read it; in the app the meaning is one tap away; Read, Listen, Remember; try it yourself; pick a text; get the app.
+- **The argument, in order:** read the classics; who the scholars are; you finished the course and opened a real book; you can sound it out but can't read it; in the app the meaning is one tap away; Read, Remember, Listen; try it yourself; pick a text; get the app. The app is filmed on the page's own line wherever a capture allows, so the line the visitor can't read at the turn is the one the app reads, and the word added in Read is the one reviewed in Remember.
 - **Never against translation.** The moment of reading without the English belongs to the page, never to the app, so "In the app, the English stays above the line." follows it directly.
 
 ## Colors
@@ -191,7 +191,7 @@ The home page has its own wide measure in `src/styles/home.css`. Content pages h
 
 **Coloured word.** Adjacent spans inside one `inline-block` word, changing only `color`. No padding, margin, weight or opacity on a segment. A mark-only segment merges into its base letter. iOS below 26.2 gets one colour, by the reader script. This has never been seen on a real iPhone.
 
-**Store links.** The official badges, unmodified, Apple first, both always, linking to `/download-app?to=<store>&from=<surface>`, where the surface is never a word or slug.
+**Store links.** The official badges, unmodified, Apple first, both always, linking to `/download-app?to=<store>&from=<surface>`, where the surface is never a word or slug. The home page counts its three apart: `home` on the first screen, `try` at the payoff, `close` at the close.
 
 **The tap section.** Says what to do: "Try it. Tap a word you don’t know." The control is "Hide the English and read it", and it removes only the English. The heading turns to "Now read it."
 
@@ -208,6 +208,9 @@ The home page has its own wide measure in `src/styles/home.css`. Content pages h
 Everything works with no script and with reduced motion, and the static state is a complete page.
 
 - The home page may pin stages to the scroll, bring things in as they arrive, and develop photos. Content pages have no entrance motion.
+- In a chapter, a screen changes only as the app changes it: a sheet rises, a push slides in from the right, or a cut switches halfway. Two different screens never fade into each other. A zoom fades at its edges, so nothing reads as cut text. Every hold shows one whole real capture.
+- A chapter's word is big only on its first stop; after that a sentence-case marker (Read · Remember · Listen) names it.
+- Two photographs of one frame may dissolve into each other, played by the scroll, when they were made to line up (`docs/imagery/turn/brief.md`). Without script they are two stills.
 - `prefers-reduced-motion: reduce`: every duration is 0, and the stages stack.
 - Sound only on a press.
 
@@ -228,7 +231,7 @@ Article, word, dictionary, category, author and book pages open on their content
 Real-looking photographs from the Codex route: Claude writes `docs/imagery/<scene>/brief.md`, Codex generates, and Claude looks at every candidate at full size and critiques it. One apartment, one man seen from behind, available light, film grain. The owner rejected polished scenes as typically AI generated.
 
 - No lettering in a generated image, and nothing readable on any page. Fake Arabic means rejection on sight. Real Arabic and text are placed afterwards.
-- App UI is always a real, unedited capture, never generated or redrawn.
+- App UI is always a real, unedited capture, never generated or redrawn. Captures are only cropped and scaled, by `node scripts/captures.mjs` from the numbers in `src/lib/captures.mjs`, and every visible title and sentence in one stays outside `src/data/flagged-texts.json`.
 - Add a row to `docs/provenance.md`.
 
 ## Review

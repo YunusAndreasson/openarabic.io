@@ -1,31 +1,44 @@
 ---
-// The line, screens 1 and 9: DESIGN.md `Word`. One colour, native popover, no script.
+// The line at the payoff: DESIGN.md `Word`. One colour, native popover, no script.
+// With `clauseEnd`, the words up to that index and the rest are each kept in one box, so a narrow screen breaks the
+// line where its clauses meet. The boxes are markup only: the text and its spaces are exactly the stored sentence's.
 import line from '../data/story-line.json';
 
 interface Props {
   prefix: 'w' | 'r';
+  clauseEnd?: number;
 }
-const { prefix } = Astro.props;
+const { prefix, clauseEnd } = Astro.props;
 const tracks = import.meta.glob<string>('../assets/story/words/*.mp3', { query: '?url', import: 'default', eager: true });
 // The words are the stored sentence split on its own spaces. If they ever differ, stop rather than show altered text.
 if (line.words.map((word) => word.arabic).join(' ') !== line.arabic) throw new Error('story-line.json: the words do not rebuild the stored sentence.');
+const indexed = line.words.map((word, index) => ({ word, index }));
+const groups = clauseEnd === undefined ? [indexed] : [indexed.slice(0, clauseEnd + 1), indexed.slice(clauseEnd + 1)];
 ---
 
 <div class="line" lang="ar" dir="rtl" role="group" aria-label="A line from Ibn al-Jawzī. Each word opens its meaning.">
   {
-    line.words.map((word, index) => {
-      const id = `${prefix}${index}`;
-      return (
-        <>
-          <button class="w" type="button" popovertarget={id} style={`anchor-name:--${id}`}>{word.arabic}</button>
-          <div class="card" id={id} popover lang="en" dir="ltr" style={`position-anchor:--${id}`}>
-            <p class="card-gloss">{word.english}</p>
-            <p class="card-note">{word.grammar_note}</p>
-            <audio controls preload="none" src={tracks[`../assets/story/words/${word.audio}`]} aria-label="This word read aloud in Arabic"></audio>
-            <button class="close" type="button" popovertarget={id} popovertargetaction="hide">Close</button>
-          </div>{' '}
-        </>
-      );
-    })
+    groups.map((group, groupIndex) => (
+      <>
+        {groupIndex > 0 && ' '}
+        <div class="clause">
+          {group.map(({ word, index }, position) => {
+            const id = `${prefix}${index}`;
+            return (
+              <>
+                {position > 0 && ' '}
+                <button class="w" type="button" popovertarget={id} style={`anchor-name:--${id}`}>{word.arabic}</button>
+                <div class="card" id={id} popover lang="en" dir="ltr" style={`position-anchor:--${id}`}>
+                  <p class="card-gloss">{word.english}</p>
+                  <p class="card-note">{word.grammar_note}</p>
+                  <audio controls preload="none" src={tracks[`../assets/story/words/${word.audio}`]} aria-label="This word read aloud in Arabic"></audio>
+                  <button class="close" type="button" popovertarget={id} popovertargetaction="hide">Close</button>
+                </div>
+              </>
+            );
+          })}
+        </div>
+      </>
+    ))
   }
 </div>

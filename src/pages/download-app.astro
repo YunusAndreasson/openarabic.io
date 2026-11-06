@@ -21,9 +21,9 @@ const rating = snapshotFile() ? site().rating : null;
   <section>
     <h2>Inside the app</h2>
     <div class="shots">
-      <Screen {...screens.read} />
-      <Screen {...screens.tap} />
-      <Screen {...screens.speak} />
+      <Screen {...screens.read} {...screens.read.small} />
+      <Screen {...screens.tap} {...screens.tap.small} />
+      <Screen {...screens.speak} {...screens.speak.small} />
     </div>
   </section>
 </Content>

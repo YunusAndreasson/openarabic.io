@@ -11,7 +11,8 @@ interface Env {
 
 // Only `pnpm ship --production` turns this off.
 const PREVIEW = !__OA_PRODUCTION__;
-const SURFACES = new Set(['home', 'word', 'read', 'book', 'qr', 'download']);
+// The home page counts its first screen (home), the payoff (try) and the close apart, so the payoff's taps show.
+const SURFACES = new Set(['home', 'try', 'close', 'word', 'read', 'book', 'qr', 'download']);
 const BOT = /bot|crawl|spider|slurp|facebookexternalhit|preview|lighthouse|bingpreview|whatsapp|telegram/i;
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
 const SAFE = /^[\w.~-]{1,100}$/;

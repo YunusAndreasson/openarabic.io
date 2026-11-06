@@ -23,5 +23,5 @@ const jsonLd = [
   <h1>{label}</h1>
   <p class="lead">{difficultyLine(articles)}</p>
   <ArticleList articles={articles} authorOf={(article) => shownName(site().author(article.author_id).name)} />
-  <Offer from="read" />
+  <Offer from="read" screen="read" />
 </Content>

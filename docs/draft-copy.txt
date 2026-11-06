@@ -429,3 +429,7 @@ He was the foremost student of Ibn Taymiyyah. He studied with him for some sixte
 # Story pass, 2026-11-06. docs/decisions/2026-11-06-story-pass.md. Draft until the owner says otherwise.
 The same man at the same table, sitting up now, his phone in his hands and the dictionary shut beside the open book.
 The same man the next morning, standing by the window in grey daylight with his phone in his hand.
+The app’s voice review: one Arabic word, and the buttons Show answer and Speak to answer.
+# The ledger's voice review row, split across one stop's title and note. Ledger wording, listed so each half traces.
+Hear the Arabic, then say what it means in English.
+The app grades your answer.

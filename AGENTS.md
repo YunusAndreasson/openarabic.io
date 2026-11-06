@@ -19,6 +19,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Prove the ship's guards still work, after changing `scripts/ship*` | `pnpm ship:test`, about a minute. `pnpm ship:test:unit` alone takes seconds |
 | Deploy, which goes live; undo it | `pnpm ship --production`; `pnpm ship:rollback` |
 | Generate tokens after changing `DESIGN.md` | `pnpm tokens` |
+| Make the app screens after a recapture, from `src/lib/captures.mjs` | `node scripts/captures.mjs`; `--hash` prints each source's hash to record |
 | Reader's and GA4's real-input checks, on a served build | `node scripts/check-reader.mjs <origin> chromium\|zen`; `node scripts/check-analytics.mjs <origin>` |
 | Serve a build locally, no upload | `wrangler dev -c dist/server/wrangler.json --port 4400` |
 | Prove the Worker name, after a build | `grep -o '"name":"[^"]*"\|"routes"' dist/*/wrangler.json` prints only `openarabic-site`. A `--name` flag would hide a wrong name |

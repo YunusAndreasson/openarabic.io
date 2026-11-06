@@ -1,18 +1,24 @@
 ---
 // The page's one offer. `body` with store links, in the place the plan's page map gives it. Exact words are the ledger's.
+// With `screen`, one small real capture of what the offer is about sits beside the words: the word sheet or the reader.
 import type { ComponentProps } from 'astro/types';
 import StoreLinks from './StoreLinks.astro';
+import Screen from './Screen.astro';
+import { screens } from '../lib/screens';
 
 interface Props {
   from: ComponentProps<typeof StoreLinks>['from'];
   heading?: string;
   /** Set only where a skip link lands on the heading. */
   id?: string;
+  screen?: 'read' | 'tap';
 }
-const { from, heading = 'Get the app', id } = Astro.props;
+const { from, heading = 'Get the app', id, screen } = Astro.props;
+const shot = screen ? screens[screen] : null;
 ---
 
-<section class="offer" id={id}>
+<section class:list={['offer', { 'has-screen': shot }]} id={id}>
+  {shot && <Screen class="offer-screen" {...shot} {...shot.small} />}
   <h2 id={id ? `${id}-h` : undefined} tabindex={id ? '-1' : undefined}>{heading}</h2>
   <slot>
     <p>If you can sound out Arabic script, you can start reading classical texts.</p>
