@@ -24,8 +24,8 @@ export const CAPTURES = {
     crop: { top: 162, bottom: 0 },
     regions: {
       pair: [0, 0.61, 1, 0.25],
-      // Both Arabic lines, so the English above and below falls in the zoom's soft edges.
-      colour: [0.42, 0.69, 0.56, 0.15],
+      // From just above the title to the end of the first Arabic pair: the whole title and the scholar's name in view.
+      opening: [0, 0.2, 1, 0.65],
       word: [0.625, 0.69, 0.19, 0.075],
     },
   },
@@ -49,25 +49,6 @@ export const CAPTURES = {
     regions: {
       review: [0, 0.35, 1, 0.63],
       speak: [0.535, 0.905, 0.435, 0.075],
-    },
-  },
-  horizon: {
-    source: 'docs/specimens/app-captures/05-memory-horizon-breakdown.png',
-    sha256: '77bcc49660a8245801fe0d6d613341beeb0d576d9d4868ade72661260c1e5c3e',
-    size: [1080, 2400],
-    crop: { top: 118, bottom: 79 },
-    regions: {
-      horizon: [0, 0.44, 1, 0.56],
-    },
-  },
-  player: {
-    source: 'docs/specimens/app-captures/03-audio-playing.png',
-    sha256: 'fad40f593d0f3201b55704494b3071ee6e8109769ca95928d24b7ba0e87e68e1',
-    size: [1080, 2400],
-    crop: { top: 118, bottom: 79 },
-    regions: {
-      playing: [0, 0.57, 1, 0.42],
-      player: [0, 0.855, 1, 0.14],
     },
   },
 };

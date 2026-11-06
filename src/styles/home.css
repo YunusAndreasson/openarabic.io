@@ -10,6 +10,7 @@
   --home-gutter: clamp(20px, 5vw, 64px);
   --home-wide: 84rem;
   --quiet-over: color-mix(in oklch, var(--color-on-surface) 78%, transparent);
+  --chapter-size: clamp(3.25rem, 6.6vw, 6.5rem);
   /* The line, the same size at the turn and the payoff. On a phone its size follows the width, so each clause holds a row. */
   --the-line: clamp(3rem, 7.6vw, 7.5rem);
 }
@@ -46,6 +47,9 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .lede, .offer-note { max-width: 42em; color: var(--quiet-over); font-size: 0.875rem; line-height: 1.4; animation: arrive var(--t-arrive) var(--home-ease) calc(4 * var(--stagger) + var(--follow)) both; }
 .lede { margin-top: clamp(12px, 2.4svh, 22px); color: var(--color-on-surface); font-size: clamp(1rem, 1.25vw, 1.125rem); }
 .hero .offer-note { margin-top: 10px; }
+/* The one shortcut to the thing to do: the payoff, for a visitor who won't scroll that far. */
+.hero-try { margin-top: 12px; font-size: clamp(0.9375rem, 1.1vw, 1.0625rem); line-height: 1.4; animation: arrive var(--t-arrive) var(--home-ease) calc(5 * var(--stagger) + var(--follow)) both; }
+.hero-try a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* On a phone the man sits above the words, and the words get their own dark ground. */
 .hero-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, var(--color-surface) 8%, color-mix(in oklch, var(--color-surface) 72%, transparent) 42%, transparent 66%); }
@@ -86,6 +90,8 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .still-audio .turn-source { text-align: left; }
 .still-audio .turn-source a { color: inherit; }
 .still-note { margin-top: 4px; color: var(--color-on-surface-quiet); font-size: 0.8125rem; line-height: 1.35; }
+/* Listen is one still: its chapter word, its claim and the line read aloud. */
+.listen .chapter { margin-bottom: clamp(8px, 2svh, 16px); }
 
 /* Two photographs of one frame: the problem, then the man reaching for the app. Without script they are two stills. */
 .problem-big, .bridge { font-size: clamp(2.25rem, 6.2vw, 6.5rem); font-weight: 300; line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; }
@@ -98,7 +104,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .play .pair-frame:nth-child(2) .still-words { opacity: clamp(0, (var(--t) - 0.6) * 2.5, 1); }
 
 /* A played chapter. This is the plain form: the chapter, its claims, then each of its screens once. */
-.stage { --chapter-size: clamp(3.25rem, 6.6vw, 6.5rem); max-width: var(--home-wide); margin: clamp(72px, 14svh, 140px) auto 0; padding-inline: var(--home-gutter); }
+.stage { max-width: var(--home-wide); margin: clamp(72px, 14svh, 140px) auto 0; padding-inline: var(--home-gutter); }
 .chapter { margin: 0; font-size: var(--chapter-size); line-height: 0.98; }
 .stops { margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 32px; }
 .stop h3 { max-width: 19em; margin: 0; font-size: clamp(1.3125rem, 2.3vw, 2.375rem); font-weight: 400; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; }
@@ -121,7 +127,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 }
 /* The chapter's word is big on its first stop, then gives its place to the claims; the marker keeps naming the chapter. */
 .play .stage-words { position: relative; }
-.play .chapter { position: absolute; left: 0; top: calc(0.875rem * 1.4 + 8px); transform-origin: 0 0; scale: calc(1 - 0.72 * var(--c)); opacity: calc(1 - 1.4 * var(--c)); }
+.play .stage .chapter { position: absolute; left: 0; top: calc(0.875rem * 1.4 + 8px); transform-origin: 0 0; scale: calc(1 - 0.72 * var(--c)); opacity: calc(1 - 1.4 * var(--c)); }
 .play .stops { display: grid; gap: 0; margin-top: 8px; translate: 0 calc((1 - var(--c)) * var(--chapter-h)); }
 .play .stop {
   grid-area: 1 / 1;
@@ -194,7 +200,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .stage[data-stop='3'] .ring[data-at='3']:not([data-before]) { animation: press 1.8s var(--home-ease) infinite; }
 
 /* The payoff: the same line and size as the turn. The press, the English leaving and the heading's change are seen together. */
-.payoff { display: flex; flex-direction: column; justify-content: center; min-height: 100svh; max-width: var(--home-wide); margin-inline: auto; padding: clamp(40px, 8svh, 80px) var(--home-gutter); }
+.payoff { display: flex; flex-direction: column; justify-content: center; min-height: 100svh; max-width: var(--home-wide); margin: clamp(64px, 14svh, 140px) auto 0; padding: clamp(40px, 8svh, 80px) var(--home-gutter); }
 .payoff-title { display: grid; font-size: clamp(1.875rem, 4.6vw, 4.5rem); font-weight: 300; line-height: 1.12; letter-spacing: -0.025em; }
 .payoff-english { margin-top: clamp(16px, 3svh, 32px); color: var(--color-on-surface-quiet); font-size: clamp(1rem, 1.6vw, 1.5rem); line-height: 1.4; text-align: right; }
 .payoff .lift-control { align-self: flex-start; margin-top: clamp(12px, 2svh, 20px); }
@@ -304,6 +310,7 @@ main img { color: transparent; }
   .badge img[src*='google'] { height: 64px; margin-block: -10px; margin-inline: -8px; }
   .lede { font-size: 0.875rem; }
   .offer-note { font-size: 0.8125rem; }
-  .stage { --chapter-size: 2.5rem; }
+  :root { --chapter-size: 2.5rem; }
+  .hero-try { margin-top: 2px; font-size: 0.875rem; }
   .stop h3 { font-size: 1.125rem; }
 }

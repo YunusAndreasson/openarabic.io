@@ -31,6 +31,16 @@ Before, from screenshots of the built page (Chromium, 390×844 and 1440×900) an
 | Chapter order | Read, Remember, Listen. The word added in Read comes back the next morning, and the street becomes the pause before "Try it." |
 | Photo picks | "Use all three", and leave the hero's coat chair, bag and socks out of the night photographs |
 
+## The owner's calls after the second review
+
+The page director's second review, of the rebuilt page on interim captures, found the middle still a list on texts the visitor never saw, and the payoff about 16 phone screens down. The owner chose:
+
+- **Cut the colour zoom** until the recapture. On the old capture it still showed cut English. The colours stay visible in Read's first screen.
+- **Cut the horizon.** On the example account it read as a backlog ("Due today 100+", "A year+ 0"). The morning photo now says "Words return when your predicted recall falls to 90%.", and "You choose 10, 20 or 30 new words a day." leaves the page for now.
+- **Cut the Listen chapter** for now. Its only player capture shows article 318. The street photo is Listen on its own: the heading "Listen", the ledger line "Arabic audio on every word and every line.", and the line's own stored audio (6 s) with the turn's attribution. The line comes back by ear halfway down, and "Play a text on the way home." and the 412 track leave.
+- **Add one quiet link** under the first screen's badges: "Try it. Tap a word you don't know.", to `#payoff`. The words are the payoff's own approved heading; the placement is new.
+- **Retry the recapture** when the machine is quiet.
+
 ## What changed
 
 - **Order.** Hero, then scholars, the turn, the stuck still dissolving into its lit twin ("In the app, the meaning is one tap away." in ink), Read, the morning still, Remember, the street still, Listen, the payoff, the library and the close. The photos run night, night, morning, dusk, dawn.
@@ -90,6 +100,28 @@ The scratch export, its guarded build and the steps are ready to rerun on a quie
 - **Chromium** at 390×664 and 1440×900, played: every hold and the moment between.
 - **Zen**, played and reduced motion, at 390×664. Headless Gecko runs no frame clock (`requestAnimationFrame` about once a second, IntersectionObserver never, lazy images never), so the Zen script sets `--t` with `home.ts`'s own maths and loads images eagerly. That tests what differs between engines: masks, container units, transforms, sticky pins and Amiri's line widths.
 - **Static form:** reads complete and in order, with no sideways scroll.
+- **`pnpm ship --production --dry-run`:** passes.
+  - Home: JS 851 B, CSS 7,794 B.
+  - `/` lab load: 198,309 B transferred, LCP 2,168 ms, CLS 0. The baseline was 165,633 B and 796 ms. Every page's LCP rose in that run, with the host load between 10 and 14 from other sessions, so it's noise plus about 33 KB more on first load. The LCP element is the heading text, painted once Inter arrives. Re-measure on a quiet host.
+- **Script checks** (`wrangler dev`, port 4400):
+  - `check-reader.mjs`: Chromium 15/15, Zen 14/14.
+  - `check-analytics.mjs`: all passed in Zen.
+  - `check-counters.mjs`: matches the 2026-11-01 table.
+  - `/download-app?from=try` and `from=close`: counted and passed on (Play's `utm_campaign=close`).
+- **Payoff, Zen and Chromium:**
+  - All 9 words are at least 44 px and open their own card.
+  - The control hides only the English and turns the heading to "Now read it."; a second press brings the English back.
+  - On a laptop the control sits on the English's row.
+
+## Glitch check, after the owner's cuts
+
+**Chromium, real wheel scrolling, 390×664 and 1440×900.**
+- At every step: no layout shift, no layer at a part opacity, no image unloaded when its layer shows, no sideways overflow, no console error.
+- The only aborted request is the line's audio once its metadata is read, as `preload="metadata"` does.
+- Frames over 50 ms happen only while the first screen loads, plus two borderline ones (50 ms) as the morning photo decodes.
+- Film strips of every transition show no blend, blank or jump.
+
+**Zen.** Every transition was drawn a quarter, half and three-quarters through (frame clock set by hand), at both sizes: no blend, unloaded image or overflow, and masks, clips and the sheet render as in Chromium.
 
 ## Open
 

@@ -8,8 +8,6 @@ const ALT = {
   read: 'The app’s reader: an English line above each classical Arabic line, with parts of the words in colour.',
   tap: 'The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from.',
   speak: 'The app’s voice review: one Arabic word, and the buttons Show answer and Speak to answer.',
-  horizon: 'The app’s memory horizon: how many practised words hold for days, weeks and months.',
-  player: 'The app’s reader with its player open along the bottom, playing a text aloud.',
 } as const;
 
 export type ScreenKey = keyof typeof CAPTURES & keyof typeof ALT;

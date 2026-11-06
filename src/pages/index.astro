@@ -9,8 +9,8 @@ import TappableLine from '../components/TappableLine.astro';
 import StoreQr from '../components/StoreQr.astro';
 import StoreLinks from '../components/StoreLinks.astro';
 import line from '../data/story-line.json';
-// A whole text as the app plays it in Arabic: article 412's stored audio_url, copied so the player's length costs no third-party request.
-import textAudio from '../assets/story/text-412-arabic.mp3?url';
+// The line itself, read aloud in Arabic: its stored track, copied so the player's length costs no third-party request.
+import lineAudio from '../assets/story/line-7106-ar.mp3?url';
 import scholarData from '../data/scholars.json';
 import footerScholars from '../data/footer-scholars.json';
 import startPath from '../data/start-path.json';
@@ -34,20 +34,13 @@ if (clauses.join(' ') !== line.arabic) throw new Error('index: the clauses do no
 
 // The three chapters. Every title and note is ledger wording (PRODUCT.md), each over the screen that shows it.
 const read = [
-  { title: 'English above every Arabic line.', note: 'The English is machine-translated.', screen: 'read', focus: 'pair' },
-  { title: 'Colour shows how multi-part words are built.', screen: 'read', focus: 'colour', zoom: true },
+  { title: 'English above every Arabic line.', note: 'The English is machine-translated.', screen: 'read', focus: 'opening' },
   { title: 'One tap gives you the meaning, a grammar note and audio.', screen: 'tap', arrive: 'sheet', ring: { on: 'word', before: true }, focus: 'card' },
   { title: 'Add the words you don’t know. Practise them with spaced repetition.', screen: 'tap', ring: { on: 'add' }, focus: 'add' },
 ] as const;
 
 const remember = [
   { title: 'Hear the Arabic, then say what it means in English.', note: 'The app grades your answer.', screen: 'speak', focus: 'review', ring: { on: 'speak' } },
-  { title: 'Words return when your predicted recall falls to 90%.', note: 'The numbers shown are from an example account.', screen: 'horizon', arrive: 'push', focus: 'horizon' },
-] as const;
-
-const listen = [
-  { title: 'Arabic audio on every word and every line.', screen: 'player', focus: 'playing' },
-  { title: 'Every text plays English first, then Arabic, or Arabic only.', screen: 'player', focus: 'player' },
 ] as const;
 ---
 
@@ -74,6 +67,7 @@ const listen = [
           <p class="lede">If you can sound out Arabic script, you can start reading classical texts.</p>
           <StoreLinks />
           <p class="offer-note">Free. No ads. No subscription. An account is needed in the app.</p>
+          <p class="hero-try"><a href="#payoff">Try it. Tap a word you don’t know.</a></p>
         </div>
       </section>
     </div>
@@ -117,21 +111,20 @@ const listen = [
     <Stage id="read" chapter="Read" stops={read} />
 
     <Still name="remember" alt="The same man the next morning, standing by the window in grey daylight with his phone in his hand.">
-      <p class="still-line reveal">You choose 10, 20 or 30 new words a day.</p>
+      <p class="still-line reveal">Words return when your predicted recall falls to 90%.</p>
     </Still>
 
     <Stage id="remember" chapter="Remember" stops={remember} />
 
-    <Still name="listen" alt="A man seen from behind, small on a wet street at dusk, wearing earphones.">
-      <p class="still-line reveal">Play a text on the way home.</p>
+    <Still name="listen" alt="A man seen from behind, small on a wet street at dusk, wearing earphones." class="listen">
+      <h2 class="chapter reveal" id="listen">Listen</h2>
+      <p class="still-line reveal">Arabic audio on every word and every line.</p>
       <div class="still-audio reveal">
-        <audio controls preload="metadata" src={textAudio} aria-label="This text read aloud in Arabic"></audio>
-        <p class="turn-source"><a href="/read/a-path-to-mercy-412">A Path to Mercy</a>. Ibn al-Jawzī, Ṣayd al-Khāṭir</p>
+        <audio controls preload="metadata" src={lineAudio} aria-label="The line from Ibn al-Jawzī, read aloud in Arabic"></audio>
+        <p class="turn-source">{line.scholar}, {line.work}</p>
         <p class="still-note">The audio uses AI voices.</p>
       </div>
     </Still>
-
-    <Stage id="listen" chapter="Listen" stops={listen} />
 
     <section class="payoff lift" id="payoff">
       <input class="lift-input vh" id="lift" type="checkbox" aria-label="Hide the English and read it" />
