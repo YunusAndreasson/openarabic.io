@@ -1,13 +1,14 @@
 ---
-import { CATEGORIES } from '../lib/words.mjs';
+import Logo from './Logo.astro';
+import { CATEGORIES, categoryPath } from '../lib/words.mjs';
 import scholars from '../data/footer-scholars.json';
 ---
 
 <footer>
   <div class="footer-inner">
-    <a class="footer-brand" href="/"><svg viewBox="0 0 1000 1000" width="22" height="22" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M0 500a500 500 0 1 1 1000 0a500 500 0 1 1-1000 0ZM106.9 500a393.1 393.1 0 1 0 786.2 0a393.1 393.1 0 1 0-786.2 0Z" /></svg><span>OpenArabic</span></a>
+    <a class="footer-brand" href="/"><Logo /><span>OpenArabic</span></a>
     <nav class="footer-browse" aria-label="Browse">
-      <p class="footer-links"><a href="/dictionary">Dictionary</a>{' '}<a href="/books/al-fawaid">Al-Fawāʾid</a>{' '}{Object.entries(CATEGORIES).map(([name, label]) => <><a href={`/category/${name}`}>{label}</a>{' '}</>)}</p>
+      <p class="footer-links"><a href="/dictionary">Dictionary</a>{' '}<a href="/books/al-fawaid">Al-Fawāʾid</a>{' '}{Object.entries(CATEGORIES).map(([name, label]) => <><a href={categoryPath(name)}>{label}</a>{' '}</>)}</p>
       <p class="footer-links">{scholars.map((scholar) => <><a href={scholar.path}>{scholar.name}</a>{' '}</>)}</p>
     </nav>
     <div class="footer-legal">

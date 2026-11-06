@@ -5,11 +5,11 @@ import Offer from '../../components/Offer.astro';
 import SearchForm from '../../components/SearchForm.astro';
 import LetterNav from '../../components/LetterNav.astro';
 import { site } from '../../lib/snapshot.mjs';
+import { absolute, breadcrumbs } from '../../lib/site.mjs';
 
-const SITE = 'https://openarabic.io';
 const jsonLd = [
-  { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: `${SITE}/dictionary`, inLanguage: 'en', isPartOf: { '@id': `${SITE}/#website` } },
-  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Dictionary', item: `${SITE}/dictionary` }] },
+  { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: absolute('/dictionary'), inLanguage: 'en', isPartOf: { '@id': absolute('/#website') } },
+  breadcrumbs(['Dictionary', '/dictionary']),
 ];
 ---
 

@@ -4,23 +4,21 @@ import Entries from '../../components/Entries.astro';
 import Offer from '../../components/Offer.astro';
 import LetterNav from '../../components/LetterNav.astro';
 import SearchForm from '../../components/SearchForm.astro';
+import type { GetStaticPaths, InferGetStaticParamsType } from 'astro';
 import { site } from '../../lib/snapshot.mjs';
-import { bucketLabel, BUCKETS } from '../../lib/words.mjs';
+import { absolute, breadcrumbs } from '../../lib/site.mjs';
+import { bucketLabel } from '../../lib/words.mjs';
 
-export function getStaticPaths() {
-  const present = site().buckets();
-  return BUCKETS.filter((bucket) => present.has(bucket)).map((letter) => ({ params: { letter } }));
-}
+export const getStaticPaths = (() => site().letters().map((letter) => ({ params: { letter } }))) satisfies GetStaticPaths;
 
-const { letter } = Astro.params;
+const { letter } = Astro.params as InferGetStaticParamsType<typeof getStaticPaths>;
 const label = bucketLabel(letter);
 const startsWith = letter === '0-9' ? 'a number' : letter === 'other' ? 'another character' : label;
 const entries = site().entriesIn(letter);
-const SITE = 'https://openarabic.io';
 const path = `/dictionary/${letter}`;
 const jsonLd = [
-  { '@type': 'CollectionPage', name: `Arabic words by meaning: ${label}`, url: `${SITE}${path}`, inLanguage: 'en', isPartOf: { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: `${SITE}/dictionary` } },
-  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Dictionary', item: `${SITE}/dictionary` }, { '@type': 'ListItem', position: 3, name: label, item: `${SITE}${path}` }] },
+  { '@type': 'CollectionPage', name: `Arabic words by meaning: ${label}`, url: absolute(path), inLanguage: 'en', isPartOf: { '@type': 'CollectionPage', name: 'Arabic Dictionary', url: absolute('/dictionary') } },
+  breadcrumbs(['Dictionary', '/dictionary'], [label, path]),
 ];
 ---
 

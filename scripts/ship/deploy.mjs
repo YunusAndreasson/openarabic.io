@@ -1,9 +1,8 @@
-import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { fail, ROOT, walk, WORKER } from './lib.mjs';
+import { bin, fail, LIVE_DOMAIN, ROOT, walk, WORKER } from './lib.mjs';
 
 export const VERSION = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PREVIEW = new RegExp(`^https://${WORKER}\\.[a-z0-9-]+\\.workers\\.dev$`);
@@ -11,12 +10,8 @@ const PUBLISHED = path.join(ROOT, '.ship/published');
 // Untracked: `published` is committed, and the preview URL stays off anything that could become public.
 const PREVIEW_URL = path.join(ROOT, '.ship/preview-url');
 
-const wrangler = (args, env = {}) =>
-  spawnSync(path.join(ROOT, 'node_modules/.bin/wrangler'), args, {
-    cwd: ROOT,
-    stdio: ['ignore', 'inherit', 'inherit'],
-    env: { ...process.env, WRANGLER_SEND_METRICS: 'false', ...env },
-  });
+const LIVE_ORIGIN = `https://${LIVE_DOMAIN}`;
+const wrangler = (args, env = {}) => bin('wrangler', args, { stdio: ['ignore', 'inherit', 'inherit'], env });
 
 /** Checked before anything uses it, so a hand-edited record can't put another name or a flag into a wrangler command. */
 export function readPublished() {
@@ -42,7 +37,7 @@ export function writePublished(record) {
 
 export const readPreviewUrl = () => {
   const url = fs.existsSync(PREVIEW_URL) ? fs.readFileSync(PREVIEW_URL, 'utf8').trim() : '';
-  return PREVIEW.test(url) || url === 'https://openarabic.io' ? url : null;
+  return PREVIEW.test(url) || url === LIVE_ORIGIN ? url : null;
 };
 
 export const writePreviewUrl = (url) => fs.writeFileSync(PREVIEW_URL, `${url}\n`);
@@ -88,7 +83,7 @@ export const previewTarget = (targets, production = false) => {
   const preview = targets.filter((target) => PREVIEW.test(target));
   const live = targets.filter((target) => LIVE_TARGET.test(target));
   if (preview.length + live.length !== targets.length) return null;
-  if (production && live.length === 1 && preview.length <= 1) return 'https://openarabic.io';
+  if (production && live.length === 1 && preview.length <= 1) return LIVE_ORIGIN;
   return live.length === 0 && preview.length === 1 ? preview[0] : null;
 };
 

@@ -3,7 +3,7 @@
 // No skip flag exists. Anything but --dry-run is refused, so no flag can name another Worker.
 import fs from 'node:fs';
 import path from 'node:path';
-import { acquireLock, bin, fail, PRODUCTION_ALLOWED, REAL_DEPLOY_REFUSAL, REAL_DEPLOYS_ALLOWED, ROOT, ShipFailure, walk, WORKER } from './ship/lib.mjs';
+import { acquireLock, bin, fail, PRODUCTION_ALLOWED, REAL_DEPLOY_REFUSAL, REAL_DEPLOYS_ALLOWED, ROOT, sha256, ShipFailure, walk, WORKER } from './ship/lib.mjs';
 import { checkBuiltConfig, checkIndexable, checkNoindex, checkSourceConfig } from './ship/guard.mjs';
 import { colourBan, driftCheck, lintGate } from './ship/design-check.mjs';
 import { checkBudgets } from './ship/budgets.mjs';
@@ -11,13 +11,12 @@ import { checkInBrowser } from './ship/browser-budgets.mjs';
 import { checkClaims } from './ship/claims.mjs';
 import { checkDevBoots } from './ship/dev-boot.mjs';
 import { hashBuild, previewTarget, readPublished, rollbackTo, upload, uploadCommand, writePreviewUrl, writePublished } from './ship/deploy.mjs';
-import { sha256, smoke } from './ship/smoke.mjs';
+import { smoke } from './ship/smoke.mjs';
 import { prepareImages } from './ship/images.mjs';
 import { checkBuiltPages, localWorker, requireParity, runParity } from './ship/parity.mjs';
-import { fetchSnapshot } from './ship/fetch.mjs';
+import { fetchSnapshot, readSnapshot } from './ship/fetch.mjs';
 import { describeProblems, validateSnapshot } from './ship/validate.mjs';
 import { compareSnapshots, loadBaseline, writeReport } from './ship/compare.mjs';
-import { readSnapshot } from './ship/fetch.mjs';
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
@@ -25,19 +24,9 @@ const production = args.includes('--production');
 const approveAt = args.indexOf('--approve');
 const approve = approveAt === -1 ? null : (args[approveAt + 1] ?? '');
 const started = Date.now();
-const results = [];
-const notBuilt = [];
 let uploadBegan = false;
 
-function report(step, status, detail = '') {
-  results.push({ step, status, detail });
-  console.log(`[${step}] ${status}${detail ? `: ${detail}` : ''}`);
-}
-
-function stub(step, task, what) {
-  notBuilt.push(step);
-  report(step, 'NOT BUILT', `${what} Task ${task}. Not a pass.`);
-}
+const report = (step, status, detail = '') => console.log(`[${step}] ${status}${detail ? `: ${detail}` : ''}`);
 
 /** Fetch, validate, compare. Returns the snapshot the build may read, or stops the run. */
 async function snapshotSteps(published) {
@@ -69,7 +58,7 @@ function build(snapshotFile) {
   // A stale build or redirect must never be what the guard reads.
   fs.rmSync(path.join(ROOT, 'dist'), { recursive: true, force: true });
   fs.rmSync(path.join(ROOT, '.wrangler/deploy'), { recursive: true, force: true });
-  const result = bin('astro', ['build'], { env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', OPENARABIC_SNAPSHOT: snapshotFile, OPENARABIC_PRODUCTION: production ? '1' : '0' } });
+  const result = bin('astro', ['build'], { env: { OPENARABIC_SNAPSHOT: snapshotFile, OPENARABIC_PRODUCTION: production ? '1' : '0' } });
   if (result.status !== 0) fail(`astro build failed:\n${result.stdout}\n${result.stderr}`);
 }
 
@@ -166,7 +155,6 @@ async function main() {
     report('smoke', 'WOULD RUN', 'Needs the preview URL an upload returns. Not run');
     report('record', 'WOULD RUN', '.ship/published is untouched');
     console.log(`\nDRY RUN COMPLETE. Worker: ${WORKER}. Routes: ${JSON.parse(fs.readFileSync(path.join(ROOT, built.file), 'utf8')).routes?.map((route) => route.pattern).join(', ') || 'none'}.${production ? ' Production: noindex off.' : ''} Nothing was uploaded.`);
-    if (notBuilt.length > 0) console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);
     return;
   }
   if (!REAL_DEPLOYS_ALLOWED) fail(REAL_DEPLOY_REFUSAL);
@@ -199,7 +187,6 @@ async function main() {
   report('record', 'PASS', `.ship/published holds version ${deployed.version}, snapshot ${content.hash}`);
 
   console.log(`\nSHIPPED${production ? ' PRODUCTION' : ' to preview'} in ${((Date.now() - started) / 1000).toFixed(1)} s. ${url}`);
-  if (notBuilt.length > 0) console.log(`NOT BUILT, so not passed: ${notBuilt.join(', ')}.`);
 }
 
 main().catch((error) => {

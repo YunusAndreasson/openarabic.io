@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import classes from '../../vendor/grammar-classes.json' with { type: 'json' };
+import { escapeHtml } from './words.mjs';
 
 const MARK = /^[ؐ-ًؚ-ٰٟۖ-ۭ]+$/u;
 
@@ -30,7 +31,7 @@ function shaped(raw) {
   const out = [];
   for (const segment of raw) {
     if (MARK.test(segment.t) && out.length > 0) {
-      const previous = out[out.length - 1];
+      const previous = out.at(-1);
       const chars = [...previous.t];
       let index = chars.length - 1;
       while (index > 0 && MARK.test(chars[index])) index -= 1;
@@ -52,17 +53,14 @@ function shaped(raw) {
   return out;
 }
 
-const escape = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-export { escape as escapeHtml };
-
 /** A word's inner HTML: short class names, because the longest article has to fit 12 KB brotli. */
 export function wordHtml(hash, words, word) {
   const raw = all(hash, words)[word.id];
-  if (!raw) return escape(word.word_form);
+  if (!raw) return escapeHtml(word.word_form);
   return shaped(raw)
     .map((segment) => {
       const name = classes[segment.c];
-      return name ? `<span class=${name}>${escape(segment.t)}</span>` : escape(segment.t);
+      return name ? `<span class=${name}>${escapeHtml(segment.t)}</span>` : escapeHtml(segment.t);
     })
     .join('');
 }

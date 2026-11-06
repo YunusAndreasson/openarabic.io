@@ -13,7 +13,6 @@
 }
 
 body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-.draft { text-decoration: none; }
 
 /* Display type: large, light and tight, as Inter's display cut wants it. */
 .hero h1, .chapter { font-weight: 300; letter-spacing: -0.035em; }

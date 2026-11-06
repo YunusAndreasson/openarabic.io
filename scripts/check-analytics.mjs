@@ -3,6 +3,7 @@
 // Requests to Google are stopped at the browser, so these runs add nothing to the property. usage: node scripts/check-analytics.mjs <origin>
 import fs from 'node:fs';
 import { chromium } from 'playwright-core';
+import { CHROMIUM } from './ship/lib.mjs';
 import { zenSession } from './zen-driver.mjs';
 
 const ORIGIN = process.argv[2] ?? 'http://127.0.0.1:4400';
@@ -44,7 +45,7 @@ async function run(name, driver) {
   check(`${name}: nothing to Google after refusing`, driver.google().length === 0);
 }
 
-const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+const browser = await chromium.launch({ executablePath: CHROMIUM, headless: true });
 const context = await browser.newContext();
 const page = await context.newPage();
 let google = [];

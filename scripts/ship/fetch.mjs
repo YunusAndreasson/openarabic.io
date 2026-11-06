@@ -1,10 +1,8 @@
 // Task 2.1: reads the content tables into one immutable snapshot file, named by its hash. READ ONLY: GET and
 // HEAD, one at a time, at most 2 a second, with the public anon key. Rules: docs/site-plan.md `Ship`.
-import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { setTimeout as sleep } from 'node:timers/promises';
-import { fail, ROOT } from './lib.mjs';
+import { fail, pacer, ROOT, sha256 } from './lib.mjs';
 
 const PROJECT = 'kkmnzbeugdoajtzfjkxg';
 export const SUPABASE_HOST = `${PROJECT}.supabase.co`;
@@ -58,12 +56,10 @@ export function readAnonKey() {
 
 /** Sequential by construction, with starts at least MIN_GAP_MS apart, and only ever GET or HEAD. */
 function client(key, fetchImpl, gapMs = MIN_GAP_MS) {
-  let last = 0;
+  const turn = pacer(gapMs);
   const stats = { requests: 0, supabaseRequests: 0, bytes: 0 };
   const paced = async (url, init, what) => {
-    const wait = last + gapMs - Date.now();
-    if (wait > 0) await sleep(wait);
-    last = Date.now();
+    await turn();
     stats.requests += 1;
     try {
       return await fetchImpl(url, init);
@@ -177,7 +173,7 @@ async function readRating(api) {
 export const canonical = ({ tables, restricted, rating }) =>
   JSON.stringify({ format: 1, tables: Object.fromEntries(Object.keys(TABLES).map((table) => [table, tables[table]])), restricted, rating });
 
-export const hashOf = (bytes) => createHash('sha256').update(bytes).digest('hex');
+export const hashOf = sha256;
 
 export const snapshotDir = (root = ROOT) => path.join(root, '.ship/snapshots');
 

@@ -6,6 +6,7 @@ import { themeColorHex } from '../styles/tokens.generated';
 import amiriUrl from '../fonts/amiri-regular.subset.woff2?url';
 import interUrl from '../fonts/inter-variable.subset.woff2?url';
 import Footer from '../components/Footer.astro';
+import { absolute, SITE, SITE_NAME, SOCIAL } from '../lib/site.mjs';
 
 interface Props {
   title?: string;
@@ -21,10 +22,8 @@ interface Props {
   neverIndex?: boolean;
 }
 
-declare const __OA_PRODUCTION__: boolean;
-
 const {
-  title = 'OpenArabic: Read the Classics',
+  title = SITE_NAME,
   description = 'If you can sound out Arabic script, you can start reading classical texts.',
   canonical = '/',
   jsonLd = [],
@@ -40,15 +39,15 @@ const VIEW: Record<string, string> = { '': 'home', word: 'word', read: 'read', d
 const viewType = VIEW[firstPart] ?? 'other';
 const storedMark = storedDescription ? { 'data-stored': '' } : {};
 
-const SITE = 'https://openarabic.io';
-const canonicalUrl = canonical === null ? null : canonical === '/' ? SITE : `${SITE}${canonical}`;
-const NAME = 'OpenArabic: Read the Classics';
+const canonicalUrl = canonical === null ? null : canonical === '/' ? SITE : absolute(canonical);
+const organization = { '@id': absolute('/#organization') };
+const person = { '@id': absolute('/#person') };
 // Docs/site-plan.md `URL parity`: the global set on every page, and no aggregateRating, ever.
 const graph = [
-  { '@type': 'Organization', '@id': `${SITE}/#organization`, name: NAME, url: SITE, logo: { '@type': 'ImageObject', url: `${SITE}/oa-logo.png` }, sameAs: ['https://x.com/openarabicio', 'https://www.instagram.com/openarabic.io/', 'https://www.facebook.com/OpenArabic.io/'], founder: { '@id': `${SITE}/#person` } },
-  { '@type': 'WebSite', '@id': `${SITE}/#website`, name: NAME, url: SITE, inLanguage: 'en', publisher: { '@id': `${SITE}/#organization` } },
-  { '@type': 'Person', '@id': `${SITE}/#person`, name: 'Yunus Andréasson' },
-  { '@type': 'MobileApplication', '@id': `${SITE}/#app`, name: NAME, operatingSystem: 'iOS, Android', applicationCategory: 'EducationalApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: { '@id': `${SITE}/#person` }, publisher: { '@id': `${SITE}/#organization` } },
+  { '@type': 'Organization', ...organization, name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: absolute('/oa-logo.png') }, sameAs: Object.values(SOCIAL), founder: person },
+  { '@type': 'WebSite', '@id': absolute('/#website'), name: SITE_NAME, url: SITE, inLanguage: 'en', publisher: organization },
+  { '@type': 'Person', ...person, name: 'Yunus Andréasson' },
+  { '@type': 'MobileApplication', '@id': absolute('/#app'), name: SITE_NAME, operatingSystem: 'iOS, Android', applicationCategory: 'EducationalApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: person, publisher: organization },
   ...jsonLd,
 ];
 // Escaped so stored text can't close the script element.
@@ -67,12 +66,12 @@ const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })
     <meta name="google-site-verification" content="7Ph-VBorESFEHDcvOZq7wp9DHLUe88ARuxlwaPseG00" />
     <meta name="theme-color" content={themeColorHex} />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
-    <meta property="og:site_name" content={NAME} />
+    <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} {...storedMark} />
     {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
-    {ogImage && <meta property="og:image" content={`${SITE}${ogImage}`} />}
+    {ogImage && <meta property="og:image" content={absolute(ogImage)} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <link rel="icon" href="/mark-64.png" type="image/png" />
     <link rel="manifest" href="/manifest.webmanifest" />

@@ -1,0 +1,15 @@
+---
+// One example sentence on a word page: the sentence, its English, the word as it appears there and where it comes from. Text as stored.
+interface Props {
+  example: { wordForm: string; english: string; grammarNote?: string | null; sentenceArabic: string; sentenceEnglish: string; articleTitle: string; articlePath: string };
+}
+const { example } = Astro.props;
+---
+
+<div class="example">
+  <p class="reading" lang="ar" dir="rtl">{example.sentenceArabic}</p>
+  <p class="en" data-stored>{example.sentenceEnglish}</p>
+  <p class="example-word"><bdi class="inline-ar" lang="ar">{example.wordForm}</bdi> <span data-stored>{example.english}</span></p>
+  {example.grammarNote && <p class="quiet" data-stored>{example.grammarNote}</p>}
+  <p class="example-from"><a href={example.articlePath}>From <span data-stored>{example.articleTitle}</span></a></p>
+</div>

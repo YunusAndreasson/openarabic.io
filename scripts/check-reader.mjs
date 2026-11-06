@@ -8,6 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { chromium } from 'playwright-core';
+import { CHROMIUM } from './ship/lib.mjs';
 
 const ORIGIN = process.argv[2] ?? 'http://127.0.0.1:4400';
 const WHICH = process.argv[3] ?? 'chromium';
@@ -15,7 +16,7 @@ const SHOTS = process.argv[4];
 const ARTICLE = '/read/' + (process.env.ARTICLE ?? fs.readdirSync('dist/client/read').find((name) => name.endsWith('-377.html')).replace('.html', ''));
 
 async function chromiumDriver() {
-  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+  const browser = await chromium.launch({ executablePath: CHROMIUM, headless: true });
   const context = await browser.newContext({ viewport: { width: 390, height: 664 }, deviceScaleFactor: 2 });
   const page = await context.newPage();
   return {

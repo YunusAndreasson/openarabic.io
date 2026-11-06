@@ -1,8 +1,7 @@
-import { createHash } from 'node:crypto';
 import { setTimeout as sleep } from 'node:timers/promises';
+import { sha256 } from './lib.mjs';
 
 export const NOINDEX_META = /<meta\s+name="robots"\s+content="noindex[^"]*"/i;
-export const sha256 = (data) => createHash('sha256').update(data).digest('hex');
 
 const headerProblems = (route, response, production) => {
   const problems = [];

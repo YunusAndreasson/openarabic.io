@@ -4,7 +4,7 @@ import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { fail, ROOT, ShipFailure } from './lib.mjs';
+import { fail, ROOT, ShipFailure, TOOL_ENV } from './lib.mjs';
 
 const SOURCES = ['astro.config.mjs', 'package.json', 'tsconfig.json', 'wrangler.jsonc', 'public', 'src'];
 const BOOT_LIMIT_MS = 90_000;
@@ -66,7 +66,7 @@ export async function checkDevBoots() {
     cwd: dir,
     detached: true,
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', WRANGLER_SEND_METRICS: 'false' },
+    env: { ...process.env, ...TOOL_ENV },
   });
   child.stdout.on('data', (chunk) => (output += chunk));
   child.stderr.on('data', (chunk) => (output += chunk));

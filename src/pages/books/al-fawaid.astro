@@ -3,10 +3,10 @@
 import Content from '../../layouts/Content.astro';
 import Offer from '../../components/Offer.astro';
 import book from '../../data/al-fawaid.json';
+import { absolute } from '../../lib/site.mjs';
 
-const SITE = 'https://openarabic.io';
 const jsonLd = [
-  { '@type': 'Book', name: 'Al-Fawaid', alternateName: 'الفوائد', author: { '@type': 'Person', name: 'Ibn al-Qayyim al-Jawziyya', alternateName: 'ابن قيّم الجوزيّة', sameAs: 'https://en.wikipedia.org/wiki/Ibn_Qayyim_al-Jawziyya' }, inLanguage: ['ar', 'en'], numberOfPages: 411, url: `${SITE}/books/al-fawaid`, publisher: { '@id': `${SITE}/#organization` }, isAccessibleForFree: true, workExample: { '@type': 'Book', bookFormat: 'https://schema.org/EBook', encodingFormat: 'application/pdf', url: `${SITE}/books/al-fawaid.pdf` } },
+  { '@type': 'Book', name: 'Al-Fawaid', alternateName: 'الفوائد', author: { '@type': 'Person', name: 'Ibn al-Qayyim al-Jawziyya', alternateName: 'ابن قيّم الجوزيّة', sameAs: 'https://en.wikipedia.org/wiki/Ibn_Qayyim_al-Jawziyya' }, inLanguage: ['ar', 'en'], numberOfPages: 411, url: absolute('/books/al-fawaid'), publisher: { '@id': absolute('/#organization') }, isAccessibleForFree: true, workExample: { '@type': 'Book', bookFormat: 'https://schema.org/EBook', encodingFormat: 'application/pdf', url: absolute('/books/al-fawaid.pdf') } },
 ];
 ---
 

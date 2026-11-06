@@ -29,18 +29,15 @@ function checkConfig(config, label, production = false) {
   if (config.topLevelName !== undefined && config.topLevelName !== WORKER) {
     fail(`${label} has topLevelName "${config.topLevelName}". Only "${WORKER}" may ship.`);
   }
+  const liveRoute = production && JSON.stringify(config.routes) === LIVE_ROUTE;
   // Off only once the live domain is what serves the site: otherwise the Worker would answer nowhere.
-  const liveOnly = production && JSON.stringify(config.routes) === LIVE_ROUTE && config.workers_dev === false;
-  if (config.workers_dev !== true && !liveOnly) {
+  if (config.workers_dev !== true && !(liveRoute && config.workers_dev === false)) {
     fail(`${label} has workers_dev ${JSON.stringify(config.workers_dev)}. It may be off only under --production, with the live domain attached.`);
   }
-  if (config.env && Object.keys(config.env).length > 0) {
-    fail(`${label} defines environments (${Object.keys(config.env).join(', ')}), which could carry another name or route.`);
+  const environments = [...Object.keys(config.env ?? {}), ...(Array.isArray(config.definedEnvironments) ? config.definedEnvironments : [])];
+  if (environments.length > 0) {
+    fail(`${label} defines environments (${environments.join(', ')}), which could carry another name or route.`);
   }
-  if (Array.isArray(config.definedEnvironments) && config.definedEnvironments.length > 0) {
-    fail(`${label} defines environments (${config.definedEnvironments.join(', ')}), which could carry another name or route.`);
-  }
-  const liveRoute = production && JSON.stringify(config.routes) === LIVE_ROUTE;
   for (const [trail, key, value] of entries(config)) {
     if (liveRoute && trail[0] === 'routes') continue;
     if (ROUTE_KEYS.has(key) && !isEmpty(value)) {

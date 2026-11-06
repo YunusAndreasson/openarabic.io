@@ -1,20 +1,8 @@
 /* The story page, DESIGN.md `Story`. docs/specimens/design-test/ is the reference. */
 :root {
   --arabic-line: var(--fluid-arabic-line-phone);
-  --arabic-pair: var(--fluid-arabic-line-phone);
-  --beat-size: var(--type-beat-size);
   --pressed: color-mix(in oklch, var(--color-on-surface) 10%, var(--color-surface));
 }
-
-.words p, .offer p { max-width: var(--space-measure); }
-.after-word { margin-top: var(--space-word); }
-.after-thought { margin-top: var(--space-thought); }
-
-/* Page grid */
-.beat { width: 100%; max-width: var(--space-page-max); margin-inline: auto; padding-inline: var(--space-gutter); }
-.gap, .bar-wrap, .gap-phone-top { margin-top: var(--fluid-beat-gap); }
-.gap-phone { margin-top: var(--space-block); }
-.object, .offer { margin-top: var(--space-block); }
 
 /* The line */
 .line { font-family: var(--type-arabic-line-family); font-size: var(--arabic-line); font-weight: var(--type-arabic-line-weight); line-height: var(--type-arabic-line-line-height); letter-spacing: 0; text-align: right; }
@@ -29,13 +17,6 @@
 @media (hover: hover) { .w:hover { border-bottom-color: var(--color-on-surface-quiet); } }
 .w:active, .w:has(+ :popover-open) { background: var(--pressed); border-bottom-color: var(--color-primary); transition: none; }
 .w:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 0; }
-
-/* Attribution and hint */
-.attr-row { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 var(--space-thought); margin-top: var(--space-word); }
-.attribution, .hint { font-size: var(--type-small-size); line-height: var(--type-small-line-height); }
-.attribution a { color: var(--color-on-surface-quiet); }
-.hint { color: var(--color-on-surface); }
-@media (hover: hover) { .attribution a:hover { text-decoration-thickness: 2px; } }
 
 /* Word card. Inside .line, so font, size and alignment are reset here. */
 .card {
@@ -70,52 +51,11 @@
 
 /* Store links */
 .stores { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: var(--space-store-gap); }
-.store {
-  display: inline-flex; align-items: center; justify-content: center; height: 48px; padding-inline: var(--space-store-inset);
-  background: var(--color-primary); color: var(--color-on-primary); border-radius: var(--radius-control); text-decoration: none;
-  transition: background-color var(--duration-state) var(--ease); touch-action: manipulation;
-}
-@media (hover: hover) { .store:hover { background: var(--color-primary-hover); } }
-.store:active { background: var(--color-primary-hover); transition: none; }
-
-.bar-wrap { position: relative; }
-.store-bar { position: sticky; bottom: 0; z-index: 1; margin-top: var(--fluid-beat-gap); background: var(--color-surface); border-top: 1px solid var(--color-outline); }
-.store-bar-inner { max-width: var(--space-page-max); margin-inline: auto; padding: var(--space-store-bar-inset) var(--space-gutter); }
-.store-bar .store { height: 44px; }
-.store-bar .stores { flex-wrap: nowrap; }
 
 /* QR, laptop only */
 .qr-plate { display: none; }
 .qr { display: block; width: 120px; height: 120px; background: var(--color-on-surface); shape-rendering: crispEdges; }
 .qr path { fill: none; stroke: var(--color-surface); stroke-width: 1; }
-
-/* Capture */
-.capture { display: block; width: fit-content; margin-left: auto; }
-.capture img { display: block; height: var(--fluid-capture-height); width: auto; border: 1px solid var(--color-outline); border-radius: var(--radius-capture); }
-.capture figcaption { width: 0; min-width: 100%; overflow-wrap: anywhere; margin-top: var(--space-word); font-size: var(--type-small-size); line-height: var(--type-small-line-height); color: var(--color-on-surface-quiet); }
-
-/* Screen 3 */
-.big { text-align: right; }
-.big-word { font-family: var(--type-arabic-word-family); font-size: var(--fluid-arabic-word); line-height: var(--type-arabic-word-line-height); letter-spacing: 0; }
-.big-gloss { margin-top: var(--space-word); font-size: var(--type-beat-laptop-size); line-height: var(--type-beat-laptop-line-height); }
-.seg-word { display: inline-block; }
-
-/* Coloured word: below iOS 26.2 the plain copy shows, with no script */
-.w-seg { display: none; }
-@supports (field-sizing: content) { .w-plain { display: none; } .w-seg { display: inline; } }
-.part-conjunction { color: var(--color-grammar-conjunction); }
-.part-preposition { color: var(--color-grammar-preposition); }
-.part-particle { color: var(--color-grammar-particle); }
-.part-negation { color: var(--color-grammar-negation); }
-.part-plural { color: var(--color-grammar-plural); }
-.part-possessive { color: var(--color-grammar-possessive); }
-.part-verb { color: var(--color-grammar-verb); }
-.part-interrogative { color: var(--color-grammar-interrogative); }
-.part-demonstrative { color: var(--color-grammar-demonstrative); }
-.part-subject-prefix { color: var(--color-grammar-subject-prefix); }
-.part-future { color: var(--color-grammar-future); }
-.part-article { color: var(--color-grammar-article); }
-.part-accent { color: var(--color-grammar-accent); }
 
 /* Audio */
 .card audio { flex: none; }
@@ -125,15 +65,6 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 .lift { position: relative; }
 /* Pressing the label focuses this hidden box, so it sits where the label is. Elsewhere, focus would scroll the page and move the control. */
 .lift-input { bottom: 24px; left: var(--space-gutter); }
-.sentence { margin-left: auto; max-width: var(--space-measure-arabic); font-size: var(--beat-size); line-height: var(--type-beat-line-height); text-align: right; }
-.pairs { display: flex; flex-wrap: wrap; gap: var(--space-word); margin-top: var(--space-thought); }
-.pair { display: flex; flex-direction: column; align-items: center; }
-.pair-ar { font-family: var(--type-arabic-pair-family); font-size: var(--arabic-pair); line-height: var(--type-arabic-pair-line-height); letter-spacing: 0; }
-.pair-gloss { max-width: 8ch; min-height: calc(2 * 1.4em); font-size: var(--type-small-size); line-height: var(--type-small-line-height); color: var(--color-on-surface); text-align: center; }
-.en { transition: opacity var(--duration-lift) var(--ease), visibility var(--duration-lift) var(--ease); }
-.stage [class*="part-"] { transition: color var(--duration-lift) var(--ease); }
-.lift-input:checked ~ .stage .en { opacity: 0; visibility: hidden; }
-.lift-input:checked ~ .stage [class*="part-"] { color: var(--color-on-surface); }
 .lift-control {
   display: inline-grid; align-items: center; justify-items: center; min-height: 48px; margin-top: var(--space-block); padding-inline: var(--space-thought);
   border: 1px solid var(--color-primary); border-radius: var(--radius-control); background: var(--color-surface); color: var(--color-primary); cursor: pointer; touch-action: manipulation;
@@ -145,20 +76,11 @@ audio { display: block; width: 100%; max-width: var(--space-measure); height: 48
 .lift-input:checked ~ .lift-control .bring { visibility: visible; }
 @media (hover: hover) { .lift-control:hover { background: var(--pressed); } }
 .lift-control:active { background: var(--pressed); transition: none; }
-.store:focus-visible, .lift-input:focus-visible ~ .lift-control { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.lift-input:focus-visible ~ .lift-control { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
 @media (min-width: 56.25rem) {
-  :root { --beat-size: var(--type-beat-laptop-size); --arabic-line: var(--fluid-arabic-line-laptop); --arabic-pair: 44px; }
-  .beat { display: grid; grid-template-columns: minmax(18rem, 2fr) 5fr; column-gap: var(--space-column-gap); padding-inline: var(--space-gutter-laptop); align-items: start; }
-  .words, .offer { grid-column: 1; grid-row: 1; }
-  .object, .line-col { grid-column: 2; grid-row: 1; margin-top: 0; }
-  .offer, .gap-phone, .gap-phone-top { margin-top: 0; }
-  .bookend { align-items: end; min-height: calc(100svh - var(--space-peek)); padding-bottom: var(--space-block); }
-  .store-bar-inner { padding-inline: var(--space-gutter-laptop); }
-  .lift .stage { grid-column: 2; grid-row: 1; }
-  .lift .lift-attr { grid-column: 2; grid-row: 2; }
+  :root { --arabic-line: var(--fluid-arabic-line-laptop); }
   .lift .lift-control { grid-column: 1; grid-row: 1; justify-self: start; margin-top: 0; }
-  .pair-gloss { max-width: 12ch; }
   .lift-input { top: 24px; bottom: auto; left: var(--space-gutter-laptop); }
   .qr-plate { display: block; }
   @supports (anchor-name: --a) { .card { right: anchor(right); width: var(--space-card-laptop); } }

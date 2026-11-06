@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { fail, ROOT, walk } from './lib.mjs';
 import { NOINDEX_META } from './smoke.mjs';
 import { routeOf } from './budgets.mjs';
-import { slugifyText } from '../../src/lib/words.mjs';
+import { wordPath as wordUrl } from '../../src/lib/words.mjs';
 
 const LIST = 'docs/research/parity/sitemap-2026-11-01.txt';
 const OUTSIDE = 'docs/research/parity/outside-sitemap-2026-11-01.txt';
@@ -16,7 +16,7 @@ const CONTENT_TYPES = { '.html': 'text/html; charset=utf-8', '.json': 'applicati
 const read = (file, root) => fs.readFileSync(path.join(root, file), 'utf8');
 const lines = (text) => text.split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'));
 const trailing = (route) => Number(route.match(/-(\d+)$/)?.[1]);
-const wordPath = ([id, , meaning]) => `/word/${slugifyText(meaning) || 'word'}-${id}`;
+const wordPath = ([id, , meaning]) => wordUrl({ id, meaning });
 
 /** Every row of the plan's table, as [route, status, location]. Ids in the odd cases come from the data, so a test fixture runs the same table. */
 export function expectations(root = ROOT) {
@@ -78,7 +78,7 @@ export function expectations(root = ROOT) {
     expect(`/word/${word[0]}`, 308, wordPath(word));
     expect(`/word/old-${word[0]}`, 308, wordPath(word));
     expect(`${wordPath(word)}/`, 308, wordPath(word));
-    expect(`/word/${slugifyText(word[2]) || 'word'}-99999999`, 404);
+    expect(wordUrl({ id: 99999999, meaning: word[2] }), 404);
   }
   if (articleId) {
     expect(`/read/${articleId}`, 308, `/read/${data.articles[articleId]}`);
@@ -165,7 +165,7 @@ export async function runParity(origin, fetchImpl, { root = ROOT, concurrency = 
 export async function localWorker(root = ROOT) {
   const client = path.join(root, 'dist/client');
   const config = JSON.parse(fs.readFileSync(path.join(root, 'dist/server/wrangler.json'), 'utf8'));
-  const first = (config.assets?.run_worker_first ?? []).map((pattern) => new RegExp(`^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`));
+  const first = (config.assets?.run_worker_first ?? []).map((pattern) => new RegExp(`^${pattern.split('*').map(RegExp.escape).join('.*')}$`));
   const fileFor = (pathname) => {
     const base = path.join(client, decodeURIComponent(pathname));
     if (!base.startsWith(client)) return null;

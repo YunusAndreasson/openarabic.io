@@ -1,28 +1,27 @@
 ---
+import type { GetStaticPaths } from 'astro';
 import Content from '../../layouts/Content.astro';
 import ArticleList from '../../components/ArticleList.astro';
 import Offer from '../../components/Offer.astro';
 import { site } from '../../lib/snapshot.mjs';
-import { articleSlug, difficultyLine, shownName, CATEGORIES } from '../../lib/words.mjs';
+import { absolute, itemList } from '../../lib/site.mjs';
+import { categoryLabel, categoryPath, difficultyLine, shownName } from '../../lib/words.mjs';
 
-export function getStaticPaths() {
-  return site().categories.filter((category) => site().articlesIn(category.id).length > 0).map((category) => ({ params: { name: category.name }, props: { category } }));
-}
+export const getStaticPaths = (() => site().categoriesWithTexts().map((category) => ({ params: { name: category.name }, props: { category } }))) satisfies GetStaticPaths;
 
 const { category } = Astro.props;
-const label = CATEGORIES[category.name] ?? category.name;
+const label = categoryLabel(category.name);
 const articles = site().byDifficulty(site().articlesIn(category.id));
-const SITE = 'https://openarabic.io';
-const path = `/category/${category.name}`;
+const path = categoryPath(category.name);
 const jsonLd = [
-  { '@type': 'CollectionPage', name: label, url: `${SITE}${path}`, inLanguage: 'en' },
-  { '@type': 'ItemList', numberOfItems: articles.length, itemListElement: articles.map((article, index) => ({ '@type': 'ListItem', position: index + 1, name: article.title, url: `${SITE}/read/${articleSlug(article)}` })) },
+  { '@type': 'CollectionPage', name: label, url: absolute(path), inLanguage: 'en' },
+  itemList(articles),
 ];
 ---
 
 <Content title={`${label}: classical Arabic texts | OpenArabic`} description={`Excerpts from classical works on ${label}, in Arabic with English under every line.`} canonical={path} jsonLd={jsonLd}>
   <h1>{label}</h1>
   <p class="lead">{difficultyLine(articles)}</p>
-  <ArticleList articles={articles} authorOf={(article: any) => shownName(site().author(article.author_id).name)} />
+  <ArticleList articles={articles} authorOf={(article) => shownName(site().author(article.author_id).name)} />
   <Offer from="read" />
 </Content>

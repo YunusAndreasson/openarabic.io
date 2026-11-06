@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Logo from '../components/Logo.astro';
 import Screen from '../components/Screen.astro';
 import Stage from '../components/Stage.astro';
 import Still from '../components/Still.astro';
@@ -13,26 +14,7 @@ import StoreLinks from '../components/StoreLinks.astro';
 import scholarData from '../data/scholars.json';
 import '../styles/story.css';
 import '../styles/home.css';
-import readAvif from '../assets/story/ios-01-read.avif?url';
-import readWebp from '../assets/story/ios-01-read.webp?url';
-import tapAvif from '../assets/story/ios-02-tap-word.avif?url';
-import tapWebp from '../assets/story/ios-02-tap-word.webp?url';
-import listenAvif from '../assets/story/ios-04-listen.avif?url';
-import listenWebp from '../assets/story/ios-04-listen.webp?url';
-import audioAvif from '../assets/story/audio.avif?url';
-import audioWebp from '../assets/story/audio.webp?url';
-import speakAvif from '../assets/story/ios-05-speak.avif?url';
-import speakWebp from '../assets/story/ios-05-speak.webp?url';
-import horizonAvif from '../assets/story/horizon.avif?url';
-import horizonWebp from '../assets/story/horizon.webp?url';
-
-const readAlt = 'The app’s reader: an English line above each classical Arabic line, with parts of the words in colour.';
-const tapAlt = 'The app’s sheet for the word كِتَاب: book, an audio button, and the root it comes from.';
-
-const listenAlt = 'The app’s playlist of texts, each with its scholar and length, and a Play all button.';
-const audioAlt = 'The app’s reader with its player open along the bottom, playing a text aloud.';
-const speakAlt = 'The app’s voice review: one Arabic word, a sound button, and the buttons Show answer and Speak to answer.';
-const horizonAlt = 'The app’s memory horizon: how many practised words hold for days, weeks and months.';
+import { screens } from '../lib/screens';
 
 const readStops = [
   { title: 'English above every Arabic line.', note: 'The English is machine-translated.' },
@@ -66,7 +48,7 @@ const rememberStops = [
         <div class="hero-shade"></div>
         <header class="topbar">
           <a class="brand" href="/" aria-label="OpenArabic">
-            <svg viewBox="0 0 1000 1000" width="24" height="24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M0 500a500 500 0 1 1 1000 0a500 500 0 1 1-1000 0ZM106.9 500a393.1 393.1 0 1 0 786.2 0a393.1 393.1 0 1 0-786.2 0Z" /></svg>
+            <Logo size={24} />
             <span>OpenArabic</span>
           </a>
         </header>
@@ -111,11 +93,11 @@ const rememberStops = [
 
     <Stage id="read" marker="Read" stops={readStops}>
       <div class="zoomer">
-        <Screen avif={readAvif} webp={readWebp} alt={readAlt} />
+        <Screen {...screens.read} />
         <span class="tap only-played" aria-hidden="true"></span>
       </div>
-      <Screen avif={tapAvif} webp={tapWebp} alt="" class="sheet-dim only-played" />
-      <Screen avif={tapAvif} webp={tapWebp} alt={tapAlt} class="sheet" />
+      <Screen {...screens.tap} alt="" class="sheet-dim only-played" />
+      <Screen {...screens.tap} class="sheet" />
     </Stage>
 
     <Still name="listen" alt="A man seen from behind, small on a wet street at dusk, wearing earphones.">
@@ -127,16 +109,16 @@ const rememberStops = [
     </Still>
 
     <Stage id="listen" marker="Listen" stops={listenStops}>
-      <Screen avif={listenAvif} webp={listenWebp} alt={listenAlt} />
-      <Screen avif={audioAvif} webp={audioWebp} alt={audioAlt} class="audio" />
+      <Screen {...screens.listen} />
+      <Screen {...screens.audio} class="audio" />
     </Stage>
 
     <Stage id="remember" marker="Remember" stops={rememberStops} caption="The numbers shown are from an example account.">
-      <Screen avif={tapAvif} webp={tapWebp} alt="" class="only-played" />
+      <Screen {...screens.tap} alt="" class="only-played" />
       <span class="add only-played" aria-hidden="true"></span>
-      <Screen avif={speakAvif} webp={speakWebp} alt={speakAlt} class="speak" />
+      <Screen {...screens.speak} class="speak" />
       <span class="spoken only-played" aria-hidden="true"></span>
-      <Screen avif={horizonAvif} webp={horizonWebp} alt={horizonAlt} class="memory" />
+      <Screen {...screens.horizon} class="memory" />
     </Stage>
 
     <section class="payoff lift" id="payoff">

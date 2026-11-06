@@ -3,41 +3,42 @@
 import Content from '../../layouts/Content.astro';
 import ArticleList from '../../components/ArticleList.astro';
 import Offer from '../../components/Offer.astro';
+import type { GetStaticPaths } from 'astro';
 import { imageOf } from '../../lib/images.mjs';
-import { escapeHtml, wordHtml } from '../../lib/segments.mjs';
+import { wordHtml } from '../../lib/segments.mjs';
 import { site } from '../../lib/snapshot.mjs';
-import { articleSlug, audioUrl, authorSlug, levelName, shownName, wordSlug, CATEGORIES } from '../../lib/words.mjs';
+import { absolute, breadcrumbs } from '../../lib/site.mjs';
+import { articlePath, articleSlug, audioUrl, authorPath, categoryLabel, categoryPath, escapeHtml, levelName, shownName, wordPath } from '../../lib/words.mjs';
 
-export function getStaticPaths() {
-  return site().published.map((article) => ({ params: { slug: articleSlug(article) }, props: { article } }));
-}
+export const getStaticPaths = (() => site().published.map((article) => ({ params: { slug: articleSlug(article) }, props: { article } }))) satisfies GetStaticPaths;
 
 const { article } = Astro.props;
 const author = site().author(article.author_id);
 const category = site().category(article.category_id);
 const image = imageOf(article.image_url);
-const path = `/read/${articleSlug(article)}`;
+const label = categoryLabel(category.name);
+const path = articlePath(article);
 let index = 0;
 const html = site()
   .articleText(article.id)
   .map((sentence) => {
-    if (!sentence.words) return `<p class=reading lang=ar dir=rtl>${escapeHtml(sentence.arabic)}</p><p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
-    const words = sentence.words.map((word) => `<a class=w href=/word/${wordSlug(word.root)} data-i=${index++}>${wordHtml(site().hash, site().words, word)}</a>`).join(' ');
-    return `<p class="reading t" lang=ar dir=rtl>${words}</p><p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
+    const english = `<p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
+    if (!sentence.words) return `<p class=reading lang=ar dir=rtl>${escapeHtml(sentence.arabic)}</p>${english}`;
+    const words = sentence.words.map((word) => `<a class=w href=${wordPath(word.root)} data-i=${index++}>${wordHtml(site().hash, site().words, word)}</a>`).join(' ');
+    return `<p class="reading t" lang=ar dir=rtl>${words}</p>${english}`;
   })
   .join('');
 const more = site().byDifficulty(site().articlesBy(article.author_id).filter((other) => other.id !== article.id)).slice(0, 3);
-const SITE = 'https://openarabic.io';
 const audio = audioUrl(article.audio_url);
 const jsonLd = [
-  { '@type': 'Article', headline: article.title, description: article.summary, url: `${SITE}${path}`, datePublished: article.created_at, inLanguage: ['ar', 'en'], author: { '@type': 'Person', name: author.name }, publisher: { '@id': `${SITE}/#organization` }, ...(image && { image: `${SITE}${image.og}` }) },
-  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: CATEGORIES[category.name] ?? category.name, item: `${SITE}/category/${category.name}` }, { '@type': 'ListItem', position: 3, name: article.title, item: `${SITE}${path}` }] },
+  { '@type': 'Article', headline: article.title, description: article.summary, url: absolute(path), datePublished: article.created_at, inLanguage: ['ar', 'en'], author: { '@type': 'Person', name: author.name }, publisher: { '@id': absolute('/#organization') }, ...(image && { image: absolute(image.og) }) },
+  breadcrumbs([label, categoryPath(category.name)], [article.title, path]),
 ];
 ---
 
 <Content title={`${article.title} | OpenArabic`} description={article.summary} storedDescription canonical={path} ogType="article" ogImage={image?.og} jsonLd={jsonLd}>
   <h1 class="article-title" data-stored>{article.title}</h1>
-  <p class="quiet meta article-meta"><span><a href={`/author/${authorSlug(author)}`}><span data-stored>{shownName(author.name)}</span></a>, <span data-stored>{article.book}</span></span> <span class="sep" aria-hidden="true">·</span> <a href={`/category/${category.name}`}>{CATEGORIES[category.name] ?? category.name}</a> <span class="level">{levelName(article.difficulty_level)}</span></p>
+  <p class="quiet meta article-meta"><span><a href={authorPath(author)}><span data-stored>{shownName(author.name)}</span></a>, <span data-stored>{article.book}</span></span> <span class="sep" aria-hidden="true">·</span> <a href={categoryPath(category.name)}>{label}</a> <span class="level">{levelName(article.difficulty_level)}</span></p>
   {image && <img class="article-image" src={image.src(960)} srcset={image.srcset} sizes="(min-width: 44rem) 42rem, 100vw" width={image.width} height={image.height} alt="" decoding="async" fetchpriority="high" />}
   {audio && <audio class="article-audio" controls preload="none" src={audio} aria-label="This text read aloud in Arabic"></audio>}
   <p class="quiet disclosures">The English is machine-translated. The audio uses AI voices.</p>

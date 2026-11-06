@@ -1,6 +1,8 @@
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { setTimeout as sleep } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -22,6 +24,21 @@ export const fail = (message) => {
 };
 
 export const rel = (file) => path.relative(ROOT, file);
+export const sha256 = (data) => createHash('sha256').update(data).digest('hex');
+// The browser every lab check drives. Zen runs through scripts/zen-driver.mjs.
+export const CHROMIUM = '/usr/bin/chromium';
+// No tool this ship runs may phone home.
+export const TOOL_ENV = { ASTRO_TELEMETRY_DISABLED: '1', WRANGLER_SEND_METRICS: 'false' };
+
+/** Call before each request: starts are at least `gapMs` apart, one at a time. */
+export function pacer(gapMs) {
+  let last = 0;
+  return async () => {
+    const wait = last + gapMs - Date.now();
+    if (wait > 0) await sleep(wait);
+    last = Date.now();
+  };
+}
 
 export function walk(dir) {
   if (!fs.existsSync(dir)) return [];
@@ -31,11 +48,12 @@ export function walk(dir) {
   });
 }
 
-export function bin(name, args, options = {}) {
+/** A pinned tool from node_modules/.bin, never one on PATH. `env` adds to this process's environment. */
+export function bin(name, args, { env = {}, ...options } = {}) {
   return spawnSync(path.join(ROOT, 'node_modules/.bin', name), args, {
     cwd: ROOT,
     encoding: 'utf8',
-    env: { ...process.env, ASTRO_TELEMETRY_DISABLED: '1', WRANGLER_SEND_METRICS: 'false' },
+    env: { ...process.env, ...TOOL_ENV, ...env },
     maxBuffer: 64 * 1024 * 1024,
     ...options,
   });

@@ -1,6 +1,14 @@
 ---
 // The page's one offer. `body` with store links, in the place the plan's page map gives it. Exact words are the ledger's.
+import type { ComponentProps } from 'astro/types';
 import StoreLinks from './StoreLinks.astro';
+
+interface Props {
+  from: ComponentProps<typeof StoreLinks>['from'];
+  heading?: string;
+  /** Set only where a skip link lands on the heading. */
+  id?: string;
+}
 const { from, heading = 'Get the app', id } = Astro.props;
 ---
 

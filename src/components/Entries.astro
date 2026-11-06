@@ -1,9 +1,14 @@
 ---
 // A list of dictionary entries. Arabic exactly as stored.
-import { wordSlug } from '../lib/words.mjs';
+import { wordPath } from '../lib/words.mjs';
+
+interface Props {
+  /** Roots, or related words that already carry their path. */
+  entries: { id?: number; letters: string; meaning: string; path?: string }[];
+}
 const { entries } = Astro.props;
 ---
 
 <ul class="entries">
-  {entries.map((entry: any) => <li><a href={entry.path ?? `/word/${wordSlug(entry)}`}><span class="entry-ar" lang="ar" dir="rtl">{entry.letters}</span> <span data-stored>{entry.meaning}</span></a></li>)}
+  {entries.map((entry) => <li><a href={entry.path ?? wordPath(entry)}><span class="entry-ar" lang="ar" dir="rtl">{entry.letters}</span> <span data-stored>{entry.meaning}</span></a></li>)}
 </ul>

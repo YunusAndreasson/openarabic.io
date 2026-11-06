@@ -144,7 +144,7 @@ export function publicStrings(html) {
 }
 
 function phraseRegex(phrase) {
-  const body = phrase.split(/\s+/).map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('[\\s\\u00A0]+');
+  const body = phrase.split(/\s+/).map(RegExp.escape).join('[\\s\\u00A0]+');
   return new RegExp(`(?<![\\w-])${body}(?![\\w-])`, 'i');
 }
 
@@ -163,7 +163,7 @@ function traceString(text, lists) {
   ].sort((a, b) => b[0].length - a[0].length);
   for (const [value, kind] of all) {
     // Whole words only, so a short entry like "on" can't eat part of a longer word.
-    const known = squash(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const known = RegExp.escape(squash(value));
     let pattern = patterns.get(known);
     if (!pattern) patterns.set(known, (pattern = new RegExp(`(?<![\\p{L}\\p{N}])${known}(?![\\p{L}\\p{N}])`, 'gu')));
     rest = rest.replace(pattern, () => {
@@ -181,7 +181,7 @@ export function checkClaims(root = ROOT) {
   const product = read('PRODUCT.md');
   const { phrases, forPerson } = readBanned(product);
   const lists = readAllowed(product, read('DESIGN.md'), read('docs/draft-copy.txt'));
-  lists.templates = [...lists.draft].filter((value) => value.includes('{}')).map((value) => new RegExp(`^${squash(value).split('{}').map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*')}$`, 'su'));
+  lists.templates = [...lists.draft].filter((value) => value.includes('{}')).map((value) => new RegExp(`^${squash(value).split('{}').map(RegExp.escape).join('.*')}$`, 'su'));
   const traced = new Map();
   const phrasePatterns = phrases.map((phrase) => [phrase, phraseRegex(phrase)]);
   const dist = path.join(root, 'dist');

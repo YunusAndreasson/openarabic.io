@@ -1,11 +1,9 @@
 // D9: every published article's image, copied once and resized into the build, so no visitor request goes to Supabase.
 // Sources stay in .ship/images. Read only, one at a time, at most 2 a second. Output in public/img, generated, not committed.
-import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { setTimeout as sleep } from 'node:timers/promises';
 import sharp from 'sharp';
-import { fail, ROOT } from './lib.mjs';
+import { fail, pacer, ROOT, sha256 } from './lib.mjs';
 import { MIN_GAP_MS } from './fetch.mjs';
 import { imageSource } from '../../src/lib/words.mjs';
 
@@ -21,14 +19,12 @@ export async function prepareImages(snapshot, root = ROOT) {
   const manifest = {};
   const missing = [];
   let fetched = 0;
-  let last = 0;
+  const turn = pacer(MIN_GAP_MS);
   for (const url of urls) {
-    const base = createHash('sha256').update(url).digest('hex').slice(0, 16);
+    const base = sha256(url).slice(0, 16);
     const source = path.join(sources, base);
     if (!fs.existsSync(source)) {
-      const wait = last + MIN_GAP_MS - Date.now();
-      if (wait > 0) await sleep(wait);
-      last = Date.now();
+      await turn();
       fetched += 1;
       const response = await fetch(url, { signal: AbortSignal.timeout(30_000) }).catch(() => null);
       if (!response?.ok) {

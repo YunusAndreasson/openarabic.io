@@ -1,7 +1,7 @@
 ---
 // Real published texts: title, scholar and image as stored, each a link to its page.
 import wall from '../data/wall.json';
-import { articleSlug } from '../lib/words.mjs';
+import { articlePath } from '../lib/words.mjs';
 
 const avif = import.meta.glob<string>('../assets/story/articles/*.avif', { query: '?url', import: 'default', eager: true });
 const webp = import.meta.glob<string>('../assets/story/articles/*.webp', { query: '?url', import: 'default', eager: true });
@@ -11,7 +11,7 @@ const webp = import.meta.glob<string>('../assets/story/articles/*.webp', { query
   {
     wall.articles.map((article) => (
       <li class="wall-card reveal">
-        <a href={`/read/${articleSlug(article)}`}>
+        <a href={articlePath(article)}>
         <picture>
           <source type="image/avif" srcset={avif[`../assets/story/articles/${article.id}.avif`]} />
           <img src={webp[`../assets/story/articles/${article.id}.webp`]} width="560" height="420" alt="" loading="lazy" decoding="async" />

@@ -1,4 +1,4 @@
-// docs/decisions/2026-10-31-spike-accessibility.md, variant C. A sentence is one tab stop; Enter opens it, Tab moves through its words, Escape steps back. `pnpm ship` keeps public/reader.js the minified copy of this.
+// docs/decisions/2026-10-31-spike-accessibility.md, variant C. A sentence is one tab stop; Enter opens it, Tab moves through its words, Escape steps back. `pnpm ship` keeps public/reader.js the minified copy of this, with __AUDIO__ set to the audio bucket.
 (function(){
 var d=document,r=d.getElementById('reader'),s=d.getElementById('sheet'),P,a,c,S;
 if(!CSS.supports('field-sizing:content'))r.querySelectorAll('.w').forEach(function(w){w.textContent=w.textContent});
@@ -27,5 +27,5 @@ r.addEventListener('click',function(e){var t=e.target,w=t.closest('.w');if(Strin
 if(w)open(w);else if(t.getAttribute('role'))into(t)});
 r.addEventListener('keydown',function(e){var t=e.target,k=e.key;
 if(k==' '||k=='Enter'){if(t.matches('.t'))into(t);else if(t.matches('.w'))open(t);else return}else if(k=='Escape'&&t.matches('.w')){rest(S);S=0;t.parentNode.focus()}else return;e.preventDefault()});
-$('sa').addEventListener('click',function(){new Audio('https://kkmnzbeugdoajtzfjkxg.supabase.co/storage/v1/object/public/audio/'+a).play()});
+$('sa').addEventListener('click',function(){new Audio(__AUDIO__+a).play()});
 })();

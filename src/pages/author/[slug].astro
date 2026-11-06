@@ -1,22 +1,21 @@
 ---
+import type { GetStaticPaths } from 'astro';
 import Content from '../../layouts/Content.astro';
 import ArticleList from '../../components/ArticleList.astro';
 import Offer from '../../components/Offer.astro';
 import { site } from '../../lib/snapshot.mjs';
-import { articleSlug, authorSlug, difficultyLine, shownName } from '../../lib/words.mjs';
+import { absolute, itemList } from '../../lib/site.mjs';
+import { authorPath, authorSlug, difficultyLine, shownName } from '../../lib/words.mjs';
 
-export function getStaticPaths() {
-  return site().authorsWithTexts().map((author) => ({ params: { slug: authorSlug(author) }, props: { author } }));
-}
+export const getStaticPaths = (() => site().authorsWithTexts().map((author) => ({ params: { slug: authorSlug(author) }, props: { author } }))) satisfies GetStaticPaths;
 
 const { author } = Astro.props;
 const articles = site().byDifficulty(site().articlesBy(author.id));
 const works = [...new Set(articles.map((article) => article.book).filter(Boolean))];
-const SITE = 'https://openarabic.io';
-const path = `/author/${authorSlug(author)}`;
+const path = authorPath(author);
 const jsonLd = [
-  { '@type': 'ProfilePage', name: author.name, url: `${SITE}${path}`, mainEntity: { '@type': 'Person', name: author.name } },
-  { '@type': 'ItemList', numberOfItems: articles.length, itemListElement: articles.map((article, index) => ({ '@type': 'ListItem', position: index + 1, name: article.title, url: `${SITE}/read/${articleSlug(article)}` })) },
+  { '@type': 'ProfilePage', name: author.name, url: absolute(path), mainEntity: { '@type': 'Person', name: author.name } },
+  itemList(articles),
 ];
 ---
 

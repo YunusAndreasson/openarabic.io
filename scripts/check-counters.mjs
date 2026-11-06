@@ -2,6 +2,7 @@
 // Plan task 3.0: when the page-view image misses and when it double-counts, cold, cached and with images off, in Chromium and Zen.
 // Counts requests for /v as the browser sees them. usage: node scripts/check-counters.mjs <origin>
 import { chromium } from 'playwright-core';
+import { CHROMIUM } from './ship/lib.mjs';
 import { zenSession } from './zen-driver.mjs';
 
 const ORIGIN = process.argv[2] ?? 'http://127.0.0.1:4400';
@@ -28,7 +29,7 @@ async function scenario(browser, driver) {
 }
 
 async function chromiumRun(args, name) {
-  const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true, args });
+  const browser = await chromium.launch({ executablePath: CHROMIUM, headless: true, args });
   const page = await (await browser.newContext()).newPage();
   let count = 0;
   page.on('request', (request) => {

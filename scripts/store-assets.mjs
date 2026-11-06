@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { chromium } from 'playwright-core';
+import { CHROMIUM } from './ship/lib.mjs';
 
 const OUT = 'docs/store-assets';
 const CAPTURES = '/home/yunus/Work/open-arabic/store-listing/captures/ios';
@@ -21,7 +22,7 @@ const b64 = (file) => fs.readFileSync(file).toString('base64');
 const font = `@font-face{font-family:Inter Site;src:url(data:font/woff2;base64,${b64('src/fonts/inter-variable.subset.woff2')});font-weight:250 600}`;
 const SURFACE = '#040d07';
 
-const browser = await chromium.launch({ executablePath: '/usr/bin/chromium', headless: true });
+const browser = await chromium.launch({ executablePath: CHROMIUM, headless: true });
 async function render(w, h, html, file) {
   const page = await (await browser.newContext({ viewport: { width: w, height: h } })).newPage();
   await page.setContent(html, { waitUntil: 'networkidle' });
