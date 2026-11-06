@@ -425,3 +425,7 @@ By Ibn Qayyim al-Jawziyyah, .
 Al-Fawāʾid, "the benefits", is one of Ibn al-Qayyim's best-loved shorter works. It collects reflections that came to him over the years: a few lines on a verse of the Qurʾān, a point drawn from a ḥadīth, a note on the ailments of the heart and their cures.
 Ibn Qayyim al-Jawziyyah, in full Shams al-Dīn Muḥammad ibn Abī Bakr ibn Ayyūb al-Zurʿī al-Dimashqī al-Ḥanbalī, was a scholar of the Ḥanbalī school in Damascus. He was born in 1292 (691 AH) and died in 1350 (751 AH). His name, "son of the qayyim of al-Jawziyyah", comes from his father, who directed the al-Jawziyyah madrasa in the city.
 He was the foremost student of Ibn Taymiyyah. He studied with him for some sixteen years and shared his imprisonment in the Citadel of Damascus. Across law, theology and the spiritual life he wrote close to a hundred works, among them Zād al-Maʿād, Madārij al-Sālikīn and Iʿlām al-Muwaqqiʿīn. He is buried at the Bāb al-Ṣaghīr cemetery in Damascus.
+
+# Story pass, 2026-11-06. docs/decisions/2026-11-06-story-pass.md. Draft until the owner says otherwise.
+The same man at the same table, sitting up now, his phone in his hands and the dictionary shut beside the open book.
+The same man the next morning, standing by the window in grey daylight with his phone in his hand.

@@ -43,3 +43,26 @@ The rebuilt first screen puts a real phone on the right and the headline at the 
 ## Round 4 critique
 
 Picked `r4-wide-2` and `r4-tall-1`. The ordinary room finally works: one lamp, one cold window on a wet street, and a small figure, in the same world as qamar360's street. `r4-wide-1` has a flatter view through the window. `r4-wide-3` loses the man at 390 px. All three are a little staged, with a very bare room and a floor reflection brighter than it would be, and that is the first thing to fix in a further round. Only 1672 px wide came back, so large screens upscale it.
+
+## Round 5: lived in (2026-11-06)
+
+The owner chose to make the first screen's room look lived in. Round 4's own critique stands: the room is very bare and the floor reflection is brighter than it would be.
+
+**Edit, don't recompose.** `r4-wide-2.png` and `r4-tall-1.png` go to Codex as the images to edit. Keep the camera, framing, light, window, street, lamp, table and the small man seen from behind exactly where they are. The left third stays a quiet dark wall for the words, and in the tall the lower half stays dark floor.
+
+**Add ordinary life, in shadow and unarranged:** a coat thrown over a second chair, a worn rug under the table that breaks the floor's reflection, a narrow shelf of mismatched old books low on the far wall, a towel or a pair of socks drying on the radiator, a bag on the floor by the chair, the lamp's cable. Nothing new, nothing styled, nothing bright.
+
+**Fix:** the lamp's reflection on the floor must be dimmer than the lamp itself.
+
+**Reject on sight, added to the list above:** any readable spine or page, anything that draws the eye away from the man, a brighter or busier left third, a room that now looks staged for a catalogue.
+
+## Round 5 critique
+
+Picked `r5-wide-1` and `r5-tall-2`, pending the owner's look.
+
+- **What works.** The edit holds round 4's frame: the man, lamp, window and street stay put, and the left third stays a quiet dark wall. The room now reads as used: a coat over a second chair, a bag on the floor, a worn rug that breaks the floor's reflection, a short shelf of old books, socks on the radiator, the lamp's cable to the wall.
+- **Lettering.** At full size the spines are plain, with no marks that read as letters.
+- **Why not the others.** `r5-wide-1` is the most restrained of the four: `r5-wide-3` and `r5-wide-4` add stacks of books that start to look arranged, and `r5-wide-2` barely changes the room. Every tall widened round 4's 1:3 frame to 9:16, which `object-fit: cover` absorbs. `r5-tall-2` keeps the man and lamp highest, with the longest dark floor for the words.
+- **Open: continuity with the stuck still.** The coat chair, the bag and the laundry on the radiator stand where the stuck and turn photographs, later the same night, show nothing. Removing only the socks wouldn't fix that. Either the owner accepts it, or both night photographs get the same things added in one more round, which risks the pair's alignment.
+
+**Owner, 2026-11-06:** approved the picks as they stand ("use all three"), and chose to leave the hero's coat chair, bag and socks out of the night photographs rather than add or remove them.
