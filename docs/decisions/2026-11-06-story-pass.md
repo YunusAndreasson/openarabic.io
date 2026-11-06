@@ -77,7 +77,7 @@ The recapture on the Android emulator was built but couldn't be filmed.
   - On the third try the app started, but died before showing its tabs.
 - **Production saw no write.** The guard's log shows one sign-in token refresh, and nothing else went through. The approved كَنْز write was never made: the due query sorts by `fsrs_due`, so a new card would sit behind the QA account's 100+ due words, and no route reviews one chosen word. Making a write the session couldn't show would have been pointless.
 
-**Interim set, in `src/lib/captures.mjs`:** the best of the existing captures, each cropped below its status bar (iPhone 162 px; Android 118 px, plus 79 px above the gesture bar) to one shape, 1080 / 2203.
+**The set in use, in `src/lib/captures.mjs`:** the best of the existing captures, each cropped below its status bar (iPhone 162 px; Android 118 px, plus 79 px above the gesture bar) to one shape, 1080 / 2203.
 
 | Screen | Capture | Why |
 |---|---|---|
@@ -93,7 +93,9 @@ The recapture on the Android emulator was built but couldn't be filmed.
 - The audio-language picker.
 - A player on a clean text.
 
-The scratch export, its guarded build and the steps are ready to rerun on a quiet machine. Then a recapture only changes `src/lib/captures.mjs` and the files it names.
+**A last try on a quiet host** (load 1.6) got the app to its tabs, with a clean demo-mode status bar and runtime 1448.5.10. Then qemu itself crashed (core dump at 23:06, not an OOM kill), so on this machine the emulator fails in every mode tried: `-gpu host` paints nothing, software rendering under load loops on ANRs, and software rendering on a quiet host crashes.
+
+**The owner's call, 2026-11-06:** "assume app screenshots are fine". The set above is the set in use, and no recapture is pending. If one is ever made, it only changes `src/lib/captures.mjs` and the files it names. The scratch export and its guarded dev client stay in `~/.cache/openarabic-capture/` until the owner deletes them.
 
 ## Checked
 
@@ -122,6 +124,20 @@ The scratch export, its guarded build and the steps are ready to rerun on a quie
 - Film strips of every transition show no blend, blank or jump.
 
 **Zen.** Every transition was drawn a quarter, half and three-quarters through (frame clock set by hand), at both sizes: no blend, unloaded image or overflow, and masks, clips and the sheet render as in Chromium.
+
+## The rings, fixed after the owner's report
+
+The owner: "the marker over a button in the app is often misplaced". The ring regions had been read by eye off a 5% grid. Measured from the captures' pixels instead:
+
+- **Speak to answer:** its ring was 3% too wide and 1.2% too high.
+- **كِتَابِ:** its ring sat about 2% up and to the left of the word.
+- **Add to practice:** within half a percent.
+
+All three now use the measured boxes. The pills get 0.3% of room at the sides so their anti-aliased edge stays inside the ring, and the word gets 1.2% all round.
+
+On a phone, Speak to answer also sat in the window's 28 px bottom fade, so its lower half dimmed while the ring stayed crisp. A layer whose focus reaches the capture's bottom edge now drops that fade, since there's nothing below to cut (`--edge-bottom` in `Stage.astro`).
+
+Crops round each ring at the moment it shows, at 390×664 and 1440×900, in Chromium and in Zen, show the ring centred on its word or around its whole button.
 
 ## Open
 

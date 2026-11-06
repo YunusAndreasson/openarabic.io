@@ -3,9 +3,10 @@
 // checks each source against its hash and writes src/assets/story/screens/. No Node imports: the build reads this too.
 // Regions are [x, y, width, height] as fractions of the cropped capture, measured by eye on a gridded copy of it.
 //
-// Interim set, 2026-11-06: the emulator recapture couldn't run (the host was too busy for the emulator), so these are
-// the best of the existing captures, iPhone and Android, each cropped below its status bar (and above Android's gesture
-// bar) so they share one shape. docs/decisions/2026-11-06-story-pass.md.
+// The set in use since 2026-11-06: the best of the existing captures, iPhone and Android, each cropped below its status
+// bar (and above Android's gesture bar) so they share one shape. The emulator recapture couldn't be filmed on this
+// machine, and the owner accepted these screens as they are. docs/decisions/2026-11-06-story-pass.md.
+// A ring's region is measured from the capture's pixels, never by eye: a few percent off shows as a ring beside its button.
 
 /** Encoder settings. WebP 70 at effort 6 is what the stuck still used; AVIF 53 likewise. */
 export const ENCODE = { webp: { quality: 70, effort: 6 }, avif: { quality: 53 } };
@@ -26,7 +27,8 @@ export const CAPTURES = {
       pair: [0, 0.61, 1, 0.25],
       // From just above the title to the end of the first Arabic pair: the whole title and the scholar's name in view.
       opening: [0, 0.2, 1, 0.65],
-      word: [0.625, 0.69, 0.19, 0.075],
+      // Measured from the pixels: كِتَابِ's ink is [0.6484, 0.7118, 0.1633, 0.0447], here with 1.2% around it.
+      word: [0.6364, 0.6998, 0.1873, 0.0687],
     },
   },
   tap: {
@@ -37,7 +39,9 @@ export const CAPTURES = {
     sheetTop: 0.094,
     regions: {
       card: [0, 0.13, 1, 0.35],
-      add: [0.065, 0.39, 0.87, 0.058],
+      // The green pill, measured from its pixels (128,184,142) as [0.0597, 0.3911, 0.8806, 0.0593], with 0.3% more
+      // at the sides and 0.2% above and below, so its anti-aliased edge stays inside the ring.
+      add: [0.0567, 0.3891, 0.8866, 0.0633],
       root: [0, 0.47, 1, 0.43],
     },
   },
@@ -48,7 +52,8 @@ export const CAPTURES = {
     crop: { top: 118, bottom: 79 },
     regions: {
       review: [0, 0.35, 1, 0.63],
-      speak: [0.535, 0.905, 0.435, 0.075],
+      // The green pill, measured from its pixels (128,184,142) as [0.5361, 0.9169, 0.4056, 0.0713], with the same room.
+      speak: [0.5331, 0.9149, 0.4116, 0.0753],
     },
   },
 };

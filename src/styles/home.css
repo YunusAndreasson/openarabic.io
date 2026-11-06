@@ -158,7 +158,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
   translate: calc((1 - var(--p)) * var(--in-x) * 100% - var(--q) * var(--out-x) * 28%) calc((1 - var(--p)) * var(--in-y) * 100%);
   mask-image:
     linear-gradient(to right, transparent, var(--color-surface) var(--edge), var(--color-surface) calc(100% - var(--edge)), transparent),
-    linear-gradient(to bottom, transparent var(--top), var(--color-surface) calc(var(--top) + var(--edge-y)), var(--color-surface) calc(100% - var(--edge-y)), transparent);
+    linear-gradient(to bottom, transparent var(--top), var(--color-surface) calc(var(--top) + var(--edge-y)), var(--color-surface) calc(100% - var(--edge-bottom, var(--edge-y))), transparent);
   mask-composite: intersect;
 }
 /* More specific than the plain form's width, which would otherwise win on a laptop. */

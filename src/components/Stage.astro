@@ -85,6 +85,9 @@ const layerViews = layers.map((layer, index) => {
   for (const [device, list] of Object.entries(frames)) {
     list.forEach((frame, step) => vars.push(`--${device}s${step}:${n(frame.s)}`, `--${device}x${step}:${n(frame.x)}`, `--${device}y${step}:${n(frame.y)}`));
   }
+  // A focus that reaches the capture's bottom edge leaves the camera resting on it, where nothing is cut, so the
+  // window's bottom fade would only dim the app's own controls (a button at the foot of the screen).
+  if (layer.stops.some((stop) => stop.focus && region(stop.screen, stop.focus)[1] + region(stop.screen, stop.focus)[3] >= 0.97)) vars.push('--edge-bottom:0px');
   if (layer.arrive === 'sheet') {
     if (!screens[layer.screen].sheetTop) throw new Error(`Stage ${id}: ${layer.screen} arrives as a sheet but has no sheetTop.`);
     vars.push(`--sheet-top:${screens[layer.screen].sheetTop}`);
