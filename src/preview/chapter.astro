@@ -1,0 +1,131 @@
+---
+// `astro dev` only (integration.mjs). A translare draft chapter, read as the article reader reads a text: the same
+// markup, colours, sheet and script as src/pages/read/[slug].astro. Below the text, what a reviewer needs that the
+// reader doesn't show: source fixes, new dictionary entries, what blocks the release.
+import Content from '../layouts/Content.astro';
+import type { GetStaticPaths } from 'astro';
+import { wordHtml } from '../lib/segments.mjs';
+import { site } from '../lib/snapshot.mjs';
+import { categoryLabel, escapeHtml, levelName, shownName, wordPath } from '../lib/words.mjs';
+import { listDrafts, loadDraft, readerText, wordsHash } from './drafts.mjs';
+
+export const getStaticPaths = (() => listDrafts().map(({ book, chapter }) => ({ params: { book, chapter } }))) satisfies GetStaticPaths;
+
+const { book, chapter } = Astro.params as { book: string; chapter: string };
+const draft = loadDraft(book, chapter);
+if (!draft) return new Response('No such draft', { status: 404 });
+const a = draft.article;
+let author: string | null = null;
+let category: string | null = null;
+try {
+  author = site().author(a.author_id)?.name ?? null;
+  category = site().category(a.category_id)?.name ?? null;
+} catch {
+  // A checkout without a snapshot: the names stay out, the text still reads.
+}
+const sentences = readerText(draft);
+const hash = wordsHash(sentences);
+const words = sentences.flatMap((sentence) => sentence.words);
+let index = 0;
+const html = sentences
+  .map((sentence) => {
+    const english = `<p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
+    if (!sentence.words.length) return `<p class=reading lang=ar dir=rtl>${escapeHtml(sentence.arabic)}</p>${english}`;
+    const line = sentence.words
+      .map((word) => `<a class="w${word.fixed ? ' fx' : ''}" href=${word.root ? wordPath(word.root) : '#'} data-i=${index++}>${wordHtml(hash, words, word)}</a>`)
+      .join(' ');
+    return `<p class="reading t" lang=ar dir=rtl>${line}</p>${english}`;
+  })
+  .join('');
+const missing = new Map<string, number>();
+for (const item of draft.missing as string[]) {
+  const kind = item.startsWith('new entry ') ? 'audio for new dictionary entries' : item;
+  missing.set(kind, (missing.get(kind) ?? 0) + 1);
+}
+const stats = draft.stats;
+const fixes = (draft.source_fixes ?? []) as { span_id: string; printed: string; text: string; by: string }[];
+const fresh = draft.new_entries as { letters: string; meaning: string | null; example_gloss: string }[];
+---
+
+<Content title={`${a.title_en ?? `Chapter ${chapter}`} | Bookstore | OpenArabic`} canonical={`/preview/${book}/${chapter}`} neverIndex
+  crumbs={[{ name: 'Bookstore', path: '/preview' }, { name: a.book ?? book, path: `/preview/${book}` }, { name: a.title_en ?? `Chapter ${chapter}` }]}>
+  <p class="quiet">Draft from translare, not published.</p>
+  <h1 class="article-title" data-stored>{a.title_en ?? `Chapter ${chapter}`}</h1>
+  <p class="quiet meta article-meta">
+    <span>{author && <span data-stored>{shownName(author)}, </span>}<span data-stored>{a.book}</span>, chapter {chapter}</span>
+    {category && <><span class="sep" aria-hidden="true">·</span> <span>{categoryLabel(category)}</span></>}
+    {a.difficulty && <span class="level">{levelName(a.difficulty)}</span>}
+  </p>
+  <p class="quiet" lang="ar" dir="rtl" data-stored>{a.title_ar}</p>
+  {a.summary && <p class="quiet" data-stored>{a.summary}</p>}
+  <p class="quiet disclosures">The English is machine-translated. The audio uses AI voices.</p>
+  <p class="tap-hint" aria-hidden="true">Tap a word you don’t know.</p>
+  <a class="skip" href="#review-h">Skip past the text</a>
+  <div id="reader" data-gl={`/preview/gl/${book}/${chapter}.json`}>
+    <p id="hint" class="vh" hidden>Each Arabic line is a button. Press it to go through its words, then press a word for its meaning.</p>
+    <Fragment set:html={html} />
+  </div>
+  <div id="sheet" popover role="dialog" aria-labelledby="se" tabindex="-1" lang="en" dir="ltr">
+    <p id="se" class="card-gloss" tabindex="-1"></p>
+    <p id="sn" class="quiet"></p>
+    <button id="sa" type="button" hidden>Play</button>
+    <a id="sl">Full entry</a>
+    <button id="sc" type="button" popovertarget="sheet" popovertargetaction="hide">Close</button>
+  </div>
+  <section class="preview-review">
+    <h2 id="review-h" tabindex="-1">For review</h2>
+    <p>
+      {draft.blocking.length === 0 ? 'Nothing blocks the release of the text.' : `${draft.blocking.length} things block the release:`}
+    </p>
+    {draft.blocking.length > 0 && <ul>{draft.blocking.map((item: string) => <li data-stored>{item}</li>)}</ul>}
+    <p class="quiet">
+      {stats.sentences} sentences, {stats.words} words. Dictionary: {stats.reused_entries} words use an existing entry, {stats.new_entries} new entries
+      {stats.book_entries ? `, ${stats.book_entries} made in an earlier chapter` : ''}. Word audio: {stats.word_audio_reused} existing clips; {stats.clips_to_make} clips still to make.
+    </p>
+    {stats.lexicon && (
+      <p class="quiet">
+        Lexicon entries (the card's root explanation): {stats.lexicon.live} words already have one in the app, {stats.lexicon.copy} get a copy of
+        their root's entry, {stats.lexicon.make} need a root that is still to be written{draft.lexicon_to_make?.length ? ` (${draft.lexicon_to_make.join(', ')})` : ''},
+        and {stats.lexicon.none} are particles or names, which have none.
+      </p>
+    )}
+    <p class="quiet">Still to come: {[...missing].map(([kind, n]) => (n > 1 ? `${kind} (${n})` : kind)).join('; ')}.</p>
+    {fixes.length > 0 && (
+      <>
+        <h3>Source fixes</h3>
+        <p class="quiet">Words the panel corrected in the printed text. They have a dotted underline in the text above.</p>
+        <ul>
+          {fixes.map((fix) => (
+            <li><span lang="ar" dir="rtl" data-stored>{fix.printed}</span> → <span lang="ar" dir="rtl" data-stored>{fix.text || '(removed)'}</span> <span class="quiet">{fix.span_id}, {fix.by}</span></li>
+          ))}
+        </ul>
+      </>
+    )}
+    {fresh.length > 0 && (
+      <>
+        <h3>New dictionary entries</h3>
+        <p class="quiet">Words the app's dictionary doesn't have yet. In the text above, their Full entry link goes nowhere until they are released.</p>
+        <ul>
+          {fresh.map((entry) => (
+            <li><span lang="ar" dir="rtl" data-stored>{entry.letters}</span> <span data-stored>{entry.meaning ?? 'meaning to come'}</span> <span class="quiet" data-stored>as “{entry.example_gloss}”</span></li>
+          ))}
+        </ul>
+      </>
+    )}
+    {draft.suspect_legacy_meanings?.length > 0 && (
+      <>
+        <h3>Existing entries with a doubtful meaning</h3>
+        <ul>{draft.suspect_legacy_meanings.map((s: { root_id: number; why: string }) => <li data-stored>{s.root_id}: {s.why}</li>)}</ul>
+      </>
+    )}
+  </section>
+  <script is:inline src="/reader.js" defer></script>
+</Content>
+
+<style>
+  #reader :global(.w.fx) { text-decoration: underline dotted; text-underline-offset: 0.4em; }
+  :global(#sheet #sn) { white-space: pre-line; }
+  .preview-review { margin-top: var(--space-thought); }
+  .preview-review ul { padding-inline-start: 1.25rem; }
+  .preview-review li { margin-block: 4px; }
+</style>

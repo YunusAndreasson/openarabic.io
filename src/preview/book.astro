@@ -1,0 +1,48 @@
+---
+// `astro dev` only (integration.mjs): one book's draft chapters, in the book's order.
+import Content from '../layouts/Content.astro';
+import type { GetStaticPaths } from 'astro';
+import { site } from '../lib/snapshot.mjs';
+import { categoryLabel, levelName, shownName } from '../lib/words.mjs';
+import { listBooks } from './drafts.mjs';
+
+export const getStaticPaths = (() => listBooks().map((entry) => ({ params: { book: entry.book } }))) satisfies GetStaticPaths;
+
+const entry = listBooks().find((one) => one.book === Astro.params.book);
+if (!entry) return new Response('No such book', { status: 404 });
+let author: string | null = null;
+const categories = new Map<number, string>();
+try {
+  author = site().author(entry.authorId)?.name ?? null;
+  for (const { draft } of entry.chapters) {
+    const name = site().category(draft.article.category_id)?.name;
+    if (name) categories.set(draft.article.category_id, name);
+  }
+} catch {
+  // No snapshot in this checkout: names stay out.
+}
+---
+
+<Content title={`${entry.name} | Bookstore | OpenArabic`} canonical={`/preview/${entry.book}`} neverIndex crumbs={[{ name: 'Bookstore', path: '/preview' }, { name: entry.name }]}>
+  <h1 data-stored>{entry.name}</h1>
+  {author && <p class="quiet">By <span data-stored>{shownName(author)}</span></p>}
+  <p class="quiet">Drafts from translare, not published. {entry.chapters.length} {entry.chapters.length === 1 ? 'chapter is' : 'chapters are'} ready to read.</p>
+  <ol class="preview-list">
+    {entry.chapters.map(({ chapter, draft }) => (
+      <li value={Number(chapter)}>
+        <a href={`/preview/${entry.book}/${chapter}`}><span data-stored>{draft.article.title_en ?? `Chapter ${chapter}`}</span></a>
+        <span class="quiet">
+          {' '}{categories.get(draft.article.category_id) ? categoryLabel(categories.get(draft.article.category_id)) : ''}
+          {draft.article.difficulty ? ` · ${levelName(draft.article.difficulty)}` : ''} · {draft.stats.sentences} sentences
+          {draft.blocking.length > 0 ? ` · ${draft.blocking.length} blocking` : ''}
+        </span>
+        <br /><span class="quiet" lang="ar" dir="rtl" data-stored>{draft.article.title_ar}</span>
+      </li>
+    ))}
+  </ol>
+</Content>
+
+<style>
+  .preview-list { padding-inline-start: 2rem; }
+  .preview-list li { margin-block: 12px; }
+</style>

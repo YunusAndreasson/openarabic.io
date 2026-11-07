@@ -60,6 +60,10 @@ const remember = [
             <Logo size={24} />
             <span>OpenArabic</span>
           </a>
+          {import.meta.env.DEV && (
+            // `astro dev` only: the way into translare's draft books (src/preview). Built pages have no such link.
+            <a href="/preview" style="position:absolute;top:50%;right:var(--home-gutter);transform:translateY(-50%);color:inherit;font-weight:500;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">Bookstore</a>
+          )}
         </header>
         <div class="hero-words">
           <h1 aria-label="Read the classics in Arabic."><span>Read</span> <span>the classics</span> <span>in Arabic.</span></h1>

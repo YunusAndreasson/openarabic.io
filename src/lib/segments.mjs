@@ -8,9 +8,10 @@ import { escapeHtml } from './words.mjs';
 
 const MARK = /^[ؐ-ًؚ-ٰٟۖ-ۭ]+$/u;
 
-let cached;
+// One entry per word list: the site's snapshot, and in `astro dev` each translare draft (src/preview).
+const cached = new Map();
 function all(hash, words, root = process.cwd()) {
-  if (cached) return cached;
+  if (cached.has(hash)) return cached.get(hash);
   const file = path.join(root, `.ship/segments/${hash}.json`);
   if (!fs.existsSync(file)) {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'openarabic-segments-'));
@@ -22,8 +23,8 @@ function all(hash, words, root = process.cwd()) {
     fs.renameSync(`${file}.tmp`, file);
     fs.rmSync(dir, { recursive: true, force: true });
   }
-  cached = JSON.parse(fs.readFileSync(file, 'utf8'));
-  return cached;
+  cached.set(hash, JSON.parse(fs.readFileSync(file, 'utf8')));
+  return cached.get(hash);
 }
 
 /** The word-tap spike's two shaping rules. They only move marks between colour spans: text order and code points don't change. */

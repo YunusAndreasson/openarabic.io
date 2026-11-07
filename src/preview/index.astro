@@ -1,0 +1,37 @@
+---
+// `astro dev` only (integration.mjs): the bookstore, every book with translare draft chapters on this machine.
+import Content from '../layouts/Content.astro';
+import { site } from '../lib/snapshot.mjs';
+import { shownName } from '../lib/words.mjs';
+import { draftsRoot, listBooks } from './drafts.mjs';
+
+const books = listBooks().map((entry) => {
+  let author: string | null = null;
+  try {
+    author = site().author(entry.authorId)?.name ?? null;
+  } catch {
+    // No snapshot in this checkout: the book still lists.
+  }
+  return { ...entry, author };
+});
+---
+
+<Content title="Bookstore | OpenArabic" canonical="/preview" neverIndex crumbs={[{ name: 'Bookstore' }]}>
+  <h1>Bookstore</h1>
+  <p class="quiet">Drafts from translare, not published.</p>
+  {books.length === 0 && <p>No drafts found in <code>{draftsRoot()}</code>.</p>}
+  <ul class="preview-list">
+    {books.map((entry) => (
+      <li>
+        <a href={`/preview/${entry.book}`}><span data-stored>{entry.name}</span></a>
+        {entry.author && <span class="quiet"> by <span data-stored>{shownName(entry.author)}</span></span>}
+        <br /><span class="quiet">{entry.chapters.length} {entry.chapters.length === 1 ? 'chapter' : 'chapters'} ready to read</span>
+      </li>
+    ))}
+  </ul>
+</Content>
+
+<style>
+  .preview-list { padding-inline-start: 1.25rem; }
+  .preview-list li { margin-block: 12px; }
+</style>

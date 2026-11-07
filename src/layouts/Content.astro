@@ -15,7 +15,16 @@ const { crumbs = [], ...base } = Astro.props;
 <Base {...base}>
   <header class="top">
     <a class="top-name" href="/"><Logo /><span>OpenArabic</span></a>{' '}
-    {base.canonical !== '/download-app' && <a class="top-app" href="/download-app">Get the app</a>}
+    {import.meta.env.DEV ? (
+      // `astro dev` only: the way into translare's draft books (src/preview). Built pages keep the line below.
+      <span class="dev-top">
+        <style is:inline>.dev-top{display:flex;align-items:center;gap:12px}.dev-top a{white-space:nowrap}.top .dev-books{color:var(--color-on-surface);font-weight:500;text-decoration:none}@media (max-width:27.5rem){.dev-top{flex-direction:column;align-items:flex-end;gap:0}.top .dev-books{min-height:36px}}</style>
+        <a class="dev-books" href="/preview">Bookstore</a>
+        {base.canonical !== '/download-app' && <a class="top-app" href="/download-app">Get the app</a>}
+      </span>
+    ) : (
+      base.canonical !== '/download-app' && <a class="top-app" href="/download-app">Get the app</a>
+    )}
   </header>
   <main class="content">
     {crumbs.length > 0 && (
