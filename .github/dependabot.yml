@@ -1,0 +1,21 @@
+# Weekly, grouped so a week's updates arrive as a few pull requests. Each one
+# runs the verify workflow; merge it when it's green. Every package is pinned
+# exactly, so a bump is always a change to package.json and the lockfile.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      astro:
+        patterns: ["astro", "@astrojs/*"]
+      site:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

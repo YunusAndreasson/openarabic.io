@@ -1,0 +1,36 @@
+name: verify
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  ship-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '26.13.0'
+      - name: Install pinned package manager
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+      - run: pnpm install --frozen-lockfile
+      # The lab budgets launch the browser at /usr/bin/chromium (scripts/ship/lib.mjs).
+      - name: Chromium where the lab budgets look for it
+        run: |
+          [ -x /usr/bin/chromium ] || sudo ln -s "$(command -v chromium-browser || command -v google-chrome)" /usr/bin/chromium
+          /usr/bin/chromium --version
+      # The unit checks, then a whole `pnpm ship --production` on fixture data:
+      # wrangler is a spy and every network host is faked, so nothing deploys
+      # and no secret is needed.
+      - run: pnpm ship:test
+        env:
+          WRANGLER_SEND_METRICS: 'false'

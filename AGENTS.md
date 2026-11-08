@@ -25,7 +25,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Prove the Worker name, after a build | `grep -o '"name":"[^"]*"\|"routes"' dist/*/wrangler.json` prints only `openarabic-site`. A `--name` flag would hide a wrong name |
 | Zen, without touching the owner's | `zen-browser --headless --no-remote --profile "$(mktemp -d)" --screenshot /tmp/z.png <url>` |
 
-No CI or schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the public `YunusAndreasson/openarabic.io`: push `main` only when the owner asks.
+CI (`.github/workflows/verify.yml`) runs `pnpm ship:test` on every push and pull request, on fixture data, and never deploys. No schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the public `YunusAndreasson/openarabic.io`: push `main` only when the owner asks.
 
 ## Read first
 
