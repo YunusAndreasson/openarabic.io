@@ -1,6 +1,6 @@
 # Story pass, 2026-11-06
 
-The owner asked for a principal UI/UX pass so the site tells the app's story better, with new images from ChatGPT where needed. The plan is `~/.claude/plans/greedy-floating-leaf.md`; this records what was decided and why.
+The owner asked for a principal UI/UX pass so the site tells the app's story better, with new images from ChatGPT where needed. This records what was decided and why.
 
 ## What was wrong
 
@@ -95,7 +95,7 @@ The recapture on the Android emulator was built but couldn't be filmed.
 
 **A last try on a quiet host** (load 1.6) got the app to its tabs, with a clean demo-mode status bar and runtime 1448.5.10. Then qemu itself crashed (core dump at 23:06, not an OOM kill), so on this machine the emulator fails in every mode tried: `-gpu host` paints nothing, software rendering under load loops on ANRs, and software rendering on a quiet host crashes.
 
-**The owner's call, 2026-11-06:** "assume app screenshots are fine". The set above is the set in use, and no recapture is pending. If one is ever made, it only changes `src/lib/captures.mjs` and the files it names. The scratch export and its guarded dev client stay in `~/.cache/openarabic-capture/` until the owner deletes them.
+**The owner's call, 2026-11-06:** "assume app screenshots are fine". The set above is the set in use, and no recapture is pending. If one is ever made, it only changes `src/lib/captures.mjs` and the files it names.
 
 ## Checked
 

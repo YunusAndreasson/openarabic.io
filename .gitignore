@@ -49,3 +49,19 @@ public/img/
 public/reader.js
 .ship/images/
 .ship/segments/
+
+# Private records: production weaknesses, keys' whereabouts, traffic figures,
+# agent spend and private tooling. They stay on the owner's machine (AGENTS.md).
+docs/site-plan.md
+docs/decisions/2026-10-31-agent-setup-test.md
+docs/decisions/2026-10-31-content-write-fix.md
+docs/decisions/2026-10-31-live-site-fix.md
+docs/decisions/2026-10-31-migration-run-sheet.md
+docs/research/agent-files.md
+docs/research/claims-audit.md
+docs/research/current-site.md
+docs/research/setup-review.md
+docs/research/skills.md
+scripts/owner/
+# The spike's throwaway templates, already ported; their tests name a private host.
+vendor/spike/

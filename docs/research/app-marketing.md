@@ -94,12 +94,12 @@ Arc is excluded because arc.net is now a sunset notice. [O] Qamar360 and the cur
 - [E] [Apple forbids fingerprinting](https://developer.apple.com/app-store/user-privacy-and-data-use/), including via attribution SDKs, and may reject such apps.
 - [V] [Adjust's web-to-app help](https://help.adjust.com/en/article/web-to-app) describes probabilistic modelling when identifiers are missing, and says nothing specific to iOS. [J] Given Apple's rule and the promises below, don't use that kind of matching here.
 
-**House rules** ([AGENTS.md](/home/yunus/Work/marketer/AGENTS.md), [open-arabic.yaml](/home/yunus/Work/marketer/products/open-arabic.yaml))
+**House rules** (the marketing setup's `AGENTS.md` and `products/open-arabic.yaml`)
 
 - [O] The first-party contract joins on `install_id` and sends `Install Attribution` once per install on Android, with the referrer split into 200-character parts. Only people who consented to both analytics and ad measurement can be joined.
 - [O] The product is `sensitiveCategory: religion`, `consentRequired: true`, `att: never`, and promises never to send Meta a name, email or what the person studies.
 - [O] Marketing's config points at `/download-app`. Ad copy must never imply the viewer's religion.
-- [O] **The app doesn't have this yet in the checkout I read.** A grep of `/home/yunus/Work/open-arabic` finds no `install_id`, `Install Attribution` or install referrer in its `.ts`, `.tsx` and `.json` files, excluding `node_modules`. `app.json` has no `associatedDomains` or `intentFilters`, and the Android manifest has no `autoVerify`. It has the custom scheme `open-arabic://`. So an `https://openarabic.io/word/...` link should not open the app today, even though `app/word-detail.tsx` and `app/article/` exist.
+- [O] **The app doesn't have this yet in the checkout I read.** A grep of the `open-arabic` checkout finds no `install_id`, `Install Attribution` or install referrer in its `.ts`, `.tsx` and `.json` files, excluding `node_modules`. `app.json` has no `associatedDomains` or `intentFilters`, and the Android manifest has no `autoVerify`. It has the custom scheme `open-arabic://`. So an `https://openarabic.io/word/...` link should not open the app today, even though `app/word-detail.tsx` and `app/article/` exist.
 
 **Badge and device rules**
 

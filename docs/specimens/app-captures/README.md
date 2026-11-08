@@ -7,7 +7,7 @@ Real screens of the running app, for the site specimens. Nothing is mocked up, e
 | Date | 2026-10-31 |
 | Device | Android emulator, AVD `pixel`, Android 15 (API 35), 1080x2400 |
 | App | Dev client 1448.5.5 (278), JS from `open-arabic` commit `cd05fc45` (`feat/skia-3`) |
-| Account | `qa@example.com`, the test account in `open-arabic/docs/argent-qa.md`. It was already signed in on this AVD; no password was entered |
+| Account | The app's QA test account, already signed in on this AVD; no password was entered |
 | Capture | `adb exec-out screencap -p`, driven with Argent. Full resolution, unprocessed |
 
 ## Files
