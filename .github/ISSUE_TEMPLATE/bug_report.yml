@@ -1,0 +1,36 @@
+name: Bug report
+description: Something on openarabic.io doesn't work or reads wrong.
+labels: [bug]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Page
+      description: The address where it happens.
+      placeholder: https://openarabic.io/read/returning-to-god-276
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what the page did instead. For Arabic that looks wrong, say which word or line.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Safari on iPhone 15, iOS 26.3
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: Drop one here if it shows the problem.
+  - type: markdown
+    attributes:
+      value: >
+        A bug in the app itself belongs in
+        [YunusAndreasson/openarabic](https://github.com/YunusAndreasson/openarabic/issues).

@@ -1,0 +1,55 @@
+MIT License
+
+Copyright (c) 2026 Yūnus Andréasson
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Content not covered by the MIT license
+
+The license above covers the code. The following are not part of the
+Software, and all rights in them are reserved:
+
+- Photographs and images: public/*-wide.*, public/*-tall.*, docs/imagery/ and
+  the article images in src/assets/story/articles/. Some article images come
+  from third parties, and none may be reused from this repository.
+- App screens, captured from the OpenArabic app: src/assets/story/ (the
+  screens/ folder, ios-* and 02-word-card.*), docs/specimens/app-captures/ and
+  docs/store-assets/.
+- Texts, translations, notes and audio: src/data/, public/books/al-fawaid.pdf
+  (shared under the terms at https://openarabic.io/terms), vendor/word-enrichment.ts,
+  docs/specimens/a11y/gl/, and every .mp3 file. The classical Arabic texts are
+  centuries old; the English, the notes and the recordings made for OpenArabic
+  are what is reserved.
+- The OpenArabic name, its ring mark and the social card: public/oa-logo.png,
+  public/mark-64.png, src/assets/story/mark-dark-64.png,
+  docs/specimens/shared/mark-dark-64.png, src/components/Logo.astro and
+  public/og.jpg.
+
+Third-party material keeps its own license:
+
+- Amiri, Copyright 2010-2022 The Amiri Project Authors, and Inter, Copyright
+  (c) 2016-2018 The Inter Project Authors, subset in src/fonts/, under the SIL
+  Open Font License 1.1 (public/licenses/). Amiri and Alegreya Sans in
+  docs/specimens/shared/fonts/ are under the same license, with their texts
+  beside them.
+- The App Store badge (public/badge-app-store.svg) is a trademark of Apple
+  Inc., and the Google Play badge (public/badge-google-play.png) a trademark
+  of Google LLC, used under their guidelines.

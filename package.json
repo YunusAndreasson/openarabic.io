@@ -3,6 +3,13 @@
   "private": true,
   "type": "module",
   "version": "0.0.0",
+  "description": "openarabic.io, the website for the OpenArabic app: read the classics in Arabic.",
+  "license": "MIT",
+  "homepage": "https://openarabic.io",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YunusAndreasson/openarabic.io.git"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
