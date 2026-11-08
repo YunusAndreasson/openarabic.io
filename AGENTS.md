@@ -2,7 +2,7 @@
 
 ## Hard rules
 
-- **Never deploy to, rename or delete the Worker `openarabic-web`.** It's the old site's Worker, and it still runs. This repo's Worker is `openarabic-site`, set in `wrangler.jsonc`. Keep that file, because without it the adapter would name the Worker after this folder.
+- **Deploy only to the Worker `openarabic-site`,** set in `wrangler.jsonc`. `openarabic-web` was the old admin panel's Worker, deleted on 2026-11-08. Keep that file, because without it the adapter would name the Worker after this folder.
 - **Keep the one custom domain in `wrangler.jsonc`.** A deploy without it could detach the live site. Add no other route or domain.
 - **openarabic.io has been served by `openarabic-site` since 2026-11-02.** Every deploy goes live: `pnpm ship --production`, only when the owner asks. Never run `wrangler deploy` directly, including `--temporary`, which needs no login: it skips every check. A plain `pnpm ship` is refused while the domain is in `wrangler.jsonc`.
 - **Treat Supabase as production.** Read only, with throttled requests, and never print or commit keys.
@@ -25,7 +25,7 @@ pnpm, with exact pins. Don't copy the spike's `wrangler.jsonc`, `astro.config.mj
 | Prove the Worker name, after a build | `grep -o '"name":"[^"]*"\|"routes"' dist/*/wrangler.json` prints only `openarabic-site`. A `--name` flag would hide a wrong name |
 | Zen, without touching the owner's | `zen-browser --headless --no-remote --profile "$(mktemp -d)" --screenshot /tmp/z.png <url>` |
 
-CI (`.github/workflows/verify.yml`) runs `pnpm ship:test` on every push and pull request, on fixture data, and never deploys. No schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the public `YunusAndreasson/openarabic-web`: push `main` only when the owner asks.
+CI (`.github/workflows/verify.yml`) runs `pnpm ship:test` on every push and pull request, on fixture data, and never deploys. No schedule exists, and content reaches readers only when someone runs `pnpm ship`. `origin` is the public `YunusAndreasson/openarabic.io`: push `main` only when the owner asks.
 
 ## Read first
 

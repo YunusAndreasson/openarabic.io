@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/YunusAndreasson/openarabic-web/actions/workflows/verify.yml"><img src="https://github.com/YunusAndreasson/openarabic-web/actions/workflows/verify.yml/badge.svg" alt="verify"></a>
+  <a href="https://github.com/YunusAndreasson/openarabic.io/actions/workflows/verify.yml"><img src="https://github.com/YunusAndreasson/openarabic.io/actions/workflows/verify.yml/badge.svg" alt="verify"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
 </p>
 

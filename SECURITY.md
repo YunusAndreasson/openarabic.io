@@ -9,7 +9,7 @@ privately.
 ## Reporting a vulnerability
 
 Use GitHub's private reporting:
-[report a vulnerability](https://github.com/YunusAndreasson/openarabic-web/security/advisories/new).
+[report a vulnerability](https://github.com/YunusAndreasson/openarabic.io/security/advisories/new).
 Please don't open a public issue.
 
 Include the URL, the request or steps, what happened, and what an attacker
