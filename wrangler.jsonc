@@ -1,8 +1,8 @@
 {
-  // NOT "openarabic-web". That is the Worker serving the live openarabic.io and
-  // its admin panel, and it shares this folder's name. The Astro adapter names a
-  // Worker after the package or folder when no config sets one, so this file
-  // must exist and must keep this name, or a deploy could overwrite the live site.
+  // NOT "openarabic-web", this folder's name. The Astro adapter names a Worker
+  // after the package or folder when no config sets one, and openarabic-web was
+  // the old admin panel's Worker (deleted 2026-11-08), so this file must exist
+  // and keep this name.
   "name": "openarabic-site",
 
   // No newer than the installed workerd supports, or `astro dev` won't start.
