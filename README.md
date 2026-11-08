@@ -54,8 +54,8 @@ dictionary on the web. It has no accounts, sign-up or admin.
 - **Analytics choice.** Google Analytics loads only for visitors who switch it
   on. Page views and store taps are counted by the Worker with no cookie, so
   they count every visitor.
-- **`pnpm ship`.** The one way to deploy. The old site's Worker shares the
-  Cloudflare account, so it refuses any Worker name but this site's. It reads
+- **`pnpm ship`.** The one way to deploy. It refuses any Worker name but this
+  site's, so a deploy can't overwrite another Worker in the account. It reads
   the content with the public key, holds unexpected changes for approval,
   checks budgets, claims and every old URL, then checks the live domain and
   rolls back if that fails.
