@@ -125,5 +125,5 @@ the rules that keep a deploy from touching anything but this site's Worker.
 
 The code is [MIT](LICENSE). The photographs, the app screens, the texts,
 translations and audio, and the OpenArabic name, logo and social card are not;
-[LICENSE](LICENSE) lists them. Amiri and Inter are used under the SIL Open
+[NOTICE.md](NOTICE.md) lists them. Amiri and Inter are used under the SIL Open
 Font License.
