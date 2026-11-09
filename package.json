@@ -20,8 +20,8 @@
     "ship:test:unit": "node scripts/test-ship-units.mjs"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "14.4.3",
-    "astro": "7.4.4"
+    "@astrojs/cloudflare": "14.4.6",
+    "astro": "7.4.7"
   },
   "devDependencies": {
     "@google/design.md": "0.4.0",
