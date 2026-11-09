@@ -72,6 +72,14 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 - Never normalise or alter vocalised text you show: no `.normalize()`, mark stripping, re-vocalising, kashida or joining. The one exception is the throwaway copy used for the letter comparison below. If stored text looks wrong, show it as stored and report it.
 - The reader shows `sentence_words.word_form`, in `position` order with real spaces, where its letters match `article_sentences.arabic`. On the 350 where they don't, it shows the stored `arabic`, with no tapping. 3 sentences have no words: report them, don't fill them in.
 
+## Open source
+
+The repository is public. MIT covers the code; [NOTICE.md](NOTICE.md) lists the photographs, images and marks it doesn't.
+
+- Anything brought in from elsewhere (an image, font or copied code) needs a licence that lets it be redistributed here, and a line in NOTICE.md.
+- No key in a commit, a doc or a fixture. Deploys run from this machine on wrangler's login, and CI holds no credentials.
+- Dependabot opens grouped pull requests weekly. Merge when `verify` is green; a merge deploys nothing.
+
 ## Done
 
 1. `pnpm ship --production --dry-run` passes. It proves the Worker name is `openarabic-site` with only the live domain. Steps marked `NOT BUILT` aren't passes.
