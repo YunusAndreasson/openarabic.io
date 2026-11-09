@@ -14,10 +14,10 @@ Copyright (c) 2026 Yūnus Andréasson, except where a third party is named.
   photograph came from.
 - **App screens**, captured from the OpenArabic app: the `screens/` folder,
   `ios-*` and `02-word-card.*` in `src/assets/story/`,
-  `docs/specimens/app-captures/` and `docs/store-assets/`.
+  and `docs/specimens/app-captures/`.
 - **Texts, translations, notes and audio:** `src/data/`,
-  `public/books/al-fawaid.pdf`, `vendor/word-enrichment.ts`,
-  `docs/specimens/a11y/gl/` and every `.mp3` file. The classical Arabic texts
+  `public/books/al-fawaid.pdf`, `vendor/word-enrichment.ts` and every `.mp3`
+  file. The classical Arabic texts
   are centuries old; the English, the notes and the recordings made for
   OpenArabic are what is reserved. The Al-Fawāʾid PDF is free to share under
   the site's [terms](https://openarabic.io/terms).

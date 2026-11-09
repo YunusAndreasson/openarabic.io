@@ -1,6 +1,6 @@
 # Cutover runbook
 
-**Done 2026-11-02, by a simpler route than steps 3 and 4 below.** With the domain in `wrangler.jsonc`, `pnpm ship --production` moved it in one call. To roll back: move `openarabic.io` to `openarabic-web` in the dashboard, and take the domain out of `wrangler.jsonc` before any further ship, or the next deploy takes it back.
+**Done 2026-11-02, by a simpler route than steps 3 and 4 below.** With the domain in `wrangler.jsonc`, `pnpm ship --production` moved it in one call. To roll back now, use `pnpm ship:rollback`, which returns `openarabic-site` to its previous version; the old `openarabic-web` Worker this runbook moved the domain from was deleted on 2026-11-08.
 
 `docs/site-plan.md` Phase 6, as built. The plan's rehearsal on a throwaway hostname is skipped unless the owner names one. That means the domain's behaviour across a deploy is checked for the first time at step 6, on the live domain.
 

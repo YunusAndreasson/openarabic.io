@@ -1,8 +1,8 @@
 # Spike: accessibility of the reader and the reveal (plan task 2.0)
 
-**Status:** decided by measurement on 2026-10-31, on throwaway pages in `docs/specimens/a11y/`. VoiceOver stays for task 5.7. Nobody listened to any of this: every speech result below is what the screen reader sent to its speech engine, read from logs.
+**Status:** decided by measurement on 2026-10-31, on throwaway pages, removed on 2026-11-09 (`git log --all -- docs/specimens/a11y` finds them). VoiceOver stays for task 5.7. Nobody listened to any of this: every speech result below is what the screen reader sent to its speech engine, read from logs.
 
-Generator: `docs/specimens/a11y/build.mjs`, from the existing snapshot, with no new Supabase request. Harness and raw keyboard output: `docs/specimens/a11y/harness/`.
+Generator (`build.mjs`), harness and raw keyboard output were in the same folder, from the existing snapshot, with no new Supabase request.
 
 ## Decision
 
