@@ -121,7 +121,7 @@ export function checkIndexable(htmlFiles, root = ROOT) {
 export function checkNoindex(htmlFiles, root = ROOT) {
   const headers = path.join(root, 'dist/client/_headers');
   const text = fs.existsSync(headers) ? fs.readFileSync(headers, 'utf8') : '';
-  if (!/^\/\*\s*\n(?:[ \t]+.*\n)*?[ \t]+X-Robots-Tag:\s*noindex/im.test(text)) {
+  if (!/^\/\*[ \t\r]*\n(?:[ \t].*\n)*?[ \t]+X-Robots-Tag:\s*noindex/im.test(text)) {
     fail('dist/client/_headers has no "X-Robots-Tag: noindex" on /*. A preview must not be indexed.');
   }
   for (const file of htmlFiles) {
