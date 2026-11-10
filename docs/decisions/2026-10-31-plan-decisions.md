@@ -13,6 +13,6 @@ The owner's answers to the decisions in `docs/site-plan.md`. D12, D13, D14 and D
 | D7 | GA4 check | Allow one inline check, 0.25 KB at most, on every page | Word and other "0 JS" pages become "0 JS except this check". The opted-in state has its own ceiling |
 | D8 | App Store rating | `/download-app` only | |
 | D9 | Article images | Keep all 202. **The owner confirmed they hold the rights;** this is the owner's statement, and no licence records were seen or checked | Article pages need an image in `DESIGN.md`. Images are copied into the build and resized, with `og:image` set per article |
-| D10 | Contact and deletion address | `yunus@edenmind.com` | The site publishes it instead of `support@openarabic.io`. No form and no third party |
+| D10 | Contact and deletion address | `yunus@edenmind.com`. **Replaced by the owner on 2026-11-10 with `contact@openarabic.io`,** one address across his sites, forwarded by Cloudflare Email Routing | The site publishes it on every page that gives an address. No form and no third party |
 | D11 | Universal links | Not at cutover | `.well-known` files return 404 until the next app release. The site never promises them |
 | D16 | Preview deploys | Allow, for `openarabic-site` on its `workers.dev` URL, noindexed, after the ship guard exists | Becomes the one exception to the `AGENTS.md` deploy rule |
