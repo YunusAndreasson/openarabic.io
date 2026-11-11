@@ -65,7 +65,7 @@ These say how to build what a task asks for. They aren't a to-do list: don't add
 | Home page | Static HTML, played by `src/scripts/home.ts`. Tappable words stay `<button popovertarget>` with one popover per word. Reads whole with no script | At most 60 KB |
 | Article reader | `<a class=w href=/word/slug data-i=N>`, one shared `popover`, glosses in `/gl/<id>.json` fetched on first pointer contact, plain external deferred script. Words stay links with JS off | 1 KB |
 | Word, dictionary, category, legal | No tappable words | 0 |
-| Every page | One inline GA4 choice check, counted on top of the above. Visitors who haven't opted in make no third-party request | At most 0.25 KB |
+| Every page | One inline GA4 choice check, counted on top of the above. Visitors who haven't opted in make no request to Google. Cloudflare Web Analytics (cookieless, no personal data) is injected by Cloudflare at serve time for every visitor, so it isn't in the build or this budget; the privacy page discloses it | At most 0.25 KB |
 
 **Arabic text.**
 
