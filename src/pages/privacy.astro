@@ -16,14 +16,14 @@ import Content from '../layouts/Content.astro';
     <h3>Voice answers</h3>
     <p>Your voice is transcribed on your device and the audio is never uploaded. The text of your answer is saved.</p>
     <h3>Usage analytics</h3>
-    <p>In the app, we use Mixpanel to record events like sign in, sign up, practice sessions and the title and category of the texts you open, linked to your account. On this website, and only if you agree, we use Google Analytics to see how visitors find and use it. Cloudflare Web Analytics also counts visits to this website anonymously, for every visitor.</p>
+    <p>In the app, we use Mixpanel to record how the app is used, such as sign in, sign up, practice sessions and which texts you open. These events are linked to a random identifier created on your device, not to your account, and do not include your name or email. A new identifier is created when you sign out or delete your account. On this website, and only if you agree, we use Google Analytics to see how visitors find and use it. Cloudflare Web Analytics also counts visits to this website anonymously, for every visitor.</p>
     <h2>How we use your information</h2>
     <p>We use your data to provide the learning service, sync your progress across devices, personalize your learning, send practice reminders if you enable them, and improve the app.</p>
     <h2>Third-party services</h2>
     <h3>Supabase</h3>
     <p>We use Supabase for authentication, database and file storage.</p>
     <h3>Mixpanel</h3>
-    <p>We use Mixpanel in the app to understand which features get used and to improve the learning experience. Its events are linked to your account. The app does not currently ask before sending them.</p>
+    <p>We use Mixpanel in the app to understand which features get used and to improve the app. Mixpanel also receives the device model, system version and app version, and derives an approximate location (city, region, country) from your IP address. It does not store the IP address. The data is stored in the United States. The app does not currently ask before sending these events.</p>
     <h3>Meta (Facebook)</h3>
     <p>The app sends a small number of app events to Meta, so we can tell whether an ad was worth running: that the app was opened, an account was created, the intro was finished, or a practice session was completed, along with the technical details the Meta SDK attaches, such as device model and system version. On Android your device advertising ID is included. This applies whether or not you installed from an ad, and the app does not currently ask first. We do not send Meta your name, your email or what you study. We never ask to track you across other apps.</p>
     <h3 id="analytics">Google Analytics</h3>
@@ -31,7 +31,7 @@ import Content from '../layouts/Content.astro';
     <h3>Cloudflare Web Analytics</h3>
     <p>On this website, Cloudflare Web Analytics counts visits anonymously: page views, referral sources, country, browser and how fast pages load. It sets no cookies and stores no personal data, and the data is not used or shared for advertising. It runs for every visitor, whatever you choose for Google Analytics.</p>
     <h3>Sentry</h3>
-    <p>We use Sentry for error tracking and crash reporting.</p>
+    <p>We use Sentry for error tracking and crash reporting. A report contains the error, the device and app version, and can include your account ID. Reports are stored in the United States.</p>
     <h3>Apple and Google</h3>
     <p>If you sign in with Apple or Google, their privacy policies apply to the sign-in.</p>
     <h2>Data security</h2>
