@@ -146,7 +146,7 @@ Privacy Terms Contact Account deletion Analytics choice
 Account Deletion | OpenArabic
 How to delete your OpenArabic account and its data.
 OpenArabic by Yunus Andréasson.
-To delete your OpenArabic account and data, send an email to contact@openarabic.io.
+To delete your OpenArabic account and data, send an email to support@openarabic.io.
 What gets deleted
 Your account profile and sign-in credentials
 Your reading progress and article history
@@ -224,7 +224,7 @@ The app's voice review: one Arabic word, a sound button, and the buttons Show an
 Privacy Policy | OpenArabic
 What OpenArabic collects, how it is used, and your rights.
 Privacy Policy
-Effective date: January 1, 2025. Last updated: November 10, 2026.
+Effective date: January 1, 2025. Last updated: November 15, 2026.
 This policy explains what information we collect, how we use it, and your rights.
 Information we collect
 Account information
@@ -259,7 +259,7 @@ Children
 OpenArabic is not intended for children under 13. We do not knowingly collect information from children under 13.
 Changes to this policy
 We may update this policy from time to time. We will tell you about significant changes through the app or by email.
-Questions about privacy? Write to contact@openarabic.io.
+Questions about privacy? Write to support@openarabic.io.
 Terms of Service | OpenArabic
 The terms for using OpenArabic.
 Terms of Service
@@ -283,7 +283,7 @@ Changes to these terms
 We may update these terms from time to time. Continued use of OpenArabic after changes means you accept the updated terms.
 Termination
 We may suspend or terminate your access if you violate these terms. You may stop using OpenArabic at any time.
-Questions about these terms? Write to contact@openarabic.io.
+Questions about these terms? Write to support@openarabic.io.
 Fiqh
 . Easier.
 . Advanced.
