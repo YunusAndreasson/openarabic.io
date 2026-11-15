@@ -20,17 +20,17 @@
     "ship:test:unit": "node scripts/test-ship-units.mjs"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "14.4.6",
-    "astro": "7.4.7"
+    "@astrojs/cloudflare": "14.4.8",
+    "astro": "7.4.12"
   },
   "devDependencies": {
     "@google/design.md": "0.4.0",
     "esbuild": "0.28.2",
     "jsonc-parser": "3.3.1",
-    "parse5": "8.1.0",
-    "playwright-core": "1.65.0",
+    "parse5": "8.1.1",
+    "playwright-core": "1.65.1",
     "sharp": "0.35.5",
-    "wrangler": "4.158.0",
+    "wrangler": "4.162.0",
     "yaml": "2.9.1"
   },
   "packageManager": "pnpm@11.28.4"
