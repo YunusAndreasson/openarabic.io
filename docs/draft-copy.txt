@@ -251,7 +251,7 @@ Cloudflare Web Analytics
 On this website, Cloudflare Web Analytics counts visits anonymously: page views, referral sources, country, browser and how fast pages load. It sets no cookies and stores no personal data, and the data is not used or shared for advertising. It runs for every visitor, whatever you choose for Google Analytics.
 Sentry
 # Draft 2026-11-15: replaces the earlier wording after Mixpanel went anonymous.
-We use Sentry for error tracking and crash reporting. A report contains the error, the device and app version, and can include your account ID. Reports are stored in the United States.
+We use Sentry for error tracking and crash reporting. A report contains the error, the device and app version. It does not include your account, email address or screenshots. Reports are stored in the United States.
 Apple and Google
 If you sign in with Apple or Google, their privacy policies apply to the sign-in.
 Data security
