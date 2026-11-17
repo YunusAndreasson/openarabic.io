@@ -6,7 +6,7 @@ import { themeColorHex } from '../styles/tokens.generated';
 import amiriUrl from '../fonts/amiri-regular.subset.woff2?url';
 import interUrl from '../fonts/inter-variable.subset.woff2?url';
 import Footer from '../components/Footer.astro';
-import { absolute, MAKER, SITE, SITE_NAME, SOCIAL, X_HANDLE } from '../lib/site.mjs';
+import { absolute, APP_STORE_ID, MAKER, SITE, SITE_NAME, SOCIAL, X_HANDLE } from '../lib/site.mjs';
 
 interface Props {
   title?: string;
@@ -40,6 +40,9 @@ const viewType = VIEW[firstPart] ?? 'other';
 const storedMark = storedDescription ? { 'data-stored': '' } : {};
 
 const canonicalUrl = canonical === null ? null : canonical === '/' ? SITE : absolute(canonical);
+// docs/site-plan.md `Smart App Banner`: content pages only, each with its own address as `app-argument`. Home and /download-app keep their own store links on the first screen (N1).
+const BANNER_VIEWS = new Set(['word', 'read', 'dictionary', 'category', 'author', 'book']);
+const smartBanner = BANNER_VIEWS.has(viewType) && canonicalUrl ? `app-id=${APP_STORE_ID}, app-argument=${canonicalUrl}` : null;
 const organization = { '@id': absolute('/#organization') };
 const person = { '@id': MAKER['@id'] };
 // Docs/site-plan.md `URL parity`: the global set on every page, and no aggregateRating, ever.
@@ -75,6 +78,7 @@ const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:site" content={X_HANDLE} />
     <meta name="twitter:creator" content="@YunusAndreasson" />
+    {smartBanner && <meta name="apple-itunes-app" content={smartBanner} />}
     <link rel="icon" href="/mark-64.png" type="image/png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script is:inline type="application/ld+json" set:html={ld}></script>
