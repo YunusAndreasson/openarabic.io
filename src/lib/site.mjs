@@ -8,6 +8,9 @@ export const PLAY_ID = 'com.edenmind.OpenArabic';
 export const APP_STORE = `https://apps.apple.com/app/openarabic/id${APP_STORE_ID}`;
 export const PLAY_STORE = `https://play.google.com/store/apps/details?id=${PLAY_ID}`;
 export const SOCIAL = { x: 'https://x.com/openarabicio', instagram: 'https://www.instagram.com/openarabic.io/', facebook: 'https://www.facebook.com/OpenArabic.io/' };
+export const X_HANDLE = '@OpenArabicIo';
+// The maker, with the same @id and profiles as on andreassonphoto.com, zuhd.news and qamar360.com, so search engines read one person behind all of them.
+export const MAKER = { '@type': 'Person', '@id': 'https://andreassonphoto.com/#person', name: 'Yunus Andreasson', alternateName: ['Jonas Yūnus Andrèasson', 'Yunus Andréasson'], url: 'https://andreassonphoto.com', sameAs: ['https://github.com/YunusAndreasson', 'https://x.com/YunusAndreasson', 'https://www.instagram.com/andreasson.photo/', 'https://www.linkedin.com/in/yunusandreasson/'] };
 
 export const absolute = (path) => `${SITE}${path}`;
 

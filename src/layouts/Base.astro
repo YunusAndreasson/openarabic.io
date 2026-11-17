@@ -6,7 +6,7 @@ import { themeColorHex } from '../styles/tokens.generated';
 import amiriUrl from '../fonts/amiri-regular.subset.woff2?url';
 import interUrl from '../fonts/inter-variable.subset.woff2?url';
 import Footer from '../components/Footer.astro';
-import { absolute, SITE, SITE_NAME, SOCIAL } from '../lib/site.mjs';
+import { absolute, MAKER, SITE, SITE_NAME, SOCIAL, X_HANDLE } from '../lib/site.mjs';
 
 interface Props {
   title?: string;
@@ -41,12 +41,12 @@ const storedMark = storedDescription ? { 'data-stored': '' } : {};
 
 const canonicalUrl = canonical === null ? null : canonical === '/' ? SITE : absolute(canonical);
 const organization = { '@id': absolute('/#organization') };
-const person = { '@id': absolute('/#person') };
+const person = { '@id': MAKER['@id'] };
 // Docs/site-plan.md `URL parity`: the global set on every page, and no aggregateRating, ever.
 const graph = [
   { '@type': 'Organization', ...organization, name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: absolute('/oa-logo.png') }, sameAs: Object.values(SOCIAL), founder: person },
   { '@type': 'WebSite', '@id': absolute('/#website'), name: SITE_NAME, url: SITE, inLanguage: 'en', publisher: organization },
-  { '@type': 'Person', ...person, name: 'Yunus Andréasson' },
+  MAKER,
   { '@type': 'MobileApplication', '@id': absolute('/#app'), name: SITE_NAME, operatingSystem: 'iOS, Android', applicationCategory: 'EducationalApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: person, publisher: organization },
   ...jsonLd,
 ];
@@ -73,6 +73,8 @@ const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })
     {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
     {ogImage && <meta property="og:image" content={absolute(ogImage)} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:site" content={X_HANDLE} />
+    <meta name="twitter:creator" content="@YunusAndreasson" />
     <link rel="icon" href="/mark-64.png" type="image/png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script is:inline type="application/ld+json" set:html={ld}></script>
