@@ -6,7 +6,7 @@ import { themeColorHex } from '../styles/tokens.generated';
 import amiriUrl from '../fonts/amiri-regular.subset.woff2?url';
 import interUrl from '../fonts/inter-variable.subset.woff2?url';
 import Footer from '../components/Footer.astro';
-import { absolute, APP_STORE_ID, MAKER, SITE, SITE_NAME, SOCIAL, X_HANDLE } from '../lib/site.mjs';
+import { absolute, APP_STORE, APP_STORE_ID, MAKER, PLAY_STORE, SITE, SITE_NAME, SOCIAL, X_HANDLE } from '../lib/site.mjs';
 
 interface Props {
   title?: string;
@@ -47,10 +47,10 @@ const organization = { '@id': absolute('/#organization') };
 const person = { '@id': MAKER['@id'] };
 // Docs/site-plan.md `URL parity`: the global set on every page, and no aggregateRating, ever.
 const graph = [
-  { '@type': 'Organization', ...organization, name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: absolute('/oa-logo.png') }, sameAs: Object.values(SOCIAL), founder: person },
+  { '@type': 'Organization', ...organization, name: SITE_NAME, url: SITE, logo: { '@type': 'ImageObject', url: absolute('/oa-logo.png') }, sameAs: [...Object.values(SOCIAL), APP_STORE, PLAY_STORE], founder: person },
   { '@type': 'WebSite', '@id': absolute('/#website'), name: SITE_NAME, url: SITE, inLanguage: 'en', publisher: organization },
   MAKER,
-  { '@type': 'MobileApplication', '@id': absolute('/#app'), name: SITE_NAME, operatingSystem: 'iOS, Android', applicationCategory: 'EducationalApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: person, publisher: organization },
+  { '@type': 'MobileApplication', '@id': absolute('/#app'), name: SITE_NAME, operatingSystem: 'iOS, Android', applicationCategory: 'EducationalApplication', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, author: person, publisher: organization, sameAs: [APP_STORE, PLAY_STORE] },
   ...jsonLd,
 ];
 // Escaped so stored text can't close the script element.
