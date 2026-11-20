@@ -7,10 +7,10 @@ export const APP_STORE_ID = '1594031029';
 export const PLAY_ID = 'com.edenmind.OpenArabic';
 export const APP_STORE = `https://apps.apple.com/app/openarabic/id${APP_STORE_ID}`;
 export const PLAY_STORE = `https://play.google.com/store/apps/details?id=${PLAY_ID}`;
-// App Store Connect's provider token (`pt`), public in every campaign link. Apple ignores a
-// campaign token without it. Empty until it's copied from App Analytics; until then the
-// App Store link stays plain. One value for every app on the account.
-export const APPLE_PROVIDER_TOKEN = '';
+// App Store Connect's provider token (`pt`), public in every campaign link (App Analytics,
+// Campaigns, Generate a Campaign Link). Apple ignores a campaign token without it. One value
+// for every app on the account.
+export const APPLE_PROVIDER_TOKEN = '2189605';
 export const SOCIAL = { x: 'https://x.com/openarabicio', instagram: 'https://www.instagram.com/openarabic.io/', facebook: 'https://www.facebook.com/OpenArabic.io/' };
 export const X_HANDLE = '@OpenArabicIo';
 // The maker, with the same @id and profiles as on andreassonphoto.com, zuhd.news and qamar360.com, so search engines read one person behind all of them.

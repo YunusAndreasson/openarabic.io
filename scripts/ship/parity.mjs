@@ -7,6 +7,7 @@ import { fail, ROOT, walk } from './lib.mjs';
 import { NOINDEX_META } from './smoke.mjs';
 import { routeOf } from './budgets.mjs';
 import { wordPath as wordUrl } from '../../src/lib/words.mjs';
+import { APPLE_PROVIDER_TOKEN } from '../../src/lib/site.mjs';
 
 const LIST = 'docs/research/parity/sitemap-2026-11-01.txt';
 const OUTSIDE = 'docs/research/parity/outside-sitemap-2026-11-01.txt';
@@ -96,12 +97,14 @@ export function expectations(root = ROOT) {
   expect('/v?p=word', 200);
   const PLAY = 'https://play.google.com/store/apps/details?id=com.edenmind.OpenArabic';
   const APPLE = 'https://apps.apple.com/app/openarabic/id1594031029';
+  // With the provider token, the App Store link carries a campaign: the link's own, or the surface's.
+  const apple = (campaign) => (APPLE_PROVIDER_TOKEN ? `${APPLE}?pt=${APPLE_PROVIDER_TOKEN}&ct=${campaign}&mt=8` : APPLE);
   const phone = (agent) => ({ agent });
-  cases.push({ route: '/download-app', status: 307, location: APPLE, ...phone('Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)') });
+  cases.push({ route: '/download-app', status: 307, location: apple('web-site'), ...phone('Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)') });
   cases.push({ route: '/download-app', status: 307, location: PLAY, ...phone('Mozilla/5.0 (Linux; Android 14; Pixel 8)') });
   cases.push({ route: '/download-app', status: 200, location: null, ...phone('Mozilla/5.0 (X11; Linux x86_64)') });
   cases.push({ route: '/download-app', status: 200, location: null, ...phone('Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X) Chrome/120 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)') });
-  expect('/download-app?to=ios&from=word', 302, APPLE);
+  expect('/download-app?to=ios&from=word', 302, apple('web-word'));
   expect('/download-app?to=android&from=read', 302, `${PLAY}&referrer=utm_source%3Dweb%26utm_campaign%3Dread`);
   expect('/download-app?to=android&utm_source=instagram&utm_campaign=bio', 302, `${PLAY}&referrer=utm_source%3Dinstagram%26utm_campaign%3Dbio`);
   // One row per URL and asker: a page both frozen and in today's data is asked once.

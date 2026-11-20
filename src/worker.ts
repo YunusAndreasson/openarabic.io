@@ -74,7 +74,7 @@ function storeUrl(store: 'ios' | 'android', from: string | null, params: URLSear
     if (referrer) url.searchParams.set('referrer', referrer);
     return url.toString();
   }
-  // Apple ignores `ct` without the provider token. Until it's set in lib/site.mjs the link stays plain.
+  // Apple ignores `ct` without the provider token, which lib/site.mjs holds. Without one the link stays plain.
   // A constant, not a Worker var: this module never sees `env`, and the token isn't secret.
   const token = APPLE_PROVIDER_TOKEN;
   const url = new URL(APP_STORE);
