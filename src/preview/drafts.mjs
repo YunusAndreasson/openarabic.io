@@ -7,6 +7,18 @@ import path from 'node:path';
 /** translare's `books/` folder: TRANSLARE_BOOKS, or the sibling checkout. */
 export const draftsRoot = () => process.env.TRANSLARE_BOOKS || path.resolve(process.cwd(), '../openarabic-translare/books');
 
+/** translare's new word clips (audio/clips/ beside books/): made there, uploaded only at release. */
+export const clipsRoot = () => path.resolve(draftsRoot(), '..', 'audio', 'clips');
+
+/**
+ * Where a word's or entry's clip plays from: an existing app clip by its stored file name (or URL), a clip translare
+ * made on this machine from /preview/audio/ (integration.mjs serves it), or null when none exists yet.
+ */
+export function clipUrl(audio) {
+  if (typeof audio === 'string') return audio;
+  return audio?.clip && audio.file ? `/preview/audio/${path.basename(audio.file)}` : null;
+}
+
 /** Every draft chapter: { book, chapter, file }, in book and chapter order. */
 export function listDrafts() {
   const root = draftsRoot();
@@ -43,7 +55,8 @@ export function readerText(draft) {
       word_form: word.form,
       english: word.english,
       grammar_note: lexiconText(word.lexicon),
-      audio_url: typeof word.audio === 'string' ? word.audio : null,
+      audio_url: clipUrl(word.audio),
+      new_clip: typeof word.audio === 'object' && Boolean(word.audio?.clip),
       root: word.entry?.decision === 'reuse' && word.entry.root_id ? { id: word.entry.root_id, meaning: word.entry.meaning ?? '' } : null,
       fixed: word.span_id.includes('+'),
       entry: word.entry ?? {},

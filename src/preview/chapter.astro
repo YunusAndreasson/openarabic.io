@@ -7,7 +7,8 @@ import type { GetStaticPaths } from 'astro';
 import { wordHtml } from '../lib/segments.mjs';
 import { site } from '../lib/snapshot.mjs';
 import { categoryLabel, escapeHtml, levelName, shownName, wordPath } from '../lib/words.mjs';
-import { listDrafts, loadDraft, readerText, wordsHash } from './drafts.mjs';
+import { audioUrl } from '../lib/words.mjs';
+import { clipUrl, listDrafts, loadDraft, readerText, wordsHash } from './drafts.mjs';
 
 export const getStaticPaths = (() => listDrafts().map(({ book, chapter }) => ({ params: { book, chapter } }))) satisfies GetStaticPaths;
 
@@ -32,7 +33,7 @@ const html = sentences
     const english = `<p class=en data-stored>${escapeHtml(sentence.english)}</p>`;
     if (!sentence.words.length) return `<p class=reading lang=ar dir=rtl>${escapeHtml(sentence.arabic)}</p>${english}`;
     const line = sentence.words
-      .map((word) => `<a class="w${word.fixed ? ' fx' : ''}" href=${word.root ? wordPath(word.root) : '#'} data-i=${index++}>${wordHtml(hash, words, word)}</a>`)
+      .map((word) => `<a class="w${word.fixed ? ' fx' : ''}${word.new_clip ? ' nc' : ''}" href=${word.root ? wordPath(word.root) : '#'} data-i=${index++}>${wordHtml(hash, words, word)}</a>`)
       .join(' ');
     return `<p class="reading t" lang=ar dir=rtl>${line}</p>${english}`;
   })
@@ -44,7 +45,9 @@ for (const item of draft.missing as string[]) {
 }
 const stats = draft.stats;
 const fixes = (draft.source_fixes ?? []) as { span_id: string; printed: string; text: string; by: string }[];
-const fresh = draft.new_entries as { letters: string; meaning: string | null; example_gloss: string }[];
+type Clip = { clip: string; file: string } | null;
+const fresh = draft.new_entries as { letters: string; meaning: string | null; example_gloss: string; audio?: { ar: Clip; en: Clip } }[];
+const play = (clip: Clip) => { const url = clipUrl(clip); return url?.startsWith('/') ? url : audioUrl(url); };
 ---
 
 <Content title={`${a.title_en ?? `Chapter ${chapter}`} | Bookstore | OpenArabic`} canonical={`/preview/${book}/${chapter}`} neverIndex
@@ -80,7 +83,8 @@ const fresh = draft.new_entries as { letters: string; meaning: string | null; ex
     {draft.blocking.length > 0 && <ul>{draft.blocking.map((item: string) => <li data-stored>{item}</li>)}</ul>}
     <p class="quiet">
       {stats.sentences} sentences, {stats.words} words. Dictionary: {stats.reused_entries} words use an existing entry, {stats.new_entries} new entries
-      {stats.book_entries ? `, ${stats.book_entries} made in an earlier chapter` : ''}. Word audio: {stats.word_audio_reused} existing clips; {stats.clips_to_make} clips still to make.
+      {stats.book_entries ? `, ${stats.book_entries} made in an earlier chapter` : ''}. Word audio: {stats.word_audio_reused} existing clips{stats.word_audio_made ? `, ${stats.word_audio_made} new clips made on this machine (marked with a dot; not uploaded yet)` : ''}; {stats.clips_to_make} clips still to make.
+      Tap a word, then Play.
     </p>
     {stats.lexicon && (
       <p class="quiet">
@@ -107,7 +111,11 @@ const fresh = draft.new_entries as { letters: string; meaning: string | null; ex
         <p class="quiet">Words the app's dictionary doesn't have yet. In the text above, their Full entry link goes nowhere until they are released.</p>
         <ul>
           {fresh.map((entry) => (
-            <li><span lang="ar" dir="rtl" data-stored>{entry.letters}</span> <span data-stored>{entry.meaning ?? 'meaning to come'}</span> <span class="quiet" data-stored>as “{entry.example_gloss}”</span></li>
+            <li>
+              <span lang="ar" dir="rtl" data-stored>{entry.letters}</span> <span data-stored>{entry.meaning ?? 'meaning to come'}</span> <span class="quiet" data-stored>as “{entry.example_gloss}”</span>
+              {entry.audio?.ar && <audio controls preload="none" src={play(entry.audio.ar)} aria-label={`${entry.letters} read aloud in Arabic`}></audio>}
+              {entry.audio?.en && <audio controls preload="none" src={play(entry.audio.en)} aria-label={`${entry.meaning} read aloud in English`}></audio>}
+            </li>
           ))}
         </ul>
       </>
@@ -119,11 +127,13 @@ const fresh = draft.new_entries as { letters: string; meaning: string | null; ex
       </>
     )}
   </section>
-  <script is:inline src="/reader.js" defer></script>
+  <script is:inline src="/preview/reader.js" defer></script>
 </Content>
 
 <style>
   #reader :global(.w.fx) { text-decoration: underline dotted; text-underline-offset: 0.4em; }
+  #reader :global(.w.nc) { background-image: radial-gradient(circle, currentColor 1.5px, transparent 2px); background-repeat: no-repeat; background-position: 50% 100%; background-size: 6px 6px; padding-bottom: 4px; }
+  .preview-review audio { display: block; height: 32px; margin-block: 4px; max-width: 100%; }
   :global(#sheet #sn) { white-space: pre-line; }
   .preview-review { margin-top: var(--space-thought); }
   .preview-review ul { padding-inline-start: 1.25rem; }
