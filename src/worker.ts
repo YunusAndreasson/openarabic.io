@@ -1,7 +1,7 @@
 // Only what a file can't answer: AGENTS.md `Prerender or on-demand`, docs/site-plan.md `URL parity`.
 // A prerendered page never reaches this. Everything else is a redirect, a real 404 or the store route.
 import data from './generated/worker-data.json';
-import { APP_STORE, PLAY_STORE } from './lib/site.mjs';
+import { APP_STORE, APPLE_PROVIDER_TOKEN, PLAY_STORE } from './lib/site.mjs';
 import { AUTHOR_MOVED, escapeAttribute, wordPath } from './lib/words.mjs';
 
 interface Env {
@@ -50,6 +50,12 @@ function trailingId(slug: string): number | null {
 /** Only a known surface is ever passed on or counted. */
 const surfaceOf = (from: string | null) => (from && SURFACES.has(from) ? from : null);
 
+/** A link's own tag, as passed on to the stores: it names the link, never the person. */
+const tagOf = (params: URLSearchParams, key: string) => {
+  const value = params.get(key);
+  return value && SAFE.test(value) ? value : 'none';
+};
+
 /** The plan's Apple and Play tokens: surface only, never a word or slug. Marketer links keep their tags. */
 function storeUrl(store: 'ios' | 'android', from: string | null, params: URLSearchParams): string {
   const surface = surfaceOf(from);
@@ -68,8 +74,9 @@ function storeUrl(store: 'ios' | 'android', from: string | null, params: URLSear
     if (referrer) url.searchParams.set('referrer', referrer);
     return url.toString();
   }
-  // Apple ignores `ct` without the provider token, which the owner generates. Until then the link stays plain.
-  const token = (globalThis as { APPLE_PROVIDER_TOKEN?: string }).APPLE_PROVIDER_TOKEN;
+  // Apple ignores `ct` without the provider token. Until it's set in lib/site.mjs the link stays plain.
+  // A constant, not a Worker var: this module never sees `env`, and the token isn't secret.
+  const token = APPLE_PROVIDER_TOKEN;
   const url = new URL(APP_STORE);
   if (token) {
     const campaign = params.get('utm_campaign');
@@ -100,7 +107,10 @@ function downloadRoute(request: Request, url: URL, env: Env): Response | null {
   const agent = request.headers.get('user-agent') ?? '';
   if (BOT.test(agent)) return null;
   const store = /iPhone|iPad|iPod/.test(agent) ? 'ios' : /Android/.test(agent) ? 'android' : null;
-  return store ? redirect(307, storeUrl(store, from, url.searchParams), { 'Cache-Control': 'no-store', Vary: 'User-Agent' }) : null;
+  if (!store) return null;
+  // A phone sent straight on loads no page, so nothing else sees it: count it, with the link's source and campaign.
+  count(request, env, ['redirect', store, surfaceOf(from) ?? 'none', tagOf(url.searchParams, 'utm_source'), tagOf(url.searchParams, 'utm_campaign')]);
+  return redirect(307, storeUrl(store, from, url.searchParams), { 'Cache-Control': 'no-store', Vary: 'User-Agent' });
 }
 
 const MARKS = /[ؐ-ًؚ-ٰٟۖ-ۭـ]/g;
