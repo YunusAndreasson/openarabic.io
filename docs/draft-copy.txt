@@ -438,3 +438,6 @@ The app’s voice review: one Arabic word, and the buttons Show answer and Speak
 # The ledger's voice review row, split across one stop's title and note. Ledger wording, listed so each half traces.
 Hear the Arabic, then say what it means in English.
 The app grades your answer.
+
+# Footer: the publisher's legal name, which Meta's business verification looks for on the site. Owner, 2026-11-20.
+Published by Jonas Yunus Andreasson.
