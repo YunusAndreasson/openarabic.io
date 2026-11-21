@@ -234,7 +234,8 @@ We store your reading progress, vocabulary lists, practice session history, revi
 Voice answers
 Usage analytics
 # Draft 2026-11-15: replaces the earlier wording after Mixpanel went anonymous.
-In the app, we use Mixpanel to record how the app is used, such as sign in, sign up, practice sessions and which texts you open. These events are linked to a random identifier created on your device, not to your account, and do not include your name or email. A new identifier is created when you sign out or delete your account. On this website, and only if you agree, we use Google Analytics to see how visitors find and use it. Cloudflare Web Analytics also counts visits to this website anonymously, for every visitor.
+# Privacy, usage analytics: the installation ID and the Play referrer added. Owner, 2026-11-21 (install attribution).
+In the app, we use Mixpanel to record how the app is used, such as sign in, sign up, practice sessions and which texts you open. These events are linked to a random identifier created on your device, not to your account, and do not include your name or email. A new identifier is created when you sign out or delete your account. Each event also carries a random installation ID that stays the same until you uninstall the app, and on Android we record which link or ad the Play Store says brought you to the app. On this website, and only if you agree, we use Google Analytics to see how visitors find and use it. Cloudflare Web Analytics also counts visits to this website anonymously, for every visitor.
 How we use your information
 We use your data to provide the learning service, sync your progress across devices, personalize your learning, send practice reminders if you enable them, and improve the app.
 Third-party services
