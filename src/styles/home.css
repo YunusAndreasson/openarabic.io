@@ -51,10 +51,10 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .hero-try { margin-top: 12px; font-size: clamp(0.9375rem, 1.1vw, 1.0625rem); line-height: 1.4; animation: arrive var(--t-arrive) var(--home-ease) calc(5 * var(--stagger) + var(--follow)) both; }
 .hero-try a { display: inline-flex; align-items: center; min-height: 44px; }
 
-/* On a phone the man sits above the words, and the words get their own dark ground. */
+/* On a phone the man sits above and to the right of the words, and the words get their own dark ground. The photo is larger
+   than the screen and lifted a little, so his head clears the top edge at every size. */
 .hero-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, var(--color-surface) 8%, color-mix(in oklch, var(--color-surface) 72%, transparent) 42%, transparent 66%); }
-.hero-photo { --lift: calc(63vw - 12svh); }
-.hero-photo img { height: calc(100% + var(--lift)); margin-top: calc(-1 * var(--lift)); }
+.hero-photo img { width: 122%; height: 122%; max-width: none; margin-top: -8.4svh; }
 
 /* The scholars: what you get, named straight after the first screen. Each name leads to their texts. */
 .names { max-width: 26em; margin-top: clamp(12px, 2.6svh, 28px); color: var(--color-on-surface); font-size: clamp(1.125rem, 1.75vw, 1.625rem); font-weight: 400; line-height: 1.3; letter-spacing: -0.015em; animation: arrive var(--t-arrive) var(--home-ease) calc(var(--stagger) + var(--follow)) both; }
@@ -84,7 +84,7 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .play .develop { transition: opacity var(--t-light) var(--home-ease), filter var(--t-light) var(--home-ease); }
 .play .develop:not(.is-visible) { opacity: 0; filter: brightness(var(--unlit)); }
 .still-words { width: 100%; max-width: var(--home-wide); margin-inline: auto; padding: 0 var(--home-gutter) clamp(56px, 13svh, 128px); }
-.still-line { max-width: 14em; font-size: clamp(2rem, 4.4vw, 4.5rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.03em; }
+.still-line { max-width: 14em; font-size: clamp(2rem, 4.4vw, 4.5rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.03em; text-wrap: balance; }
 .still-audio { max-width: 22rem; margin-top: 16px; }
 .still-audio audio { margin-left: 0; }
 .still-audio .turn-source { text-align: left; }
@@ -92,14 +92,20 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 .still-note { margin-top: 4px; color: var(--color-on-surface-quiet); font-size: 0.8125rem; line-height: 1.35; }
 /* Listen is one still: its chapter word, its claim and the line read aloud. */
 .listen .chapter { margin-bottom: clamp(8px, 2svh, 16px); }
+/* The water is the lightest ground any words stand on, so it gets a little shade under them. */
+.listen .still-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, color-mix(in oklch, var(--color-surface) 62%, transparent) 40%, transparent 72%); }
 
-/* Two photographs of one frame: the problem, then the man reaching for the app. Without script they are two stills. */
+/* Two photographs: the problem, then the app in his hand. The scroll cuts between them. Without script they are two stills. */
 .problem-big, .bridge { font-size: clamp(2.25rem, 6.2vw, 6.5rem); font-weight: 300; line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; }
+.hold { white-space: nowrap; }
 .problem-small { max-width: 26em; margin-top: clamp(14px, 3svh, 28px); font-size: clamp(1.125rem, 1.6vw, 1.5rem); line-height: 1.35; }
 .play .still-pair { height: 170svh; }
 .play .pair-pin { position: sticky; top: 0; height: 100svh; overflow: clip; }
 .play .pair-frame { position: absolute; inset: 0; min-height: 0; }
-.play .pair-frame:nth-child(2) .still-photo { opacity: clamp(0, var(--t), 1); }
+/* The cut: one photo goes as the other comes, so the edges' fades never show one place through the other and no scroll
+   position is empty. The first hides its image, because `develop` already transitions the picture's own opacity. */
+.play .pair-frame:nth-child(1) .still-photo img { opacity: clamp(0, (0.5 - var(--t)) * 10000, 1); }
+.play .pair-frame:nth-child(2) .still-photo { opacity: clamp(0, (var(--t) - 0.4999) * 10000, 1); }
 .play .pair-frame:nth-child(1) .still-words { opacity: clamp(0, 1 - var(--t) * 2.5, 1); }
 .play .pair-frame:nth-child(2) .still-words { opacity: clamp(0, (var(--t) - 0.6) * 2.5, 1); }
 
@@ -247,7 +253,8 @@ body { font-weight: 400; -webkit-font-smoothing: antialiased; -moz-osx-font-smoo
 /* The close */
 .closing { min-height: 110svh; }
 .closing h2 { max-width: 11em; text-wrap: balance; font-size: clamp(2.25rem, 7vw, 7rem); font-weight: 300; line-height: 1; letter-spacing: -0.035em; }
-.closing-offer { display: flex; align-items: center; gap: 28px; }
+.closing-offer { display: flex; align-items: center; gap: 28px; margin-top: clamp(14px, 3svh, 32px); }
+.closing-offer .stores { margin-top: 0; }
 .closing .offer-note { margin-top: 14px; animation: none; }
 .qr-plate { padding: 6px; background: var(--color-on-surface); border-radius: 10px; line-height: 0; }
 .qr { width: 84px; height: 84px; }
@@ -264,23 +271,29 @@ main img { color: transparent; }
   .wall-card:nth-child(n + 9) { display: block; }
   .wall { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 36px clamp(16px, 2vw, 28px); }
   .start-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.6vw, 20px); }
-  .still-photo { mask-image: linear-gradient(to bottom, transparent 0%, var(--color-surface) 22%, var(--color-surface) 76%, transparent 100%); }
+  .still-photo { mask-image: linear-gradient(to bottom, transparent 0%, var(--color-surface) 13%, var(--color-surface) 80%, transparent 100%); }
   .still-photo img { object-position: 50% 50%; }
-  .closing h2 { font-size: min(5.6vw, 11svh); }
+  /* The words' side, in shade. `--shift` moves a photo right, clear of them, and its left edge dissolves as its top and bottom do. */
+  .still-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, color-mix(in oklch, var(--color-surface) var(--shade, 40%), transparent), transparent 62%); }
+  .still-photo img { transform: translateX(var(--shift, 0%)); mask-image: linear-gradient(to right, transparent, var(--color-surface) calc(var(--shift, 0%) * 3)); }
+  .problem { --shift: 2%; }
+  .remember { --shift: 11%; }
+  .remember .still-line { max-width: 7.4em; }
+  .listen { --shade: 82%; }
+  .listen .still-photo::after { background: linear-gradient(to right, color-mix(in oklch, var(--color-surface) var(--shade), transparent), transparent 62%); }
+  .closing h2 { font-size: min(5.6vw, 11svh, 7rem); }
   .still-words { padding-bottom: clamp(80px, 20svh, 200px); }
   .scholar-list { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 3.4vw, 56px); row-gap: 28px; }
   .scholar { padding-block: 18px 20px; }
   .scholar-works { margin-top: 8px; font-size: 0.875rem; }
   .hero { height: 100svh; }
   .hero-photo { mask-image: linear-gradient(to top, transparent 0%, color-mix(in oklch, var(--color-surface) 50%, transparent) 8%, var(--color-surface) 24%); }
-  .hero-photo img { width: 100%; height: 100%; margin-top: 0; margin-left: 24%; max-width: none; object-position: 50% 46%; }
-  .hero-shade { background: linear-gradient(to right, var(--color-surface) 24%, color-mix(in oklch, var(--color-surface) 62%, transparent) 40%, transparent 58%); }
+  .hero-photo img { width: 100%; height: 100%; margin-top: 0; object-position: 100% 34%; transform: translateX(8%); mask-image: linear-gradient(to right, transparent, var(--color-surface) 24%); }
+  .hero-shade { background: linear-gradient(to right, color-mix(in oklch, var(--color-surface) 70%, transparent), color-mix(in oklch, var(--color-surface) 45%, transparent) 36%, transparent 62%); }
   .hero-words { top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; padding-top: 72px; padding-bottom: 32px; }
-  .hero h1 { font-size: min(6.6vw, 13svh); line-height: 0.98; }
+  .hero h1 { font-size: min(6.6vw, 13svh, 8.5rem); line-height: 0.98; }
   .hero h1 span:first-child, .hero h1 span:nth-child(2) { display: inline; }
-  /* On a wide screen the man and his table move right, clear of the words. The room's dark wall holds the left. */
-  .problem .still-photo img { transform: translateX(22%); mask-image: linear-gradient(to right, transparent, var(--color-surface) 32%); }
-  .problem-big, .bridge { max-width: 9.5em; }
+  .problem-big, .bridge { max-width: 6.6em; }
 
   /* A chapter on a laptop: the words, and beside them the whole phone, as large as the screen allows. */
   .play .stage-pin { display: grid; grid-template-columns: minmax(0, 34rem) auto; grid-template-rows: minmax(0, 1fr); justify-content: center; align-items: center; column-gap: clamp(40px, 5vw, 88px); padding-block: 4svh; }
@@ -301,6 +314,30 @@ main img { color: transparent; }
   .payoff-english { grid-column: 2; grid-row: 2; }
   .payoff .lift-input { top: 40%; }
   .payoff .stores { justify-self: start; }
+}
+
+/* A squarer laptop or a tablet on its side crops the first photo's left, so the man moves further from the words. */
+@media (min-width: 56.25rem) and (max-aspect-ratio: 3/2) {
+  .hero-photo img { transform: translateX(16%); }
+}
+
+/* On a large monitor the words' column sits further in, so these photos' dark sides move with it. */
+@media (min-width: 100rem) and (min-aspect-ratio: 3/2) {
+  .problem { --shift: 5%; }
+  .closing { --shift: 9%; }
+}
+
+/* A large screen held upright: the tall photos, with the phone's dissolve and the words at the foot. */
+@media (min-width: 56.25rem) and (max-aspect-ratio: 1/1) {
+  .hero-photo { mask-image: linear-gradient(to top, transparent 0%, color-mix(in oklch, var(--color-surface) 35%, transparent) 26%, var(--color-surface) 58%); }
+  .hero-photo img { width: 122%; height: 122%; margin-top: -8.4svh; object-position: 50% 0%; transform: none; mask-image: none; }
+  .hero-shade { background: linear-gradient(to top, var(--color-surface) 8%, color-mix(in oklch, var(--color-surface) 72%, transparent) 42%, transparent 66%); }
+  .hero-words { justify-content: flex-end; padding-bottom: 11svh; }
+  .still-photo { mask-image: linear-gradient(to bottom, transparent 0%, var(--color-surface) 14%, var(--color-surface) 42%, transparent 82%); }
+  .still-photo::after { content: none; }
+  .listen .still-photo::after { content: ''; background: linear-gradient(to top, color-mix(in oklch, var(--color-surface) 62%, transparent) 40%, transparent 72%); }
+  .still-photo img { object-position: 50% 0%; transform: none; mask-image: none; }
+  .problem-big, .bridge, .remember .still-line { max-width: 14em; }
 }
 
 /* Very short phones: tighten the first screen so the whole offer still fits. */

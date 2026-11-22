@@ -49,10 +49,10 @@ const remember = [
     <div class="hero-wrap">
       <section class="hero" id="top">
         <picture class="hero-photo">
-          <source media="(max-width: 56.24rem)" type="image/avif" srcset="/hero-tall.avif" />
-          <source media="(max-width: 56.24rem)" type="image/webp" srcset="/hero-tall.webp" />
+          <source media="(max-width: 56.24rem), (max-aspect-ratio: 1/1)" type="image/avif" srcset="/hero-tall.avif" />
+          <source media="(max-width: 56.24rem), (max-aspect-ratio: 1/1)" type="image/webp" srcset="/hero-tall.webp" />
           <source type="image/avif" srcset="/hero-wide.avif" />
-          <img src="/hero-wide.webp" width="1672" height="941" alt="A man seen from behind, small in a dark room, reading a book at a table by a window at dusk." fetchpriority="high" />
+          <img src="/hero-wide.webp" width="1672" height="941" alt="A man seen from behind on a long bench by a window, reading from his phone, his other hand resting on a closed book." fetchpriority="high" />
         </picture>
         <div class="hero-shade"></div>
         <header class="topbar">
@@ -100,11 +100,11 @@ const remember = [
 
     <StillPair
       class="problem"
-      first={{ name: 'stuck', alt: 'A man seen from behind at a small table at night, his head in his hand, with books left open in front of him.' }}
-      then={{ name: 'turn', alt: 'The same man at the same table, sitting up now, his phone in his hands and the dictionary shut beside the open book.' }}
+      first={{ name: 'stuck', alt: 'Seen over his shoulder, a man pushes one more paper slip into a dictionary already full of them.' }}
+      then={{ name: 'turn', alt: 'On a tram in the rain, a man holds his phone in one hand. It shows the app’s card for one Arabic word.' }}
     >
       <Fragment slot="first">
-        <h2 class="problem-big">You can sound it out.<br />You can’t read it.</h2>
+        <h2 class="problem-big">You can <span class="hold">sound it out.</span><br />You can’t read it.</h2>
         <p class="problem-small">Every word is a trip to the dictionary.</p>
       </Fragment>
       <Fragment slot="then">
@@ -114,13 +114,13 @@ const remember = [
 
     <Stage id="read" chapter="Read" stops={read} />
 
-    <Still name="remember" alt="The same man the next morning, standing by the window in grey daylight with his phone in his hand.">
+    <Still name="remember" class="remember" alt="A phone leans on a jar on a kitchen counter, showing one Arabic word to answer. Behind it, a man dries a bowl.">
       <p class="still-line reveal">Words return when your predicted recall falls to 90%.</p>
     </Still>
 
     <Stage id="remember" chapter="Remember" stops={remember} />
 
-    <Still name="listen" alt="A man seen from behind, small on a wet street at dusk, wearing earphones." class="listen">
+    <Still name="listen" alt="A man by the water, seen from the side, wearing an earphone. Its cord falls over the front of his coat." class="listen">
       <h2 class="chapter reveal" id="listen">Listen</h2>
       <p class="still-line reveal">Arabic audio on every word and every line.</p>
       <div class="still-audio reveal">
@@ -161,7 +161,7 @@ const remember = [
       <ArticleWall />
     </section>
 
-    <Still name="close" alt="A closed book and a phone on a small table under a window, in the first light before dawn." class="closing">
+    <Still name="close" alt="A chair pushed back from a table in daylight, with a closed book and a phone on its seat and a sweater over its back." class="closing">
       <h2 class="reveal">Free. No ads. No subscription.</h2>
       <div class="closing-offer reveal">
         <StoreLinks from="close" />

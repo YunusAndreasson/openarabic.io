@@ -210,7 +210,7 @@ Everything works with no script and with reduced motion, and the static state is
 - The home page may pin stages to the scroll, bring things in as they arrive, and develop photos. Content pages have no entrance motion.
 - In a chapter, a screen changes only as the app changes it: a sheet rises, a push slides in from the right, or a cut switches halfway. Two different screens never fade into each other. A zoom fades at its edges, so nothing reads as cut text. Every hold shows one whole real capture.
 - A chapter's word is big only on its first stop; after that a sentence-case marker (Read · Remember · Listen) names it.
-- Two photographs of one frame may dissolve into each other, played by the scroll, when they were made to line up (`docs/imagery/turn/brief.md`). Without script they are two stills.
+- Two photographs may share a pinned frame, played by the scroll. Two places cut; only two photographs of one frame, made to line up, may dissolve. Without script they are two stills.
 - `prefers-reduced-motion: reduce`: every duration is 0, and the stages stack.
 - Sound only on a press.
 
@@ -228,10 +228,11 @@ Article, word, dictionary, category, author and book pages open on their content
 
 ## Imagery
 
-Real-looking photographs from the Codex route: Claude writes `docs/imagery/<scene>/brief.md`, Codex generates, and Claude looks at every candidate at full size and critiques it. One apartment, one man seen from behind, available light, film grain. The owner rejected polished scenes as typically AI generated.
+Real-looking photographs from the Codex route: Claude writes `docs/imagery/<scene>/brief.md`, Codex generates, and Claude looks at every candidate at full size and critiques it. The set since 2026-11-22 is `docs/imagery/natural/brief.md`: daylight from one real direction, ordinary northern places, one man whose face is never shown and whose jaw, where it shows, has a full natural beard, one idea per picture, and the phone as a tool in use. The owner rejected polished scenes as typically AI generated, and anything a person wouldn't do: ask whether someone would really hold, wear or leave it that way.
 
 - No lettering in a generated image, and nothing readable on any page. Fake Arabic means rejection on sight. Real Arabic and text are placed afterwards.
-- App UI is always a real, unedited capture, never generated or redrawn. Captures are only cropped and scaled, by `node scripts/captures.mjs` from the numbers in `src/lib/captures.mjs`, and every visible title and sentence in one stays outside `src/data/flagged-texts.json`.
+- App UI is always a real, unedited capture, never generated or redrawn. On the page, captures are only cropped and scaled, by `node scripts/captures.mjs` from the numbers in `src/lib/captures.mjs`. Inside a photograph, the phone is generated with a blank screen and a real capture is laid on the glass in perspective, with its light, softness and reflection matched to the photo, and nothing in it redrawn. Every visible title and sentence in one stays outside `src/data/flagged-texts.json`.
+- The wide export serves screens wider than they are tall from 900px; the tall one serves phones and any screen held upright. Words never cross a face, a phone's screen or a bright subject, from 375 to 2560 wide: each photo's `--shift` and `--shade` in `home.css` keep them on its dark side, at 4.5:1 or better. On the shortest phones the first screen's words do cross his dark clothes and his hand.
 - Add a row to `docs/provenance.md`.
 
 ## Review
